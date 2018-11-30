@@ -16,5 +16,9 @@
     "generator"
   ],
   "author": "Jasper Van Proeyen",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "replace-in-file": "^3.4.2"
+  }
 }
