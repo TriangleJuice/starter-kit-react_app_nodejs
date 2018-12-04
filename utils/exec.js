@@ -1,16 +1,13 @@
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
-function execPromise(command) {
-    return new Promise(function(resolve, reject) {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                reject(error);
-                return;
-            }
+function execPromise(command, options = []) {
+	return new Promise(function(resolve, reject) {
+		const child = spawn(command, options, { stdio: 'inherit' });
 
-            resolve(stdout.trim());
-        });
-    });
+		child.on('data', data => console.log(data));
+		child.on('close', resolve);
+		child.on('error', error => reject(error));
+	});
 }
 
 module.exports.execPromise = execPromise;

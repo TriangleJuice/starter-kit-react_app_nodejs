@@ -44,11 +44,13 @@ inquirer.prompt(questions).then(answers => {
  * Create a clean new frontend folder (delete it first should it exist).
  */
 async function startInstall() {
-	log(chalk.green.bold('Starting...'));
+	log(chalk.green.bold(`
+Preparing...`));
 
 	try {
-		await deleteFolderSync(`frontend`);
-		log(chalk.blue('Done'));
+		await deleteFolderSync('frontend');
+		log(chalk.blue(`
+Done`));
 		installReact();
 	} catch (e) {
 		showError(e);
@@ -60,11 +62,13 @@ async function startInstall() {
  * Install NPM dependencies.
  */
 async function installReact() {
-	log(chalk.green.bold('Installing React...'));
+	log(chalk.green.bold(`
+Installing React...`));
 
 	try {
-		await execPromise(`npx create-react-app frontend`);
-		log(chalk.blue('Done'));
+		await execPromise('npx', ['create-react-app', 'frontend']);
+		log(chalk.blue(`
+Done`));
 		installACPaaSUI();
 	} catch (e) {
 		showError(e);
@@ -78,11 +82,15 @@ async function installReact() {
  * - Node SASS, so you don't have to rely on CSS only.
  */
 async function installACPaaSUI() {
-	log(chalk.green.bold('Installing ACPaaS UI...'));
+	log(chalk.green.bold(`
+Installing ACPaaS UI...`));
 
 	try {
-		await execPromise(`cd frontend && npm install --save-dev node-sass && npm install --save @acpaas-ui/react-components ${config.branding.npm}`);
-		log(chalk.blue('Done'));
+		await execPromise('cd', ['frontend']);
+		await execPromise('npm', ['install', '--save-dev', 'node-sass']);
+		await execPromise('npm', ['install', '--save', '@acpaas-ui/react-components', config.branding.npm]);
+		log(chalk.blue(`
+Done`));
 		createStarterTemplate();
 	} catch (e) {
 		showError(e);
@@ -96,7 +104,8 @@ async function installACPaaSUI() {
  * Merge our ready-made files with the files created by Create React App.
  */
 async function createStarterTemplate() {
-	log(chalk.green.bold('Creating starter template...'));
+	log(chalk.green.bold(`
+Creating starter template...`));
 
 	const options = {
 		files: 'frontend/public/index.html',
@@ -110,7 +119,8 @@ async function createStarterTemplate() {
 		await replace(options);
 		await copyFolderRecursiveSync(`${__dirname}/files/public`, 'frontend');
 		await copyFolderRecursiveSync(`${__dirname}/files/src`, 'frontend');
-		log(chalk.blue('Done'));
+		log(chalk.blue(`
+Done`));
 		finishInstall();
 	} catch (e) {
 		showError(e);
@@ -121,5 +131,7 @@ async function createStarterTemplate() {
  * Clean up and finish installation.
  */
 function finishInstall() {
-	log(chalk.white.bold('Now run ' + chalk.cyan.bold('npm start') + ' in your frontend directory.'));
+	log(chalk.white.bold(`
+Now run ${chalk.cyan.bold('npm start')} in your frontend directory.
+`));
 }
