@@ -5,37 +5,55 @@ const replace = require('replace-in-file');
 
 const log = console.log;
 
+const { copyFolderRecursiveSync } = require('./utils/copy');
+const { deleteFolderSync } = require('./utils/delete');
 const { execPromise } = require('./utils/exec');
 const { showError } = require('./utils/error');
 
 let config = {};
 
-
-// Welcome
-log(chalk.yellow.bold(`===========================================
-Welcome to the Digipolis React starter kit!
-===========================================`));
-
 const questions = [
 	{
-	    type: 'list',
-	    name: 'branding',
-	    message: 'Which branding do you want to use?',
-	    choices: ['Antwerp', 'Digipolis', 'ACPaaS'],
-	    filter: (val) => {
-	    	switch (val) {
-	    		case 'ACPaaS': return {cdn: 'acpaas_branding_scss', npm: '@a-ui/core @a-ui/acpaas', version: '3.0.3', type: 'acpaas' };
-	    		case 'Digipolis': return {cdn: 'digipolis_branding_scss', npm: '@a-ui/core @a-ui/digipolis', version: '3.0.2', type: 'digipolis' };
-	    		default: return {cdn: 'core_branding_scss', npm: '@a-ui/core', version: '3.0.3', type: 'core' };
-	    	}
-	    }
+		type: 'list',
+		name: 'branding',
+		message: 'Which branding do you want to use?',
+		choices: ['Antwerp', 'Digipolis', 'ACPaaS'],
+		filter: (val) => {
+			switch (val) {
+				case 'ACPaaS': return {cdn: 'acpaas_branding_scss', npm: '@a-ui/core @a-ui/acpaas', version: '3.0.3', type: 'acpaas' };
+				case 'Digipolis': return {cdn: 'digipolis_branding_scss', npm: '@a-ui/core @a-ui/digipolis', version: '3.0.2', type: 'digipolis' };
+				default: return {cdn: 'core_branding_scss', npm: '@a-ui/core', version: '3.0.3', type: 'core' };
+			}
+		}
 	},
 ]
 
+/**
+ * Welcome!
+ * First run the questionnaire.
+ */
+log(chalk.yellow.bold(`===========================================
+Welcome to the Digipolis React starter kit!
+===========================================`));
 inquirer.prompt(questions).then(answers => {
 	config = answers;
-	installReact();
+	startInstall();
 });
+
+/**
+ * Create a clean new frontend folder (delete it first should it exist).
+ */
+async function startInstall() {
+	log(chalk.green.bold('Starting...'));
+
+	try {
+		await deleteFolderSync(`frontend`);
+		log(chalk.blue('Done'));
+		installReact();
+	} catch (e) {
+		showError(e);
+	}
+}
 
 /**
  * Run the create-react-app command.
@@ -43,37 +61,39 @@ inquirer.prompt(questions).then(answers => {
  */
 async function installReact() {
 	log(chalk.green.bold('Installing React...'));
+
 	try {
-	    await execPromise(`npx create-react-app frontend`);
-	    log(chalk.blue('Done'));
-	    installACPaaSUI();
+		await execPromise(`npx create-react-app frontend`);
+		log(chalk.blue('Done'));
+		installACPaaSUI();
 	} catch (e) {
-	    showError(e);
+		showError(e);
 	}
 }
 
 /**
  * Go into frontend folder and install ACPaaS UI related stuff:
- * - ACPaaS UI (React)
- * - Core Branding and optionally one of the other brandings
- * - Node SASS, so you don't have to rely on CSS only
+ * - ACPaaS UI (React).
+ * - Core Branding and optionally one of the other brandings.
+ * - Node SASS, so you don't have to rely on CSS only.
  */
 async function installACPaaSUI() {
 	log(chalk.green.bold('Installing ACPaaS UI...'));
+
 	try {
-	    await execPromise(`cd frontend && npm install --save-dev node-sass && npm install --save @acpaas-ui/react-components ${config.branding.npm}`);
-	    log(chalk.blue('Done'));
-	    createStarterTemplate();
+		await execPromise(`cd frontend && npm install --save-dev node-sass && npm install --save @acpaas-ui/react-components ${config.branding.npm}`);
+		log(chalk.blue('Done'));
+		createStarterTemplate();
 	} catch (e) {
-	    showError(e);
+		showError(e);
 	}
 }
 
 /**
  * Adjust the generated `index.html` file to include:
- * - Core Branding
- * - Flexbox grid
- * Merge our ready-made files with the files created by Create React App
+ * - Core Branding.
+ * - Flexbox grid.
+ * Merge our ready-made files with the files created by Create React App.
  */
 async function createStarterTemplate() {
 	log(chalk.green.bold('Creating starter template...'));
@@ -88,7 +108,8 @@ async function createStarterTemplate() {
 
 	try {
 		await replace(options);
-		await execPromise(`cp -R ${__dirname}/files/* frontend`);
+		await copyFolderRecursiveSync(`${__dirname}/files/public`, 'frontend');
+		await copyFolderRecursiveSync(`${__dirname}/files/src`, 'frontend');
 		log(chalk.blue('Done'));
 		finishInstall();
 	} catch (e) {
@@ -97,7 +118,7 @@ async function createStarterTemplate() {
 }
 
 /**
- * Clean up and finish installation
+ * Clean up and finish installation.
  */
 function finishInstall() {
 	log(chalk.white.bold('Now run ' + chalk.cyan.bold('npm start') + ' in your frontend directory.'));
