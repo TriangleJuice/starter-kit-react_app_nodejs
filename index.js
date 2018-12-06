@@ -24,7 +24,13 @@ const questions = [
 				case 'Digipolis': return {cdn: 'digipolis_branding_scss', npm: '@a-ui/core @a-ui/digipolis', version: '3.0.2', type: 'digipolis' };
 				default: return {cdn: 'core_branding_scss', npm: '@a-ui/core', version: '3.0.3', type: 'core' };
 			}
-		}
+		},
+	},
+	{
+		type: 'confirm',
+		name: 'flexboxgrid',
+		message: 'Do you want to use the Flexbox grid?',
+		default: true,
 	},
 ]
 
@@ -86,9 +92,8 @@ async function installACPaaSUI() {
 Installing ACPaaS UI...`));
 
 	try {
-		await execPromise('cd', ['frontend']);
-		await execPromise('npm', ['install', '--save-dev', 'node-sass']);
-		await execPromise('npm', ['install', '--save', '@acpaas-ui/react-components', config.branding.npm]);
+		await execPromise('npm', ['install', '--prefix', './frontend', '--save-dev', 'node-sass']);
+		await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components', config.branding.npm]);
 		log(chalk.blue(`
 Done`));
 		createStarterTemplate();
@@ -107,11 +112,13 @@ async function createStarterTemplate() {
 	log(chalk.green.bold(`
 Creating starter template...`));
 
+	let addFlexboxGrid = config.flexboxgrid ? `
+    <link rel="stylesheet" href="https://cdn.antwerpen.be/core_flexboxgrid_scss/1.0.1/flexboxgrid.min.css">` : '';
+
 	const options = {
 		files: 'frontend/public/index.html',
 		from: /<link rel="manifest"/g,
-		to: `<link rel="stylesheet" href="https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css">
-    <link rel="stylesheet" href="https://cdn.antwerpen.be/core_flexboxgrid_scss/1.0.1/flexboxgrid.min.css">
+		to: `<link rel="stylesheet" href="https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css">${addFlexboxGrid}
     <link rel="manifest"`,
 	};
 
