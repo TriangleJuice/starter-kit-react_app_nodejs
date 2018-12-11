@@ -20,9 +20,9 @@ const questions = [
 		choices: ['Antwerp', 'Digipolis', 'ACPaaS'],
 		filter: (val) => {
 			switch (val) {
-				case 'ACPaaS': return {cdn: 'acpaas_branding_scss', npm: '@a-ui/core @a-ui/acpaas', version: '3.0.3', type: 'acpaas' };
-				case 'Digipolis': return {cdn: 'digipolis_branding_scss', npm: '@a-ui/core @a-ui/digipolis', version: '3.0.2', type: 'digipolis' };
-				default: return {cdn: 'core_branding_scss', npm: '@a-ui/core', version: '3.0.3', type: 'core' };
+				case 'ACPaaS': return {cdn: 'acpaas_branding_scss', npm: ['@a-ui/core', '@a-ui/acpaas'], version: '3.0.3', type: 'acpaas' };
+				case 'Digipolis': return {cdn: 'digipolis_branding_scss', npm: ['@a-ui/core', '@a-ui/digipolis'], version: '3.0.2', type: 'digipolis' };
+				default: return {cdn: 'core_branding_scss', npm: ['@a-ui/core'], version: '3.0.3', type: 'core' };
 			}
 		},
 	},
@@ -93,7 +93,7 @@ Installing ACPaaS UI...`));
 
 	try {
 		await execPromise('npm', ['install', '--prefix', './frontend', '--save-dev', 'node-sass']);
-		await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components', config.branding.npm]);
+		await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components'].concat(config.branding.npm));
 		log(chalk.blue(`
 Done`));
 		createStarterTemplate();
