@@ -20,7 +20,7 @@ let config = {};
  */
 program
 	.version(pjson.version)
-	.usage('digipolis-start-react [options]')
+	.usage('[options]')
 	.option('-b, --branding <branding>', 'Branding (Antwerp, Digipolis or ACPaaS)', /^(Antwerp|Digipolis|ACPaaS)$/i, 'Antwerp')
 	.option('-F, --no-flexboxgrid', 'Don\'t use the Flexbox grid')
 	.option('-S, --no-setup', 'Skip setup questions')
