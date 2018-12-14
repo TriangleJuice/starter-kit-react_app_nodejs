@@ -7,6 +7,7 @@ const replace = require('replace-in-file');
 const pjson = require('./package.json');
 const log = console.log;
 
+const { mapBranding } = require('./utils/branding');
 const { copyFolderRecursiveSync } = require('./utils/copy');
 const { deleteFolderSync } = require('./utils/delete');
 const { execPromise } = require('./utils/exec');
@@ -14,6 +15,9 @@ const { showError } = require('./utils/error');
 
 let config = {};
 
+/**
+ * Define command flags
+ */
 program
 	.version(pjson.version)
 	.usage('digipolis-start-react [options]')
@@ -22,6 +26,9 @@ program
 	.option('-S, --no-setup', 'Skip setup questions')
 	.parse(process.argv);
 
+/**
+ * Define questionnaire questions
+ */
 const questions = [
 	{
 		type: 'list',
@@ -36,18 +43,7 @@ const questions = [
 		message: 'Do you want to use the Flexbox grid?',
 		default: true,
 	},
-]
-
-/**
- * Map correct branding props to config object
- */
-function mapBranding(val) {
-	switch (val) {
-		case 'ACPaaS': return {cdn: 'acpaas_branding_scss', npm: ['@a-ui/core', '@a-ui/acpaas'], version: '3.0.3', type: 'acpaas' };
-		case 'Digipolis': return {cdn: 'digipolis_branding_scss', npm: ['@a-ui/core', '@a-ui/digipolis'], version: '3.0.2', type: 'digipolis' };
-		default: return {cdn: 'core_branding_scss', npm: ['@a-ui/core'], version: '3.0.3', type: 'core' };
-	}
-}
+];
 
 /**
  * Welcome!
@@ -65,13 +61,11 @@ Welcome to the Digipolis React starter kit!
 	if (program.setup) {
 		inquirer.prompt(questions).then(answers => {
 			config = answers;
-			console.log(config);
 			startInstall();
 		});
 	} else {
 		program.branding = mapBranding(program.branding);
 		config = program;
-		console.log(config);
 		startInstall();
 	}
 }
