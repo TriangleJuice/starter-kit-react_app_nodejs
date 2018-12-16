@@ -16,7 +16,7 @@
 > digipolis-start-react --no-setup
 ```
 
-Run the help command in order to see all available configuration
+Run the help command in order to see all available configuration options:
 
 ```sh
 > digipolis-start-react --help
