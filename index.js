@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 const chalk = require('chalk');
+const program = require('commander');
 const inquirer = require('inquirer');
 const replace = require('replace-in-file');
 
+const pjson = require('./package.json');
 const log = console.log;
 
+const { mapBranding } = require('./utils/branding');
 const { copyFolderRecursiveSync } = require('./utils/copy');
 const { deleteFolderSync } = require('./utils/delete');
 const { execPromise } = require('./utils/exec');
@@ -12,19 +15,27 @@ const { showError } = require('./utils/error');
 
 let config = {};
 
+/**
+ * Define command flags
+ */
+program
+	.version(pjson.version)
+	.usage('[options]')
+	.option('-b, --branding <branding>', 'Branding (Antwerp, Digipolis or ACPaaS)', /^(Antwerp|Digipolis|ACPaaS)$/i, 'Antwerp')
+	.option('-F, --no-flexboxgrid', 'Don\'t use the Flexbox grid')
+	.option('-S, --no-setup', 'Skip setup questions')
+	.parse(process.argv);
+
+/**
+ * Define questionnaire questions
+ */
 const questions = [
 	{
 		type: 'list',
 		name: 'branding',
 		message: 'Which branding do you want to use?',
 		choices: ['Antwerp', 'Digipolis', 'ACPaaS'],
-		filter: (val) => {
-			switch (val) {
-				case 'ACPaaS': return {cdn: 'acpaas_branding_scss', npm: ['@a-ui/core', '@a-ui/acpaas'], version: '3.0.3', type: 'acpaas' };
-				case 'Digipolis': return {cdn: 'digipolis_branding_scss', npm: ['@a-ui/core', '@a-ui/digipolis'], version: '3.0.2', type: 'digipolis' };
-				default: return {cdn: 'core_branding_scss', npm: ['@a-ui/core'], version: '3.0.3', type: 'core' };
-			}
-		},
+		filter: mapBranding,
 	},
 	{
 		type: 'confirm',
@@ -32,19 +43,32 @@ const questions = [
 		message: 'Do you want to use the Flexbox grid?',
 		default: true,
 	},
-]
+];
 
 /**
  * Welcome!
- * First run the questionnaire.
  */
-log(chalk.yellow.bold(`===========================================
+run();
+
+/**
+ * Go!
+ * First check if the starter app was intended to run on its own.
+ */
+function run() {
+	log(chalk.yellow.bold(`===========================================
 Welcome to the Digipolis React starter kit!
 ===========================================`));
-inquirer.prompt(questions).then(answers => {
-	config = answers;
-	startInstall();
-});
+	if (program.setup) {
+		inquirer.prompt(questions).then(answers => {
+			config = answers;
+			startInstall();
+		});
+	} else {
+		program.branding = mapBranding(program.branding);
+		config = program;
+		startInstall();
+	}
+}
 
 /**
  * Create a clean new frontend folder (delete it first should it exist).
