@@ -3,7 +3,7 @@
 ## Basic usage
 
 ```sh
-> npm i -g @digipolis/start-react
+> npm install -g @digipolis/start-react
 > cd your-app
 > digipolis-start-react
 ```
