@@ -1,5 +1,7 @@
 # Digipolis starter kit for React
 
+This starter kit makes it easy for you to create a React-based [ACPaaS UI](https://acpaas-ui.digipolis.be) app. It works best as part of the [Digipolis NodeJS starter kit](https://github.com/digipolisantwerp/starter-kit_app_nodejs), but it's also possible to use it stand-alone.
+
 ## Basic usage
 
 ```sh
