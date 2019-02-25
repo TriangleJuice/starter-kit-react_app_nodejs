@@ -1,0 +1,36 @@
+{
+  "extends": [
+    "airbnb-base"
+  ],
+  "plugins": [
+    "node",
+    "mocha"
+  ],
+  "globals": {
+    "__basedir": "writable",
+    "__frontenddir": "writable",
+    "__backenddir": "writable",
+  }
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "rules" : {
+    "no-use-before-define": 0,
+    "class-methods-use-this": ["off"],
+    "no-console": ["error", { "allow": ["log", "info", "warn", "error"]  }],
+    "max-len": ["error", 150]
+  },
+  "globals": {
+    "base": false,
+    "expect": false,
+    "nock": false,
+    "request": false
+  }
+}
