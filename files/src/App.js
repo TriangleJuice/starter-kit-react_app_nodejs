@@ -5,7 +5,6 @@ import {
   Footer,
 } from '@acpaas-ui/react-components';
 /**
-    await start(config);
  * More ACPaaS UI documentation can be found here:
  * https://digipolisantwerp.github.io/acpaas-ui_react/
  */
