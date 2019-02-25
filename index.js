@@ -19,11 +19,13 @@ global.__backenddir = `${__dirname}/backend`;
 program
   .version(pjson.version)
   .usage('[options]')
-  .option('-b, --branding <branding>', 'Branding (Antwerp, Digipolis or ACPaaS)', /^(Antwerp|Digipolis|ACPaaS)$/i, 'Antwerp')
+  .option('-b, --branding <branding>', 'Branding (Antwerp, Digipolis or ACPaaS)', /^(antwerp|digipolis|acpaas)$/i, 'Antwerp')
   .option('-F, --no-flexboxgrid', 'Don\'t use the Flexbox grid')
   .option('-S, --no-setup', 'Skip setup questions')
   .option('-f, --frontend <frontend>', 'frontend')
   .option('-b, --backend <backend>', 'backend')
+  .option('-t, --tesing <testing>', 'testing mocha|jest')
+  .option('-d, --database <database>', 'database mongodb|postgres')
   .parse(process.argv);
 
 /**
@@ -53,6 +55,7 @@ Welcome to the Digipolis starter kit! (v${pjson.version})
   } else {
     program.branding = mapBranding(program.branding);
     const config = program;
+    config.noSetup = true;
     const { frontend, backend } = config;
     await generators[frontend].start(config);
     if (backend) {
