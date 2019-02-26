@@ -17,7 +17,7 @@ const frontEndConfig = require('../config/front-end.config');
 
 async function createStarterTemplate(config) {
   log(chalk.green.bold('Creating starter template...'));
-  const branding = frontEndConfig.branding.generateLinkTag(config.branding);
+  const branding = await frontEndConfig.branding.generateLinkTag(config.branding);
   const flexboxGrid = config.flexboxgrid ? frontEndConfig.flexbox.link : '';
 
   const options = {
