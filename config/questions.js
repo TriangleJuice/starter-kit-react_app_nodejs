@@ -10,7 +10,7 @@ const questions = [
     choices: [
       { value: 'nodejs', name: 'Node.js' },
       { value: 'dotnet', name: '.net' },
-      { value: undefined, name: 'I don`t need a backend' },
+      { value: undefined, name: 'I don\'t need a backend' },
     ],
   },
   {
