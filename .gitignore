@@ -19,3 +19,11 @@ node_modules
 
 ## Eslint
 .eslintcache
+
+#OS-files
+.DS_Store
+
+#projectlocations
+/frontend
+/backend
+
