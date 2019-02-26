@@ -36,5 +36,32 @@ function copyFolderRecursiveSync(source, target) {
     });
   }
 }
+function deleteFolderRecursive(path) {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach(function(file, index){
+      var curPath = path + "/" + file;
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
 
-module.exports.copyFolderRecursiveSync = copyFolderRecursiveSync;
+function copyJob(jobs){
+  const promiseArray = jobs.map(({ source, destination, type }) => {
+    if(type === 'folder'){
+      return copyFolderRecursiveSync(source, destination);
+    }
+    return copyFileSync(source, destination);
+  });
+  return Promise.all(promiseArray);
+}
+
+module.exports = {
+  copyFolderRecursiveSync,
+  copyJob,
+  deleteFolderRecursive,
+};
