@@ -11,11 +11,6 @@ import { BrowserRouter } from "react-router-dom";`,
     to: `<BrowserRouter><App /></BrowserRouter>`,
   },
   {
-    files: './frontend/src/index.js',
-    from: `<App />`,
-    to: `<BrowserRouter><App /></BrowserRouter>`,
-  },
-  {
     files: './frontend/src/App.js',
     from: `import Home from './components/Home/Home';`,
     to: `import Home from './components/Home/Home';
