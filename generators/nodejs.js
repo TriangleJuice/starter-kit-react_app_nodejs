@@ -10,8 +10,8 @@ const questions = [
     message: 'Which DB would you like?',
     choices: [
       { value: 'mongodb', name: 'MongoDB' },
-      { value: 'postgres', name: 'Postgres' },
-      { value: undefined, name: 'I don`t need a database' },
+      { value: 'postgres', name: 'PostgreSQL' },
+      { value: undefined, name: 'I don\'t need a database' },
     ],
   },
   {
@@ -31,7 +31,7 @@ async function start(options) {
     const backendconfig = await inquirer.prompt(questions);
     backedOptions = { ...options, ...backendconfig };
   }
-  log(chalk.green.bold('Node.Js not yet implemented 🙄'));
+  log(chalk.green.bold('Node.js not yet implemented 🙄'));
 }
 
 module.exports = {
