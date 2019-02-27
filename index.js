@@ -54,7 +54,6 @@ Welcome to the Digipolis starter kit! (v${pjson.version})
     }
     finishInstall();
   } else {
-    console.log(program);
     program.branding = mapBranding(program.branding);
     const config = program;
     config.noSetup = true;
