@@ -1,17 +1,9 @@
 const gitClone = require('git-clone');
+const util = require('util');
+const gitClonePromisify = util.promisify(gitClone);
 
-// Wrap callback into Promise
 function gitclone(repo, branch) {
-  return new Promise((resolve, reject) => {
-    gitClone(repo, './tmp', {
-      branch
-    }, (err) => {
-      if(err) {
-        return reject(err);
-      }
-      return resolve();
-    });
-  });
+  return gitClonePromisify(repo, './tmp', { branch })
 }
 
 

@@ -1,9 +1,9 @@
 const { log } = console;
 const chalk = require('chalk');
-const inquirer = require('inquirer');
 const gitclone = require('../utils/gitclone');
+const fancyLog = require('../utils/fancyLog');
 const { nodeConfig } = require('../config/back-end.config');
-const { copyJob, copyFolderRecursiveSync, deleteFolderRecursive } = require('../utils/copy');
+const { copyJob, deleteFolderRecursive } = require('../utils/copy');
 
 const questions = [
   {
@@ -31,18 +31,18 @@ function getQuestions() {
   return questions;
 }
 
-async function copyBaseProject(){
+async function copyBaseProject() {
   const { baseProject } = nodeConfig;
   const { repository, branch } = baseProject;
   log(chalk`{blue 🔗 Clone backend verion: {yellow.bold ${branch}}}`);
   await gitclone(repository, branch);
   log(chalk`Copy files form repo.`);
   const copyJobs = [
-    { source: `./tmp/backend`, destination: './', type: 'folder' },
-    { source: `./tmp/.digipolis.json`, destination: './', type: 'file' },
-    { source: `./tmp/docker-compose.ci.yml`, destination: './', type: 'file' },
-    { source: `./tmp/docker-compose.yml`, destination: './', type: 'file' },
-    { source: `./tmp/Dockerfile`, destination: './', type: 'file' },
+    { source: './tmp/backend', destination: './', type: 'folder' },
+    { source: './tmp/.digipolis.json', destination: './', type: 'file' },
+    { source: './tmp/docker-compose.ci.yml', destination: './', type: 'file' },
+    { source: './tmp/docker-compose.yml', destination: './', type: 'file' },
+    { source: './tmp/Dockerfile', destination: './', type: 'file' },
   ];
   await copyJob(copyJobs);
   log(chalk`{green Done. }`);
@@ -52,27 +52,13 @@ async function copyBaseProject(){
 }
 
 async function start(options) {
-  log(chalk`
-------------------------------------------------
-------------- {yellow.bold 🔨 Setup node.js} -----------------
-------------------------------------------------
-`);
-
-  let backedOptions =  options;
-  try{
+  fancyLog('yellow.bold', '🔨 Setup node.js');
+  try {
     await copyBaseProject();
-    log(chalk`
-------------------------------------------------
----------- {yellow.bold ✅ Setup node.js done} ---------------
-------------------------------------------------
-`);
+    fancyLog('yellow.bold', '✅ Setup node.js done}');
   } catch (e) {
-  log(chalk`
-------------------------------------------------
---------- {red.bold ❗️ Setup node.js failed} --------------
-------------------------------------------------
-`);
-    log('error:', e );
+    fancyLog('red.bold', '❗️ Setup node.js failed');
+    log('error:', e);
   }
 }
 
