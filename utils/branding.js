@@ -6,7 +6,7 @@ const brandings = {
     npm: ['@a-ui/core'],
     version: '0',
     type: 'core',
-    key: 'default',
+    key: 'Antwerp',
   },
   Digipolis: {
     cdn: 'digipolis_branding_scss',
