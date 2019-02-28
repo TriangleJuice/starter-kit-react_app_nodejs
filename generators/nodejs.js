@@ -12,8 +12,8 @@ const questions = [
     message: 'Which DB would you like?',
     choices: [
       { value: 'mongodb', name: 'MongoDB' },
-      { value: 'postgres', name: 'Postgres' },
-      { value: undefined, name: 'I don`t need a database' },
+      { value: 'postgres', name: 'PostgreSQL' },
+      { value: undefined, name: 'I don\'t need a database' },
     ],
   },
   {

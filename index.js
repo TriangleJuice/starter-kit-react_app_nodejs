@@ -12,8 +12,8 @@ const { log } = console;
 const { mapBranding } = require('./utils/branding');
 
 global.__basedir = __dirname;
-global.__frontenddir = `${__dirname}/frontend`;
-global.__backenddir = `${__dirname}/backend`;
+global.__frontenddir = `./frontend`;
+global.__backenddir = `./backend`;
 /**
  * Define command flags
  */
@@ -22,11 +22,12 @@ program
   .usage('[options]')
   .option('-b, --branding <branding>', 'Branding (Antwerp, Digipolis or ACPaaS)', /^(antwerp|digipolis|acpaas)$/i, 'Antwerp')
   .option('-F, --no-flexboxgrid', 'Don\'t use the Flexbox grid')
+  .option('-R, --no-routing', 'Don\'t add basic routing')
   .option('-S, --no-setup', 'Skip setup questions')
-  .option('-f, --frontend <frontend>', 'frontend')
-  .option('-b, --backend <backend>', 'backend')
-  .option('-t, --tesing <testing>', 'testing mocha|jest')
-  .option('-d, --database <database>', 'database mongodb|postgres')
+  .option('-f, --frontend <frontend>', 'Frontend framework (React or Angular)', /^(react|angular)$/i, 'React')
+  .option('-b, --backend <backend>', 'Backend framework (Node.js, .NET Core or none)', /^(nodejs|dotnet)$/i, 'Node.js')
+  .option('-t, --testing <testing>', 'Testing (Mocha or Jest)', /^(mocha|jest)$/i, 'Mocha')
+  .option('-d, --database <database>', 'Database (MongoDB or PostgreSQL)', /^(mongodb|postgres)$/i, 'MongoDB')
   .parse(process.argv);
 
 /**

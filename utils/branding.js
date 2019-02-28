@@ -1,26 +1,26 @@
 const package = require('./package');
 
 const brandings = {
-  ACPaaS: {
-    cdn: 'acpaas_branding_scss',
-    npm: ['@a-ui/core', '@a-ui/acpaas'],
-    version: 0,
-    type: 'acpaas',
-    key: 'ACPaaS',
+  Antwerp: {
+    cdn: 'core_branding_scss',
+    npm: ['@a-ui/core'],
+    version: '0',
+    type: 'core',
+    key: 'default',
   },
   Digipolis: {
     cdn: 'digipolis_branding_scss',
     npm: ['@a-ui/core', '@a-ui/digipolis'],
-    version: '3.0.2',
+    version: '0',
     type: 'digipolis',
     key: 'Digipolis',
   },
-  Antwerp: {
-    cdn: 'core_branding_scss',
-    npm: ['@a-ui/core'],
-    version: '3.0.3',
-    type: 'core',
-    key: 'default',
+  ACPaaS: {
+    cdn: 'acpaas_branding_scss',
+    npm: ['@a-ui/core', '@a-ui/acpaas'],
+    version: '0',
+    type: 'acpaas',
+    key: 'ACPaaS',
   },
 };
 

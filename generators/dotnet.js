@@ -3,7 +3,7 @@ const chalk = require('chalk');
 
 
 async function start(options) {
-  log(chalk.green.bold('.net not yet implemented 🙄'));
+  log(chalk.green.bold('.NET Core is not yet implemented 🙄'));
 }
 
 module.exports = {
