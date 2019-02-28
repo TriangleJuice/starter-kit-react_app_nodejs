@@ -4,25 +4,25 @@ const { mapBranding, brandings } = require('../utils/branding');
  * Define questionnaire questions
  */
 const questions = [
-  {
-    type: 'list',
-    name: 'backend',
-    message: 'Which BFF technology would you like?',
-    choices: [
-      { value: 'nodejs', name: 'Node.js' },
-      { value: 'dotnet', name: '.NET Core' },
-      { value: undefined, name: 'I don\'t need a BFF' },
-    ],
-  },
-  {
-    type: 'list',
-    name: 'frontend',
-    message: 'Which frontend framework would you like?',
-    choices: [
-      { value: 'angular', name: 'Angular' },
-      { value: 'react', name: 'React' },
-    ],
-  },
+  // {
+  //   type: 'list',
+  //   name: 'backend',
+  //   message: 'Which BFF technology would you like?',
+  //   choices: [
+  //     { value: 'nodejs', name: 'Node.js' },
+  //     { value: 'dotnet', name: '.NET Core' },
+  //     { value: undefined, name: 'I don\'t need a BFF' },
+  //   ],
+  // },
+  // {
+  //   type: 'list',
+  //   name: 'frontend',
+  //   message: 'Which frontend framework would you like?',
+  //   choices: [
+  //     { value: 'angular', name: 'Angular' },
+  //     { value: 'react', name: 'React' },
+  //   ],
+  // },
   {
     type: 'list',
     name: 'branding',
