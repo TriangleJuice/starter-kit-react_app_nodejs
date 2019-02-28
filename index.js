@@ -10,6 +10,7 @@ const questions = require('./config/questions');
 
 const { log } = console;
 const { mapBranding } = require('./utils/branding');
+
 global.__basedir = __dirname;
 global.__frontenddir = `./frontend`;
 global.__backenddir = `./backend`;
@@ -41,7 +42,6 @@ function finishInstall() {
  * First check if the starter app was intended to run on its own.
  */
 async function run() {
-
   log(chalk.blue.bold(`==============================================
 Welcome to the Digipolis starter kit! (v${pjson.version})
 ==============================================`));

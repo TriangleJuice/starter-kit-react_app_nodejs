@@ -6,11 +6,6 @@
     "node",
     "mocha"
   ],
-  "globals": {
-    "__basedir": "writable",
-    "__frontenddir": "writable",
-    "__backenddir": "writable",
-  }
   "env": {
     "node": true,
     "mocha": true,
@@ -23,11 +18,15 @@
   },
   "rules" : {
     "no-use-before-define": 0,
+    "no-underscore-dangle": 0,
     "class-methods-use-this": ["off"],
     "no-console": ["error", { "allow": ["log", "info", "warn", "error"]  }],
     "max-len": ["error", 150]
   },
   "globals": {
+    "__basedir": "writable",
+    "__frontenddir": "writable",
+    "__backenddir": "writable",
     "base": false,
     "expect": false,
     "nock": false,

@@ -18,7 +18,7 @@ function copyFolderRecursiveSync(source, target) {
   let files = [];
 
   // Check if folder needs to be created or integrated
-  let targetFolder = path.join(target, path.basename(source));
+  const targetFolder = path.join(target, path.basename(source));
   if (!fs.existsSync(targetFolder)) {
     fs.mkdirSync(targetFolder);
   }
@@ -26,8 +26,8 @@ function copyFolderRecursiveSync(source, target) {
   // Copy
   if (fs.lstatSync(source).isDirectory()) {
     files = fs.readdirSync(source);
-    files.forEach(function (file) {
-      let curSource = path.join(source, file);
+    files.forEach((file) => {
+      const curSource = path.join(source, file);
       if (fs.lstatSync(curSource).isDirectory()) {
         copyFolderRecursiveSync(curSource, targetFolder);
       } else {
@@ -36,5 +36,32 @@ function copyFolderRecursiveSync(source, target) {
     });
   }
 }
+function deleteFolderRecursive(folderpath) {
+  if (fs.existsSync(folderpath)) {
+    fs.readdirSync(folderpath).forEach((file) => {
+      const curPath = `${folderpath}/${file}`;
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(folderpath);
+  }
+}
 
-module.exports.copyFolderRecursiveSync = copyFolderRecursiveSync;
+function copyJob(jobs) {
+  const promiseArray = jobs.map(({ source, destination, type }) => {
+    if (type === 'folder') {
+      return copyFolderRecursiveSync(source, destination);
+    }
+    return copyFileSync(source, destination);
+  });
+  return Promise.all(promiseArray);
+}
+
+module.exports = {
+  copyFolderRecursiveSync,
+  copyJob,
+  deleteFolderRecursive,
+};
