@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.1.0] - 2019-02-28
 
 ### Added
-- Added possiblity to choose for routing
+- Added possibility to choose for routing
 
 
 ## [1.0.0] - 2019-01-28
