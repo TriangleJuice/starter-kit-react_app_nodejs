@@ -1,8 +1,7 @@
 import React from 'react';
 import './Home.scss';
 
-const home = (prop) => {
-	return (
+const home = prop => (
     <div>
 		  <h2 className="h4 u-margin-top">Handy resources:</h2>
       <ul className="a-list">
@@ -11,7 +10,6 @@ const home = (prop) => {
         <li>Core Branding: <a href="https://a-ui.github.io/core_branding_scss/" target="_blank" rel="noopener noreferrer" className="has-icon-right">https://a-ui.github.io/core_branding_scss/<i className="fa fa-external-link"></i></a></li>
       </ul>
     </div>
-	);
-}
+);
 
 export default home;

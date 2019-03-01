@@ -7,66 +7,61 @@ const requireDir = require('require-dir');
 const generators = requireDir('./generators');
 const pjson = require('./package.json');
 const questions = require('./config/questions');
+const options = require('./config/options');
 
 const { log } = console;
 const { mapBranding } = require('./utils/branding');
+const fancyLog = require('./utils/fancyLog');
 
 global.__basedir = __dirname;
-global.__frontenddir = `./frontend`;
-global.__backenddir = `./backend`;
-/**
- * Define command flags
- */
-program
-  .version(pjson.version)
-  .usage('[options]')
-  .option('-b, --branding <branding>', 'Branding (Antwerp, Digipolis or ACPaaS)', /^(Antwerp|Digipolis|ACPaaS)$/i, 'Antwerp')
-  .option('-F, --no-flexboxgrid', 'Don\'t use the Flexbox grid')
-  .option('-R, --no-routing', 'Don\'t add basic routing')
-  .option('-S, --no-setup', 'Skip setup questions')
-  .option('-f, --frontend <frontend>', 'Frontend framework (React or Angular)', /^(react|angular)$/i, 'react')
-  .option('-b, --backend <backend>', 'Backend framework (Node.js, .NET Core or none)', /^(nodejs|dotnet)$/i, 'nodejs')
-  .option('-t, --testing <testing>', 'Testing (Mocha or Jest)', /^(mocha|jest)$/i, 'Mocha')
-  .option('-d, --database <database>', 'Database (MongoDB or PostgreSQL)', /^(mongodb|postgres)$/i, 'mongodb')
-  .parse(process.argv);
+global.__frontenddir = './frontend';
+global.__backenddir = './backend';
 
-/**
- * Clean up and finish installation.
- */
-function finishInstall() {
+
+// Run commander with generator options
+options();
+
+function finishInstallation() {
   log(chalk.white.bold(`Now run ${chalk.cyan.bold('npm start')} in your frontend directory.`));
 }
 
+async function askQuestions() {
+  let config = await inquirer.prompt(questions);
+  const { frontend, backend } = config;
+  if (config.backend && generators[backend].getQuestions) {
+    const backendConfig = await inquirer.prompt(generators[backend].getQuestions());
+    config = Object.assign({}, config, backendConfig);
+  }
+  if (config.frontend && generators[frontend].getQuestions) {
+    const frontendConfig = await inquirer.prompt(generators[frontend].getQuestions());
+    config = Object.assign({}, config, frontendConfig);
+  }
+  return config;
+}
 /**
  * Go!
  * First check if the starter app was intended to run on its own.
  */
 async function run() {
-  log(chalk.blue.bold(`==============================================
-Welcome to the Digipolis starter kit! (v${pjson.version})
-==============================================`));
+  fancyLog('blue.bold', `Welcome to the Digipolis starter kit! (v${pjson.version})`, '=');
   if (program.setup) {
-    const config = await inquirer.prompt(questions);
+    const config = await askQuestions();
     const { frontend, backend } = config;
-    if (frontend) {
-      await generators[frontend].start(config);
-    } else {
-      await generators['react'].start(config);
-    }
-    if (backend) {
-      await generators[backend].start(config);
-    }
-    finishInstall();
+
+    if (frontend) await generators[frontend].start(config);
+    if (backend) await generators[backend].start(config);
+
+    finishInstallation();
   } else {
     program.branding = await mapBranding(program.branding);
     const config = program;
     config.noSetup = true;
     const { frontend, backend } = config;
-    await generators[frontend].start(config);
-    if (backend) {
-      await generators[backend].start(config);
-    }
-    finishInstall();
+
+    if (frontend) await generators[frontend].start(config);
+    if (backend) await generators[backend].start(config);
+
+    finishInstallation();
   }
 }
 
