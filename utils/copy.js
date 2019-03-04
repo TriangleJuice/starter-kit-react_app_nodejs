@@ -49,7 +49,14 @@ function deleteFolderRecursive(folderpath) {
     fs.rmdirSync(folderpath);
   }
 }
-
+function deleteFile(filepath) {
+  try {
+    return fs.unlinkSync(filepath);
+  } catch (e) {
+    console.log('deleteFile error:', e);
+    throw e;
+  }
+}
 function copyJob(jobs) {
   const promiseArray = jobs.map(({ source, destination, type }) => {
     if (type === 'folder') {
@@ -63,5 +70,6 @@ function copyJob(jobs) {
 module.exports = {
   copyFolderRecursiveSync,
   copyJob,
+  deleteFile,
   deleteFolderRecursive,
 };
