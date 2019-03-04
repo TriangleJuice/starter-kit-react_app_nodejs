@@ -5,6 +5,20 @@ const fancyLog = require('../utils/fancyLog');
 const { nodeConfig } = require('../config/back-end.config');
 const { copyJob, deleteFolderRecursive } = require('../utils/copy');
 
+const options = [
+  {
+    param: '-t, --testing <testing>',
+    description: 'Testing (Mocha or Jest)',
+    validation: /^(mocha|jest)$/i,
+    fallback: 'Mocha',
+  },
+  {
+    param: '-d, --database <database>',
+    description: 'Database (MongoDB or PostgreSQL)',
+    validation: /^(mongodb|postgres)$/i,
+    fallback: 'mongodb',
+  },
+];
 const questions = [
   {
     type: 'list',
@@ -29,6 +43,10 @@ const questions = [
 
 function getQuestions() {
   return questions;
+}
+
+function getOptions() {
+  return options;
 }
 
 async function copyBaseProject() {
@@ -63,6 +81,7 @@ async function start(options) {
 }
 
 module.exports = {
-  start,
+  getOptions,
   getQuestions,
+  start,
 };

@@ -6,8 +6,59 @@ const { copyFolderRecursiveSync } = require('../utils/copy');
 const { deleteFolderSync } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
 const { showError } = require('../utils/error');
+const { mapBranding, brandings } = require('../utils/branding');
 const { mapRouting, routingReplaceOptions, asyncForEach } = require('../utils/routing');
 const frontEndConfig = require('../config/front-end.config');
+
+const options = [
+  {
+    param: '-b, --branding <branding>',
+    description: 'Branding (Antwerp, Digipolis or ACPaaS)',
+    validation: /^(Antwerp|Digipolis|ACPaaS)$/i,
+    fallback: 'Antwerp',
+  },
+  {
+    param: '-F, --no-flexboxgrid',
+    description: 'Don\'t use the Flexbox grid',
+  },
+  {
+    param: '-R, --no-routing',
+    description: 'Don\'t add basic routing',
+  },
+  {
+    param: '-R, --no-routing',
+    description: 'Don\'t add basic routing',
+  },
+];
+const questions = [
+  {
+    type: 'list',
+    name: 'branding',
+    message: 'Which branding do you want to use?',
+    choices: Object.keys(brandings),
+    filter: mapBranding,
+  },
+  {
+    type: 'confirm',
+    name: 'flexboxgrid',
+    message: 'Do you want to use the Flexbox grid?',
+    default: true,
+  },
+  {
+    type: 'confirm',
+    name: 'routing',
+    message: 'Do you want to add basic routing?',
+    default: true,
+  },
+];
+
+function getQuestions() {
+  return questions;
+}
+
+function getOptions() {
+  return options;
+}
 
 /**
  * Run the create-react-app command.
@@ -71,7 +122,7 @@ async function createStarterTemplate(config) {
     if (config.routing.add) {
       await asyncForEach(routingReplaceOptions, async (option) => {
         await replace(option);
-      })
+      });
     } else {
       await deleteFolderSync('frontend/src/components/About');
     }
@@ -95,5 +146,7 @@ async function start(config) {
 }
 
 module.exports = {
+  getOptions,
+  getQuestions,
   start,
 };
