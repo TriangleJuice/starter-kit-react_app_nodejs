@@ -1,7 +1,7 @@
 
 /**
  * Define general questionnaire questions
- * Framework spesific question are defined on the generator level
+ * Framework specific questions are defined on the generator level
  */
 const questions = [
   {
