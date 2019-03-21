@@ -25,10 +25,6 @@ const options = [
     param: '-R, --no-routing',
     description: 'Don\'t add basic routing',
   },
-  {
-    param: '-R, --no-routing',
-    description: 'Don\'t add basic routing',
-  },
 ];
 const questions = [
   {
@@ -87,7 +83,8 @@ Installing ACPaaS UI...`));
 
   try {
     await execPromise('npm', ['install', '--prefix', './frontend', '--save-dev', 'node-sass']);
-    await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components'].concat(config.branding.npm).concat(config.routing.npm));
+    await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components']
+      .concat(config.branding.npm).concat(config.routing.npm));
     log(chalk.blue(`
 Done`));
   } catch (e) {
@@ -133,13 +130,14 @@ async function createStarterTemplate(config) {
 }
 
 async function start(config) {
-  config.routing = mapRouting(config.routing);
+  const configuration = Object.assign({}, config);
+  configuration.routing = mapRouting(configuration.routing);
   log(chalk.green.bold('Preparing...'));
   try {
     await deleteFolderSync('frontend');
-    await installReact(config);
-    await installACPaaSUI(config);
-    await createStarterTemplate(config);
+    await installReact(configuration);
+    await installACPaaSUI(configuration);
+    await createStarterTemplate(configuration);
   } catch (e) {
     showError(e);
   }
