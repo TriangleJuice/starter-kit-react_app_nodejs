@@ -8,6 +8,10 @@ const generatorNames = Object.keys(generators);
 
 const generalOptions = [
   {
+    param: '-D, --debug ',
+    description: 'debug',
+  },
+  {
     param: '-S, --no-setup',
     description: 'Skip setup questions',
   },

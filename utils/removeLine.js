@@ -1,4 +1,5 @@
 const fs = require('fs');
+const debug = require('./debug');
 
 function removeMatchedLines(file, match) {
   return new Promise((resolve, reject) => {
@@ -17,7 +18,7 @@ function removeMatchedLines(file, match) {
       const updatedData = dataArray.join('\n');
       fs.writeFile(file, updatedData, (error) => {
         if (err) reject(error);
-        console.log('Successfully updated the file data');
+        debug.logger('Successfully updated the file data');
         return resolve();
       });
     });

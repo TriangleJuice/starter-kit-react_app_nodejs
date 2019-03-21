@@ -12,6 +12,7 @@ const options = require('./config/options');
 const { log } = console;
 const { mapBranding } = require('./utils/branding');
 const fancyLog = require('./utils/fancyLog');
+const debug = require('./utils/debug');
 
 global.__basedir = __dirname;
 global.__frontenddir = './frontend';
@@ -46,6 +47,9 @@ async function run() {
   fancyLog('blue.bold', `Welcome to the Digipolis starter kit! (v${pjson.version})`, '=');
   if (program.setup) {
     const config = await askQuestions();
+    if (program.debug) {
+      debug.enable();
+    }
     const { frontend, backend } = config;
 
     if (frontend) await generators[frontend].start(config);
@@ -57,7 +61,6 @@ async function run() {
     const config = program;
     config.noSetup = true;
     const { frontend, backend } = config;
-
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);
 

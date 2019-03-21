@@ -2,6 +2,7 @@ const { log } = console;
 const chalk = require('chalk');
 const gitclone = require('../utils/gitclone');
 const fancyLog = require('../utils/fancyLog');
+const debug = require('../utils/debug');
 const { nodeConfig } = require('../config/back-end.config');
 const removeMatchedLines = require('../utils/removeLine');
 const { copyJob, deleteFile, deleteFolderRecursive } = require('../utils/copy');
@@ -83,13 +84,14 @@ async function copyBaseProject() {
 }
 
 async function setDB(db) {
-  if (db === 'mongo') {
-    log(chalk`{yellow.bold MongoDB is the default. Nothing to replace }`);
+  if (db === 'mongodb') {
+    log(chalk`{yellow.bold Installing MongoDB }`);
+    debug.logger('MongoDB is the default. Nothing to replace');
   } else {
-    log(chalk`{yellow.bold Remove DB files}`);
+    debug.logger('Remove DB files');
     deleteFile('./backend/src/helpers/db.helper.js');
     deleteFile('./backend/src/routes/example.router.js');
-    log(chalk`remove db references`);
+    debug.logger('remove db references');
     deleteFolderRecursive('./backend/src/models');
     await removeMatchedLines('./backend/src/app.js', 'initializeDatabase');
     await removeMatchedLines('./backend/src/routes/api.router.js', 'example');
@@ -99,11 +101,12 @@ async function setDB(db) {
 
 async function setAuth(auth) {
   if (auth) {
-    log(chalk`{yellow.bold Auth is included. Nothing to replace }`);
+    log(chalk`{yellow.bold Installing Auth endpoints }`);
+    debug.logger('Auth is included. Nothing to replace');
   } else {
-    log(chalk`{yellow.bold Remove Auth files}`);
+    debug.logger('Remove Auth files');
     deleteFile('./backend/src/routes/auth.router.js');
-    log(chalk`remove auth references`);
+    debug.logger('remove auth references');
     deleteFolderRecursive('./backend/src/models');
     await removeMatchedLines('./backend/src/routes/index.js', 'setupAuthRoutes');
     await removeMatchedLines('./backend/package.json', '@digipolis/auth');
