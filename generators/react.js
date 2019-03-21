@@ -130,7 +130,7 @@ async function createStarterTemplate(config) {
 }
 
 async function start(config) {
-  const configuration = Object.assing({}, config);
+  const configuration = Object.assign({}, config);
   configuration.routing = mapRouting(configuration.routing);
   log(chalk.green.bold('Preparing...'));
   try {
