@@ -2,12 +2,12 @@ const chalk = require('chalk');
 const replace = require('replace-in-file');
 
 const { log } = console;
-const { copyFolderRecursiveSync, deleteFile } = require('../utils/copy');
-const { deleteFolderSync } = require('../utils/delete');
+const { copyFolderRecursiveSync } = require('../utils/copy');
+const { deleteFolderSync, deleteFile } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
 const { showError } = require('../utils/error');
 const { mapBranding, brandings } = require('../utils/branding');
-const { mapRouting, routingReplaceOptions, loginRoutingReplaceOptions, asyncForEach } = require('../utils/routing');
+const { mapRouting, routingReplaceOptions, loginReplaceOptions, loginRoutingReplaceOptions, asyncForEach } = require('../utils/routing');
 const frontEndConfig = require('../config/front-end.config');
 
 const options = [
@@ -41,17 +41,15 @@ const questions = [
     message: 'Do you want to use the Flexbox grid?',
     default: true,
   },
+  {
+    type: 'confirm',
+    name: 'routing',
+    message: 'Do you want to add basic routing?',
+    default: true,
+  }
 ];
 
-function getQuestions(auth) {
-  if (!auth) {
-    questions.push({
-      type: 'confirm',
-      name: 'routing',
-      message: 'Do you want to add basic routing?',
-      default: true,
-    });
-  }
+function getQuestions() {
   return questions;
 }
 
@@ -65,7 +63,8 @@ function getOptions(auth) {
 */
 
 async function installReact() {
-  log(chalk.green.bold('Installing React...'));
+  log(chalk.green.bold(`
+Installing React...`));
 
   try {
     await execPromise('npx', ['create-react-app', 'frontend']);
@@ -88,8 +87,6 @@ Installing ACPaaS UI...`));
     await execPromise('npm', ['install', '--prefix', './frontend', '--save-dev', 'node-sass']);
     await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components']
       .concat(config.branding.npm).concat(config.routing.npm));
-    log(chalk.blue(`
-Done`));
   } catch (e) {
     showError(e);
   }
@@ -103,7 +100,8 @@ Done`));
  */
 
 async function createStarterTemplate(config) {
-  log(chalk.green.bold('Creating starter template...'));
+  log(chalk.green.bold(`
+Creating starter template...`));
   const branding = await frontEndConfig.branding.generateLinkTag(config.branding);
   const flexboxGrid = config.flexboxgrid ? frontEndConfig.flexbox.link : '';
 
@@ -129,13 +127,19 @@ async function createStarterTemplate(config) {
     }
 
     if (config.auth) {
-      await asyncForEach(loginRoutingReplaceOptions, async (option) => {
-        await replace(option);
-      });
+      if (config.routing.add) {
+        await asyncForEach(loginRoutingReplaceOptions, async (option) => {
+          await replace(option);
+        });
+      } else {
+        await asyncForEach(loginReplaceOptions, async (option) => {
+          await replace(option);
+        });
+      }
     } else {
       await deleteFile('frontend/src/setupProxy.js');
+      await deleteFolderSync('frontend/src/components/Login');
     }
-    log(chalk.blue('Done'));
   } catch (e) {
     showError(e);
   }
@@ -144,12 +148,15 @@ async function createStarterTemplate(config) {
 async function start(config) {
   const configuration = Object.assign({}, config);
   configuration.routing = mapRouting(configuration);
-  log(chalk.green.bold('Preparing...'));
+  log(chalk.green.bold(`
+Preparing...`));
   try {
     await deleteFolderSync('frontend');
     await installReact(configuration);
     await installACPaaSUI(configuration);
     await createStarterTemplate(configuration);
+    log(chalk.cyan.bold(`
+Done with front-end setup`));
   } catch (e) {
     showError(e);
   }

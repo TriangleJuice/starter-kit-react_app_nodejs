@@ -36,27 +36,7 @@ function copyFolderRecursiveSync(source, target) {
     });
   }
 }
-function deleteFolderRecursive(folderpath) {
-  if (fs.existsSync(folderpath)) {
-    fs.readdirSync(folderpath).forEach((file) => {
-      const curPath = `${folderpath}/${file}`;
-      if (fs.lstatSync(curPath).isDirectory()) { // recurse
-        deleteFolderRecursive(curPath);
-      } else { // delete file
-        fs.unlinkSync(curPath);
-      }
-    });
-    fs.rmdirSync(folderpath);
-  }
-}
-function deleteFile(filepath) {
-  try {
-    return fs.unlinkSync(filepath);
-  } catch (e) {
-    console.log('deleteFile error:', e);
-    throw e;
-  }
-}
+
 function copyJob(jobs) {
   const promiseArray = jobs.map(({ source, destination, type }) => {
     if (type === 'folder') {
@@ -70,6 +50,4 @@ function copyJob(jobs) {
 module.exports = {
   copyFolderRecursiveSync,
   copyJob,
-  deleteFile,
-  deleteFolderRecursive,
 };

@@ -13,16 +13,16 @@ const questions = [
       { value: undefined, name: 'I don\'t need a BFF' },
     ],
   },
-  {
-    type: 'list',
-    name: 'frontend',
-    message: 'Which frontend framework would you like?',
-    choices: [
-      { value: 'angular', name: 'Angular' },
-      { value: 'react', name: 'React' },
-    ],
-    default: 'react',
-  },
+  // {
+  //   type: 'list',
+  //   name: 'frontend',
+  //   message: 'Which frontend framework would you like?',
+  //   choices: [
+  //     { value: 'angular', name: 'Angular' },
+  //     { value: 'react', name: 'React' },
+  //   ],
+  //   default: 'react',
+  // },
 ];
 
 module.exports = questions;

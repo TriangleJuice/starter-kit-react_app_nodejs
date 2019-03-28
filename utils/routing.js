@@ -42,6 +42,59 @@ import { Link, Route, Switch } from "react-router-dom";`,
   },
 ];
 
+const loginReplaceOptions = [
+  {
+    files: './frontend/src/App.js',
+    from: 'Footer,',
+    to: `Footer,
+  UserMenu,`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: 'class App extends Component {',
+    to: `class App extends Component {
+  state = {
+    isLoggedin: false,
+    user: undefined,
+  }
+
+  componentDidMount() {
+    fetch('/auth/isloggedin')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw Error('Request rejected with status ' + response.status);
+        }
+      })
+      .then(data => this.setState({ isLoggedin: data.isLoggedin, user: data.user }))
+      .catch(console.error);
+  }
+
+  goToLogin = () => {
+    if (!this.state.isLoggedin) {
+      window.location.href = '/auth/login/mprofiel';
+    }
+  }
+`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: '<Header />',
+    to: `<Header>
+            <div className="m-button-group">
+              <div onClick={this.goToLogin}>
+                <UserMenu
+                  user={this.state.user}
+                  loggedIn={this.state.isLoggedin}
+                  logoutUrl="/auth/logout/callback/mprofiel">
+                </UserMenu>
+              </div>
+            </div>
+          </Header>`,
+  },
+];
+
 const loginRoutingReplaceOptions = [
   {
     files: './frontend/src/App.js',
@@ -115,8 +168,7 @@ import Login from './components/Login/Login';`,
 ];
 
 mapRouting = (conf) => {
-  // Routing will always be added if authentication === true
-  if (!conf.routing && !conf.auth) {
+  if (!conf.routing) {
     return {
       add: false,
       npm: [],
@@ -136,6 +188,7 @@ async function asyncForEach(array, callback) {
 
 module.exports = {
   routingReplaceOptions,
+  loginReplaceOptions,
   loginRoutingReplaceOptions,
   mapRouting,
   asyncForEach,

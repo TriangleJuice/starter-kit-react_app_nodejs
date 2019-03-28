@@ -24,21 +24,27 @@ options();
 
 function finishInstallation(config) {
   if (config.backend) {
-    log(chalk.white.bold(`Now run ${chalk.cyan.bold('npm start')} in both your backend and frontend directory.`));
+    log(chalk.white.bold(`
+✅ ${chalk.green.bold('Done!')} Now run ${chalk.cyan.bold('npm start')} in both your backend and frontend directory.
+`));
   } else {
-    log(chalk.white.bold(`Now run ${chalk.cyan.bold('npm start')} in your frontend directory.`));
+    log(chalk.white.bold(`
+✅ ${chalk.green.bold('Done!')} Now run ${chalk.cyan.bold('npm start')} in your frontend directory.
+`));
   }
 }
 
 async function askQuestions() {
   let config = await inquirer.prompt(questions);
+  // Remove this line when activating front-end choices
+  config.frontend = 'react';
   const { frontend, backend } = config;
   if (config.backend && generators[backend].getQuestions) {
     const backendConfig = await inquirer.prompt(generators[backend].getQuestions());
     config = Object.assign({}, config, backendConfig);
   }
   if (config.frontend && generators[frontend].getQuestions) {
-    const frontendConfig = await inquirer.prompt(generators[frontend].getQuestions(config.auth));
+    const frontendConfig = await inquirer.prompt(generators[frontend].getQuestions());
     config = Object.assign({}, config, frontendConfig);
   }
   return config;
@@ -48,7 +54,7 @@ async function askQuestions() {
  * First check if the starter app was intended to run on its own.
  */
 async function run() {
-  fancyLog('blue.bold', `Welcome to the Digipolis starter kit! (v${pjson.version})`, '=');
+  fancyLog('cyan.bold', `Welcome to the Digipolis starter kit! (v${pjson.version})`, '=');
   if (program.setup) {
     const config = await askQuestions();
     if (program.debug) {
