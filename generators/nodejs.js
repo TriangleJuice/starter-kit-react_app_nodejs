@@ -1,5 +1,6 @@
 const { log } = console;
 const chalk = require('chalk');
+const { execPromise } = require('../utils/exec');
 const gitclone = require('../utils/gitclone');
 const fancyLog = require('../utils/fancyLog');
 const debug = require('../utils/debug');
@@ -21,14 +22,14 @@ const generatorOptions = [
     fallback: 'mongodb',
   },
   {
-    param: '-A, --auth',
-    description: 'Add basic /auth routing',
+    param: '-A, --no-auth',
+    description: 'Don\'t add basic authentication',
   },
 ];
 const questions = [
   {
     type: 'list',
-    name: 'db',
+    name: 'database',
     message: 'Which DB would you like?',
     choices: [
       { value: 'mongodb', name: 'MongoDB' },
@@ -38,7 +39,7 @@ const questions = [
   },
   {
     type: 'list',
-    name: 'testingFramework',
+    name: 'testing',
     message: 'Which testing framework would you like?',
     choices: [
       { value: 'mocha', name: 'Mocha' },
@@ -112,12 +113,18 @@ async function setAuth(auth) {
     await removeMatchedLines('./backend/package.json', '@digipolis/auth');
   }
 }
+
+async function installPackages() {
+  await execPromise('npm', ['install', '--prefix', './backend']);
+}
+
 async function start(options) {
   fancyLog('yellow.bold', '🔨 Setup node.js');
   try {
     await copyBaseProject();
-    await setDB(options.db);
+    await setDB(options.database);
     await setAuth(options.auth);
+    await installPackages();
     fancyLog('yellow.bold', '✅ Setup node.js done');
   } catch (e) {
     fancyLog('red.bold', '❗️ Setup node.js failed');

@@ -22,8 +22,12 @@ global.__backenddir = './backend';
 // Run commander with generator options
 options();
 
-function finishInstallation() {
-  log(chalk.white.bold(`Now run ${chalk.cyan.bold('npm start')} in your frontend directory.`));
+function finishInstallation(config) {
+  if (config.backend) {
+    log(chalk.white.bold(`Now run ${chalk.cyan.bold('npm start')} in both your backend and frontend directory.`));
+  } else {
+    log(chalk.white.bold(`Now run ${chalk.cyan.bold('npm start')} in your frontend directory.`));
+  }
 }
 
 async function askQuestions() {
@@ -34,7 +38,7 @@ async function askQuestions() {
     config = Object.assign({}, config, backendConfig);
   }
   if (config.frontend && generators[frontend].getQuestions) {
-    const frontendConfig = await inquirer.prompt(generators[frontend].getQuestions());
+    const frontendConfig = await inquirer.prompt(generators[frontend].getQuestions(config.auth));
     config = Object.assign({}, config, frontendConfig);
   }
   return config;
@@ -51,20 +55,25 @@ async function run() {
       debug.enable();
     }
     const { frontend, backend } = config;
+    // console.log(config);
 
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);
 
-    finishInstallation();
+    finishInstallation(config);
   } else {
     program.branding = await mapBranding(program.branding);
     const config = program;
-    config.noSetup = true;
+    if (program.debug) {
+      debug.enable();
+    }
     const { frontend, backend } = config;
+    // console.log(config);
+
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);
 
-    finishInstallation();
+    finishInstallation(config);
   }
 }
 

@@ -2,12 +2,12 @@ const chalk = require('chalk');
 const replace = require('replace-in-file');
 
 const { log } = console;
-const { copyFolderRecursiveSync } = require('../utils/copy');
+const { copyFolderRecursiveSync, deleteFile } = require('../utils/copy');
 const { deleteFolderSync } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
 const { showError } = require('../utils/error');
 const { mapBranding, brandings } = require('../utils/branding');
-const { mapRouting, routingReplaceOptions, asyncForEach } = require('../utils/routing');
+const { mapRouting, routingReplaceOptions, loginRoutingReplaceOptions, asyncForEach } = require('../utils/routing');
 const frontEndConfig = require('../config/front-end.config');
 
 const options = [
@@ -26,6 +26,7 @@ const options = [
     description: 'Don\'t add basic routing',
   },
 ];
+
 const questions = [
   {
     type: 'list',
@@ -40,19 +41,21 @@ const questions = [
     message: 'Do you want to use the Flexbox grid?',
     default: true,
   },
-  {
-    type: 'confirm',
-    name: 'routing',
-    message: 'Do you want to add basic routing?',
-    default: true,
-  },
 ];
 
-function getQuestions() {
+function getQuestions(auth) {
+  if (!auth) {
+    questions.push({
+      type: 'confirm',
+      name: 'routing',
+      message: 'Do you want to add basic routing?',
+      default: true,
+    });
+  }
   return questions;
 }
 
-function getOptions() {
+function getOptions(auth) {
   return options;
 }
 
@@ -114,14 +117,23 @@ async function createStarterTemplate(config) {
 
   try {
     await replace(brandingReplaceOption);
-    await copyFolderRecursiveSync(`${__basedir}/files/public`, __frontenddir);
+
     await copyFolderRecursiveSync(`${__basedir}/files/src`, __frontenddir);
+
     if (config.routing.add) {
       await asyncForEach(routingReplaceOptions, async (option) => {
         await replace(option);
       });
     } else {
       await deleteFolderSync('frontend/src/components/About');
+    }
+
+    if (config.auth) {
+      await asyncForEach(loginRoutingReplaceOptions, async (option) => {
+        await replace(option);
+      });
+    } else {
+      await deleteFile('frontend/src/setupProxy.js');
     }
     log(chalk.blue('Done'));
   } catch (e) {
@@ -131,7 +143,7 @@ async function createStarterTemplate(config) {
 
 async function start(config) {
   const configuration = Object.assign({}, config);
-  configuration.routing = mapRouting(configuration.routing);
+  configuration.routing = mapRouting(configuration);
   log(chalk.green.bold('Preparing...'));
   try {
     await deleteFolderSync('frontend');

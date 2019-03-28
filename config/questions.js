@@ -21,6 +21,7 @@ const questions = [
       { value: 'angular', name: 'Angular' },
       { value: 'react', name: 'React' },
     ],
+    default: 'react',
   },
 ];
 

@@ -8,7 +8,7 @@ const generatorNames = Object.keys(generators);
 
 const generalOptions = [
   {
-    param: '-D, --debug ',
+    param: '-d, --debug ',
     description: 'debug',
   },
   {
