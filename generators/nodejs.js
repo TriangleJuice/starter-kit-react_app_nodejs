@@ -9,12 +9,6 @@ const { copyJob } = require('../utils/copy');
 const { deleteFile, deleteFolderRecursive } = require('../utils/delete');
 
 const generatorOptions = [
-  // {
-  //   param: '-t, --testing <testing>',
-  //   description: 'Testing (Mocha or Jest)',
-  //   validation: /^(mocha|jest)$/i,
-  //   fallback: 'Mocha',
-  // },
   {
     param: '-d, --database <database>',
     description: 'Database (MongoDB or none)',
@@ -33,19 +27,9 @@ const questions = [
     message: 'Which database would you like?',
     choices: [
       { value: 'mongodb', name: 'MongoDB' },
-      // { value: 'postgres', name: 'PostgreSQL' },
       { value: undefined, name: 'I don\'t need a database' },
     ],
   },
-  // {
-  //   type: 'list',
-  //   name: 'testing',
-  //   message: 'Which testing framework would you like?',
-  //   choices: [
-  //     { value: 'mocha', name: 'Mocha' },
-  //     { value: 'jest', name: 'Jest' },
-  //   ],
-  // },
   {
     type: 'confirm',
     name: 'auth',

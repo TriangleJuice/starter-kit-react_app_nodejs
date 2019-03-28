@@ -61,7 +61,6 @@ async function run() {
       debug.enable();
     }
     const { frontend, backend } = config;
-    // console.log(config);
 
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);
@@ -74,7 +73,6 @@ async function run() {
       debug.enable();
     }
     const { frontend, backend } = config;
-    // console.log(config);
 
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);

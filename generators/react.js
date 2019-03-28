@@ -46,7 +46,7 @@ const questions = [
     name: 'routing',
     message: 'Do you want to add basic routing?',
     default: true,
-  }
+  },
 ];
 
 function getQuestions() {
