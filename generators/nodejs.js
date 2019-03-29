@@ -51,7 +51,6 @@ async function copyBaseProject() {
   const { baseProject } = nodeConfig;
   const { repository, branch } = baseProject;
   debug.logger(`Clone backend version: ${branch}`);
-  // log(chalk`{blue 🔗 Clone backend version: {yellow.bold ${branch}}}`);
   await gitclone(repository, branch);
   debug.logger(`Copy files from repo`);
   const copyJobs = [
