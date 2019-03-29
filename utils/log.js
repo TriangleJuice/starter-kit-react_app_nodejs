@@ -10,4 +10,18 @@ function fancyLog(color, text, sign = '-') {
   log(chalk`${sign.repeat(totalLength)}`);
 }
 
-module.exports = fancyLog;
+function updateLog(text, color = 'green') {
+  log(chalk`
+{${color}.bold ${text}}`);
+}
+
+function errorLog(error) {
+  log(chalk.bold.red('Oops!'));
+  log(chalk.red(error));
+}
+
+module.exports = {
+  fancyLog,
+  updateLog,
+  errorLog,
+};

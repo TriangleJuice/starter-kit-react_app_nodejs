@@ -42,16 +42,141 @@ import { Link, Route, Switch } from "react-router-dom";`,
   },
 ];
 
-mapRouting = (val) => {
-  if (val) {
+const loginReplaceOptions = [
+  {
+    files: './frontend/src/App.js',
+    from: 'Footer,',
+    to: `Footer,
+  UserMenu,`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: 'class App extends Component {',
+    to: `class App extends Component {
+  state = {
+    isLoggedin: false,
+    user: undefined,
+  }
+
+  componentDidMount() {
+    fetch('/auth/isloggedin')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw Error('Request rejected with status ' + response.status);
+        }
+      })
+      .then(data => this.setState({ isLoggedin: data.isLoggedin, user: data.user }))
+      .catch(console.error);
+  }
+
+  goToLogin = () => {
+    if (!this.state.isLoggedin) {
+      window.location.href = '/auth/login/mprofiel';
+    }
+  }
+`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: '<Header />',
+    to: `<Header>
+            <div className="m-button-group">
+              <div onClick={this.goToLogin}>
+                <UserMenu
+                  user={this.state.user}
+                  loggedIn={this.state.isLoggedin}
+                  logoutUrl="/auth/logout/callback/mprofiel">
+                </UserMenu>
+              </div>
+            </div>
+          </Header>`,
+  },
+];
+
+const loginRoutingReplaceOptions = [
+  {
+    files: './frontend/src/App.js',
+    from: 'Link, Route, Switch',
+    to: 'Link, Route, Switch, withRouter',
+  },
+  {
+    files: './frontend/src/App.js',
+    from: 'Footer,',
+    to: `Footer,
+  UserMenu,`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: 'import About from \'./components/About/About\';',
+    to: `import About from './components/About/About';
+import Login from './components/Login/Login';`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: 'class App extends Component {',
+    to: `class App extends Component {
+  state = {
+    isLoggedin: false,
+    user: undefined,
+  }
+
+  componentDidMount() {
+    fetch('/auth/isloggedin')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw Error('Request rejected with status ' + response.status);
+        }
+      })
+      .then(data => this.setState({ isLoggedin: data.isLoggedin, user: data.user }))
+      .catch(console.error);
+  }
+
+  goToLogin = () => {
+    if (!this.state.isLoggedin) {
+      this.props.history.push('/login');
+    }
+  }
+`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: `<Link to={'/about'} className="a-button">About</Link>`,
+    to: `<Link to={'/about'} className="a-button">About</Link>
+              <div onClick={this.goToLogin}>
+                <UserMenu
+                  user={this.state.user}
+                  loggedIn={this.state.isLoggedin}
+                  logoutUrl="/auth/logout/callback/mprofiel">
+                </UserMenu>
+              </div>`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: `<Route path="/about" component={About}></Route>`,
+    to: `<Route path="/about" component={About}></Route>
+                  <Route path="/login" component={Login}></Route>`,
+  },
+  {
+    files: './frontend/src/App.js',
+    from: 'export default App;',
+    to: 'export default withRouter(App);',
+  },
+];
+
+mapRouting = (conf) => {
+  if (!conf.routing) {
     return {
-      add: true,
-      npm: ['react-router-dom'],
+      add: false,
+      npm: [],
     };
   }
   return {
-    add: false,
-    npm: [],
+    add: true,
+    npm: ['react-router-dom'],
   };
 };
 
@@ -63,6 +188,8 @@ async function asyncForEach(array, callback) {
 
 module.exports = {
   routingReplaceOptions,
+  loginReplaceOptions,
+  loginRoutingReplaceOptions,
   mapRouting,
   asyncForEach,
 };

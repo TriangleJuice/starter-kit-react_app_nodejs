@@ -11,7 +11,7 @@ const options = require('./config/options');
 
 const { log } = console;
 const { mapBranding } = require('./utils/branding');
-const fancyLog = require('./utils/fancyLog');
+const { fancyLog } = require('./utils/log');
 const debug = require('./utils/debug');
 
 global.__basedir = __dirname;
@@ -22,12 +22,22 @@ global.__backenddir = './backend';
 // Run commander with generator options
 options();
 
-function finishInstallation() {
-  log(chalk.white.bold(`Now run ${chalk.cyan.bold('npm start')} in your frontend directory.`));
+function finishInstallation(config) {
+  if (config.backend) {
+    log(chalk.white.bold(`
+✅ ${chalk.green.bold('Done!')} Now run ${chalk.cyan.bold('npm start')} in both your backend and frontend directory.
+`));
+  } else {
+    log(chalk.white.bold(`
+✅ ${chalk.green.bold('Done!')} Now run ${chalk.cyan.bold('npm start')} in your frontend directory.
+`));
+  }
 }
 
 async function askQuestions() {
   let config = await inquirer.prompt(questions);
+  // Remove this line when activating front-end choices
+  config.frontend = 'react';
   const { frontend, backend } = config;
   if (config.backend && generators[backend].getQuestions) {
     const backendConfig = await inquirer.prompt(generators[backend].getQuestions());
@@ -44,7 +54,7 @@ async function askQuestions() {
  * First check if the starter app was intended to run on its own.
  */
 async function run() {
-  fancyLog('blue.bold', `Welcome to the Digipolis starter kit! (v${pjson.version})`, '=');
+  fancyLog('cyan.bold', `Welcome to the Digipolis starter kit! (v${pjson.version})`, '=');
   if (program.setup) {
     const config = await askQuestions();
     if (program.debug) {
@@ -55,16 +65,19 @@ async function run() {
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);
 
-    finishInstallation();
+    finishInstallation(config);
   } else {
     program.branding = await mapBranding(program.branding);
     const config = program;
-    config.noSetup = true;
+    if (program.debug) {
+      debug.enable();
+    }
     const { frontend, backend } = config;
+
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);
 
-    finishInstallation();
+    finishInstallation(config);
   }
 }
 

@@ -3,11 +3,11 @@ const replace = require('replace-in-file');
 
 const { log } = console;
 const { copyFolderRecursiveSync } = require('../utils/copy');
-const { deleteFolderSync } = require('../utils/delete');
+const { deleteFolderSync, deleteFile } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
-const { showError } = require('../utils/error');
+const { updateLog, errorLog } = require('../utils/log');
 const { mapBranding, brandings } = require('../utils/branding');
-const { mapRouting, routingReplaceOptions, asyncForEach } = require('../utils/routing');
+const { mapRouting, routingReplaceOptions, loginReplaceOptions, loginRoutingReplaceOptions, asyncForEach } = require('../utils/routing');
 const frontEndConfig = require('../config/front-end.config');
 
 const options = [
@@ -26,6 +26,7 @@ const options = [
     description: 'Don\'t add basic routing',
   },
 ];
+
 const questions = [
   {
     type: 'list',
@@ -52,7 +53,7 @@ function getQuestions() {
   return questions;
 }
 
-function getOptions() {
+function getOptions(auth) {
   return options;
 }
 
@@ -62,12 +63,12 @@ function getOptions() {
 */
 
 async function installReact() {
-  log(chalk.green.bold('Installing React...'));
+  updateLog('Installing React...');
 
   try {
     await execPromise('npx', ['create-react-app', 'frontend']);
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 
@@ -78,17 +79,14 @@ async function installReact() {
  * - Node SASS, so you don't have to rely on CSS only.
  */
 async function installACPaaSUI(config) {
-  log(chalk.green.bold(`
-Installing ACPaaS UI...`));
+  updateLog('Installing ACPaaS UI...');
 
   try {
     await execPromise('npm', ['install', '--prefix', './frontend', '--save-dev', 'node-sass']);
     await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components']
       .concat(config.branding.npm).concat(config.routing.npm));
-    log(chalk.blue(`
-Done`));
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 
@@ -100,7 +98,7 @@ Done`));
  */
 
 async function createStarterTemplate(config) {
-  log(chalk.green.bold('Creating starter template...'));
+  updateLog('Creating starter template...');
   const branding = await frontEndConfig.branding.generateLinkTag(config.branding);
   const flexboxGrid = config.flexboxgrid ? frontEndConfig.flexbox.link : '';
 
@@ -114,8 +112,9 @@ async function createStarterTemplate(config) {
 
   try {
     await replace(brandingReplaceOption);
-    await copyFolderRecursiveSync(`${__basedir}/files/public`, __frontenddir);
+
     await copyFolderRecursiveSync(`${__basedir}/files/src`, __frontenddir);
+
     if (config.routing.add) {
       await asyncForEach(routingReplaceOptions, async (option) => {
         await replace(option);
@@ -123,23 +122,38 @@ async function createStarterTemplate(config) {
     } else {
       await deleteFolderSync('frontend/src/components/About');
     }
-    log(chalk.blue('Done'));
+
+    if (config.auth) {
+      if (config.routing.add) {
+        await asyncForEach(loginRoutingReplaceOptions, async (option) => {
+          await replace(option);
+        });
+      } else {
+        await asyncForEach(loginReplaceOptions, async (option) => {
+          await replace(option);
+        });
+      }
+    } else {
+      await deleteFile('frontend/src/setupProxy.js');
+      await deleteFolderSync('frontend/src/components/Login');
+    }
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 
 async function start(config) {
   const configuration = Object.assign({}, config);
-  configuration.routing = mapRouting(configuration.routing);
-  log(chalk.green.bold('Preparing...'));
+  configuration.routing = mapRouting(configuration);
+  updateLog('Preparing...');
   try {
     await deleteFolderSync('frontend');
     await installReact(configuration);
     await installACPaaSUI(configuration);
     await createStarterTemplate(configuration);
+    updateLog('Done with front-end setup', 'cyan');
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 

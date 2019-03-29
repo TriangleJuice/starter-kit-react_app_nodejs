@@ -1,54 +1,40 @@
 const { log } = console;
 const chalk = require('chalk');
-const gitclone = require('../utils/gitclone');
-const fancyLog = require('../utils/fancyLog');
-const debug = require('../utils/debug');
 const { nodeConfig } = require('../config/back-end.config');
+const { copyJob } = require('../utils/copy');
+const debug = require('../utils/debug');
+const { deleteFile, deleteFolderRecursive } = require('../utils/delete');
+const { execPromise } = require('../utils/exec');
+const gitclone = require('../utils/gitclone');
+const { updateLog, errorLog } = require('../utils/log');
 const removeMatchedLines = require('../utils/removeLine');
-const { copyJob, deleteFile, deleteFolderRecursive } = require('../utils/copy');
 
 const generatorOptions = [
   {
-    param: '-t, --testing <testing>',
-    description: 'Testing (Mocha or Jest)',
-    validation: /^(mocha|jest)$/i,
-    fallback: 'Mocha',
-  },
-  {
     param: '-d, --database <database>',
-    description: 'Database (MongoDB or PostgreSQL)',
-    validation: /^(mongodb|postgres)$/i,
+    description: 'Database (MongoDB or none)',
+    validation: /^(mongodb)$/i,
     fallback: 'mongodb',
   },
   {
-    param: '-A, --auth',
-    description: 'Add basic /auth routing',
+    param: '-A, --no-auth',
+    description: 'Don\'t add basic authentication',
   },
 ];
 const questions = [
   {
     type: 'list',
-    name: 'db',
-    message: 'Which DB would you like?',
+    name: 'database',
+    message: 'Which database would you like?',
     choices: [
       { value: 'mongodb', name: 'MongoDB' },
-      { value: 'postgres', name: 'PostgreSQL' },
       { value: undefined, name: 'I don\'t need a database' },
-    ],
-  },
-  {
-    type: 'list',
-    name: 'testingFramework',
-    message: 'Which testing framework would you like?',
-    choices: [
-      { value: 'mocha', name: 'Mocha' },
-      { value: 'jest', name: 'Jest' },
     ],
   },
   {
     type: 'confirm',
     name: 'auth',
-    message: 'Do you want to use digipolis authentication?',
+    message: 'Do you want your app to include Digipolis authentication?',
     default: true,
   },
 ];
@@ -64,9 +50,9 @@ function getOptions() {
 async function copyBaseProject() {
   const { baseProject } = nodeConfig;
   const { repository, branch } = baseProject;
-  log(chalk`{blue 🔗 Clone backend verion: {yellow.bold ${branch}}}`);
+  debug.logger(`Clone backend version: ${branch}`);
   await gitclone(repository, branch);
-  log(chalk`Copy files form repo.`);
+  debug.logger(`Copy files from repo`);
   const copyJobs = [
     { source: './tmp/.digipolis.json', destination: './', type: 'file' },
     { source: './tmp/Dockerfile', destination: './', type: 'file' },
@@ -77,15 +63,13 @@ async function copyBaseProject() {
     { source: './tmp/docker-compose.yml', destination: './', type: 'file' },
   ];
   await copyJob(copyJobs);
-  log(chalk`{green Done. }`);
-  log(chalk`Cleanup tmp folder.`);
+  debug.logger(`Cleanup tmp folder`);
   deleteFolderRecursive('./tmp');
-  log(chalk`{green Done. }`);
 }
 
 async function setDB(db) {
   if (db === 'mongodb') {
-    log(chalk`{yellow.bold Installing MongoDB }`);
+    updateLog('Installing MongoDB...');
     debug.logger('MongoDB is the default. Nothing to replace');
   } else {
     debug.logger('Remove DB files');
@@ -101,7 +85,7 @@ async function setDB(db) {
 
 async function setAuth(auth) {
   if (auth) {
-    log(chalk`{yellow.bold Installing Auth endpoints }`);
+    updateLog('Adding M-profile authentication...');
     debug.logger('Auth is included. Nothing to replace');
   } else {
     debug.logger('Remove Auth files');
@@ -112,16 +96,22 @@ async function setAuth(auth) {
     await removeMatchedLines('./backend/package.json', '@digipolis/auth');
   }
 }
+
+async function installPackages() {
+  await execPromise('npm', ['install', '--prefix', './backend']);
+}
+
 async function start(options) {
-  fancyLog('yellow.bold', '🔨 Setup node.js');
+  updateLog('Setting up Node.js...');
   try {
     await copyBaseProject();
-    await setDB(options.db);
+    await setDB(options.database);
     await setAuth(options.auth);
-    fancyLog('yellow.bold', '✅ Setup node.js done');
+    await installPackages();
+    log(chalk.cyan.bold(`
+Done with BFF setup`));
   } catch (e) {
-    fancyLog('red.bold', '❗️ Setup node.js failed');
-    log('error:', e);
+    showError(e);
   }
 }
 

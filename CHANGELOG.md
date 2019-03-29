@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 
+## [1.2.0] - 2019-03-29
+
+### Added
+- Added possibility to choose a BFF
+- Added possibility to add Digipolis authentication
+
+
 ## [1.1.0] - 2019-02-28
 
 ### Added
@@ -18,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.0.0
