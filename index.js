@@ -11,7 +11,7 @@ const options = require('./config/options');
 
 const { log } = console;
 const { mapBranding } = require('./utils/branding');
-const fancyLog = require('./utils/fancyLog');
+const { fancyLog } = require('./utils/log');
 const debug = require('./utils/debug');
 
 global.__basedir = __dirname;

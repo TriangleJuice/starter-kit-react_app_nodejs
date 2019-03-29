@@ -5,7 +5,7 @@ const { log } = console;
 const { copyFolderRecursiveSync } = require('../utils/copy');
 const { deleteFolderSync, deleteFile } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
-const { showError } = require('../utils/error');
+const { updateLog, errorLog } = require('../utils/log');
 const { mapBranding, brandings } = require('../utils/branding');
 const { mapRouting, routingReplaceOptions, loginReplaceOptions, loginRoutingReplaceOptions, asyncForEach } = require('../utils/routing');
 const frontEndConfig = require('../config/front-end.config');
@@ -63,13 +63,12 @@ function getOptions(auth) {
 */
 
 async function installReact() {
-  log(chalk.green.bold(`
-Installing React...`));
+  updateLog('Installing React...');
 
   try {
     await execPromise('npx', ['create-react-app', 'frontend']);
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 
@@ -80,15 +79,14 @@ Installing React...`));
  * - Node SASS, so you don't have to rely on CSS only.
  */
 async function installACPaaSUI(config) {
-  log(chalk.green.bold(`
-Installing ACPaaS UI...`));
+  updateLog('Installing ACPaaS UI...');
 
   try {
     await execPromise('npm', ['install', '--prefix', './frontend', '--save-dev', 'node-sass']);
     await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components']
       .concat(config.branding.npm).concat(config.routing.npm));
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 
@@ -100,8 +98,7 @@ Installing ACPaaS UI...`));
  */
 
 async function createStarterTemplate(config) {
-  log(chalk.green.bold(`
-Creating starter template...`));
+  updateLog('Creating starter template...');
   const branding = await frontEndConfig.branding.generateLinkTag(config.branding);
   const flexboxGrid = config.flexboxgrid ? frontEndConfig.flexbox.link : '';
 
@@ -141,24 +138,22 @@ Creating starter template...`));
       await deleteFolderSync('frontend/src/components/Login');
     }
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 
 async function start(config) {
   const configuration = Object.assign({}, config);
   configuration.routing = mapRouting(configuration);
-  log(chalk.green.bold(`
-Preparing...`));
+  updateLog('Preparing...');
   try {
     await deleteFolderSync('frontend');
     await installReact(configuration);
     await installACPaaSUI(configuration);
     await createStarterTemplate(configuration);
-    log(chalk.cyan.bold(`
-Done with front-end setup`));
+    updateLog('Done with front-end setup', 'cyan');
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 

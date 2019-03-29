@@ -1,12 +1,13 @@
 const { log } = console;
 const chalk = require('chalk');
+const { nodeConfig } = require('../config/back-end.config');
+const { copyJob } = require('../utils/copy');
+const debug = require('../utils/debug');
+const { deleteFile, deleteFolderRecursive } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
 const gitclone = require('../utils/gitclone');
-const debug = require('../utils/debug');
-const { nodeConfig } = require('../config/back-end.config');
+const { updateLog, errorLog } = require('../utils/log');
 const removeMatchedLines = require('../utils/removeLine');
-const { copyJob } = require('../utils/copy');
-const { deleteFile, deleteFolderRecursive } = require('../utils/delete');
 
 const generatorOptions = [
   {
@@ -69,8 +70,7 @@ async function copyBaseProject() {
 
 async function setDB(db) {
   if (db === 'mongodb') {
-    log(chalk.green.bold(`
-Installing MongoDB...`));
+    updateLog('Installing MongoDB...');
     debug.logger('MongoDB is the default. Nothing to replace');
   } else {
     debug.logger('Remove DB files');
@@ -86,8 +86,7 @@ Installing MongoDB...`));
 
 async function setAuth(auth) {
   if (auth) {
-    log(chalk.green.bold(`
-Adding M-profile authentication...`));
+    updateLog('Adding M-profile authentication...');
     debug.logger('Auth is included. Nothing to replace');
   } else {
     debug.logger('Remove Auth files');
@@ -104,8 +103,7 @@ async function installPackages() {
 }
 
 async function start(options) {
-  log(chalk.green.bold(`
-Setting up Node.js...`));
+  updateLog('Setting up Node.js...');
   try {
     await copyBaseProject();
     await setDB(options.database);
