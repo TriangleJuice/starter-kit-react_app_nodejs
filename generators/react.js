@@ -3,7 +3,7 @@ const replace = require('replace-in-file');
 
 const { log } = console;
 const { copyFolderRecursiveSync } = require('../utils/copy');
-const { deleteFolderSync, deleteFile } = require('../utils/delete');
+const { deleteFolderSync, deleteFileSync } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
 const { updateLog, errorLog } = require('../utils/log');
 const { mapBranding, brandings } = require('../utils/branding');
@@ -67,6 +67,9 @@ async function installReact() {
 
   try {
     await execPromise('npx', ['create-react-app', 'frontend']);
+    if (config.backend) {
+      deleteFolderSync('frontend/.git');
+    }
   } catch (e) {
     errorLog(e);
   }
@@ -120,7 +123,7 @@ async function createStarterTemplate(config) {
         await replace(option);
       });
     } else {
-      await deleteFolderSync('frontend/src/components/About');
+      deleteFolderSync('frontend/src/components/About');
     }
 
     if (config.auth) {
@@ -134,8 +137,8 @@ async function createStarterTemplate(config) {
         });
       }
     } else {
-      await deleteFile('frontend/src/setupProxy.js');
-      await deleteFolderSync('frontend/src/components/Login');
+      deleteFileSync('frontend/src/setupProxy.js');
+      deleteFolderSync('frontend/src/components/Login');
     }
   } catch (e) {
     errorLog(e);
@@ -147,7 +150,7 @@ async function start(config) {
   configuration.routing = mapRouting(configuration);
   updateLog('Preparing...');
   try {
-    await deleteFolderSync('frontend');
+    deleteFolderSync('frontend');
     await installReact(configuration);
     await installACPaaSUI(configuration);
     await createStarterTemplate(configuration);
