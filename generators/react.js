@@ -68,7 +68,7 @@ async function installReact() {
   try {
     await execPromise('npx', ['create-react-app', 'frontend']);
     if (config.backend) {
-      await deleteFolderSync('frontend/.git');
+      deleteFolderSync('frontend/.git');
     }
   } catch (e) {
     errorLog(e);
@@ -123,7 +123,7 @@ async function createStarterTemplate(config) {
         await replace(option);
       });
     } else {
-      await deleteFolderSync('frontend/src/components/About');
+      deleteFolderSync('frontend/src/components/About');
     }
 
     if (config.auth) {
@@ -138,7 +138,7 @@ async function createStarterTemplate(config) {
       }
     } else {
       await deleteFile('frontend/src/setupProxy.js');
-      await deleteFolderSync('frontend/src/components/Login');
+      deleteFolderSync('frontend/src/components/Login');
     }
   } catch (e) {
     errorLog(e);
@@ -150,7 +150,7 @@ async function start(config) {
   configuration.routing = mapRouting(configuration);
   updateLog('Preparing...');
   try {
-    await deleteFolderSync('frontend');
+    deleteFolderSync('frontend');
     await installReact(configuration);
     await installACPaaSUI(configuration);
     await createStarterTemplate(configuration);
