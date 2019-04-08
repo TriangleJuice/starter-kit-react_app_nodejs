@@ -1,6 +1,6 @@
 {
   "name": "@digipolis/start-react",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Digipolis starter kit for React",
   "main": "index.js",
   "scripts": {
