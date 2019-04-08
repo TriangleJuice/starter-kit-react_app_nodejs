@@ -67,6 +67,9 @@ async function installReact() {
 
   try {
     await execPromise('npx', ['create-react-app', 'frontend']);
+    if (config.backend) {
+      await deleteFolderSync('frontend/.git');
+    }
   } catch (e) {
     errorLog(e);
   }

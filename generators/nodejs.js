@@ -111,7 +111,7 @@ async function start(options) {
     log(chalk.cyan.bold(`
 Done with BFF setup`));
   } catch (e) {
-    showError(e);
+    errorLog(e);
   }
 }
 
