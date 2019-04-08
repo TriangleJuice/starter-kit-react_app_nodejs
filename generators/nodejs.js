@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const { nodeConfig } = require('../config/back-end.config');
 const { copyJob } = require('../utils/copy');
 const debug = require('../utils/debug');
-const { deleteFile, deleteFolderRecursive } = require('../utils/delete');
+const { deleteFileSync, deleteFolderRecursive } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
 const gitclone = require('../utils/gitclone');
 const { updateLog, errorLog } = require('../utils/log');
@@ -73,8 +73,8 @@ async function setDB(db) {
     debug.logger('MongoDB is the default. Nothing to replace');
   } else {
     debug.logger('Remove DB files');
-    deleteFile('./backend/src/helpers/db.helper.js');
-    deleteFile('./backend/src/routes/example.router.js');
+    deleteFileSync('./backend/src/helpers/db.helper.js');
+    deleteFileSync('./backend/src/routes/example.router.js');
     debug.logger('remove db references');
     deleteFolderRecursive('./backend/src/models');
     await removeMatchedLines('./backend/src/app.js', 'initializeDatabase');
@@ -89,7 +89,7 @@ async function setAuth(auth) {
     debug.logger('Auth is included. Nothing to replace');
   } else {
     debug.logger('Remove Auth files');
-    deleteFile('./backend/src/routes/auth.router.js');
+    deleteFileSync('./backend/src/routes/auth.router.js');
     debug.logger('remove auth references');
     deleteFolderRecursive('./backend/src/models');
     await removeMatchedLines('./backend/src/routes/index.js', 'setupAuthRoutes');

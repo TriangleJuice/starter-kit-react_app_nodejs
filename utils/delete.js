@@ -21,11 +21,11 @@ function deleteFolderRecursive(folderpath) {
   }
 }
 
-function deleteFile(filepath) {
+function deleteFileSync(filepath) {
   try {
     return fs.unlinkSync(filepath);
   } catch (e) {
-    console.log('deleteFile error:', e);
+    console.log('Delete file error:', e);
     throw e;
   }
 }
@@ -33,5 +33,5 @@ function deleteFile(filepath) {
 module.exports = {
   deleteFolderSync,
   deleteFolderRecursive,
-  deleteFile,
+  deleteFileSync,
 };

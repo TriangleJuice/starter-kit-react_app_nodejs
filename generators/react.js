@@ -3,7 +3,7 @@ const replace = require('replace-in-file');
 
 const { log } = console;
 const { copyFolderRecursiveSync } = require('../utils/copy');
-const { deleteFolderSync, deleteFile } = require('../utils/delete');
+const { deleteFolderSync, deleteFileSync } = require('../utils/delete');
 const { execPromise } = require('../utils/exec');
 const { updateLog, errorLog } = require('../utils/log');
 const { mapBranding, brandings } = require('../utils/branding');
@@ -137,7 +137,7 @@ async function createStarterTemplate(config) {
         });
       }
     } else {
-      await deleteFile('frontend/src/setupProxy.js');
+      deleteFileSync('frontend/src/setupProxy.js');
       deleteFolderSync('frontend/src/components/Login');
     }
   } catch (e) {
