@@ -62,7 +62,7 @@ function getOptions(auth) {
  * Install NPM dependencies.
 */
 
-async function installReact() {
+async function installReact(config) {
   updateLog('Installing React...');
 
   try {
