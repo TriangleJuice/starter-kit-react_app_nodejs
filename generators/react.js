@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const path = require('path');
 const replace = require('replace-in-file');
 
 const { log } = console;
@@ -85,9 +86,13 @@ async function installACPaaSUI(config) {
   updateLog('Installing ACPaaS UI...');
 
   try {
-    await execPromise('npm', ['install', '--prefix', './frontend', '--save-dev', 'node-sass']);
-    await execPromise('npm', ['install', '--prefix', './frontend', '--save', '@acpaas-ui/react-components']
-      .concat(config.branding.npm).concat(config.routing.npm));
+    await execPromise('npm',
+      ['install', '--save-dev', 'node-sass'],
+      { cwd: path.resolve('frontend') });
+    await execPromise('npm',
+      ['install', '--save', '@acpaas-ui/react-components']
+        .concat(config.branding.npm).concat(config.routing.npm),
+      { cwd: path.resolve('frontend') });
   } catch (e) {
     errorLog(e);
   }

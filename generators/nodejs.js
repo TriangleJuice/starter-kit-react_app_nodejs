@@ -1,4 +1,5 @@
 const { log } = console;
+const path = require('path');
 const chalk = require('chalk');
 const { nodeConfig } = require('../config/back-end.config');
 const { copyJob } = require('../utils/copy');
@@ -98,7 +99,7 @@ async function setAuth(auth) {
 }
 
 async function installPackages() {
-  await execPromise('npm', ['install', '--prefix', './backend']);
+  await execPromise('npm', ['install'], { cwd: path.resolve('backend') });
 }
 
 async function start(options) {
