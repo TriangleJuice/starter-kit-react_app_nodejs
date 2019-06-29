@@ -70,12 +70,6 @@ const loginReplaceOptions = [
       .then(data => this.setState({ isLoggedin: data.isLoggedin, user: data.user }))
       .catch(console.error);
   }
-
-  goToLogin = () => {
-    if (!this.state.isLoggedin) {
-      window.location.href = '/auth/login/mprofiel';
-    }
-  }
 `,
   },
   {
@@ -83,13 +77,12 @@ const loginReplaceOptions = [
     from: '<Header />',
     to: `<Header>
             <div className="m-button-group">
-              <div onClick={this.goToLogin}>
-                <UserMenu
-                  user={this.state.user}
-                  loggedIn={this.state.isLoggedin}
-                  logoutUrl="/auth/logout/callback/mprofiel">
-                </UserMenu>
-              </div>
+              <UserMenu
+                user={this.state.user}
+                loggedIn={this.state.isLoggedin}
+                loginUrl="/auth/login/mprofiel"
+                logoutUrl="/auth/logout/callback/mprofiel">
+              </UserMenu>
             </div>
           </Header>`,
   },
@@ -134,25 +127,18 @@ import Login from './components/Login/Login';`,
       .then(data => this.setState({ isLoggedin: data.isLoggedin, user: data.user }))
       .catch(console.error);
   }
-
-  goToLogin = () => {
-    if (!this.state.isLoggedin) {
-      this.props.history.push('/login');
-    }
-  }
 `,
   },
   {
     files: './frontend/src/App.js',
     from: `<Link to={'/about'} className="a-button">About</Link>`,
     to: `<Link to={'/about'} className="a-button">About</Link>
-              <div onClick={this.goToLogin}>
-                <UserMenu
-                  user={this.state.user}
-                  loggedIn={this.state.isLoggedin}
-                  logoutUrl="/auth/logout/callback/mprofiel">
-                </UserMenu>
-              </div>`,
+              <UserMenu
+                user={this.state.user}
+                loggedIn={this.state.isLoggedin}
+                loginUrl="/login"
+                logoutUrl="/auth/logout/callback/mprofiel">
+              </UserMenu>`,
   },
   {
     files: './frontend/src/App.js',

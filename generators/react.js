@@ -108,18 +108,58 @@ async function installACPaaSUI(config) {
 async function createStarterTemplate(config) {
   updateLog('Creating starter template...');
   const branding = await frontEndConfig.branding.generateLinkTag(config.branding);
-  const flexboxGrid = config.flexboxgrid ? frontEndConfig.flexbox.link : '';
 
-  const brandingReplaceOption = {
+  const brandingReplaceOptions = [{
     files: 'frontend/public/index.html',
-    from: /<link rel="manifest"/g,
-    to: `${branding}
-    ${flexboxGrid}
-    <link rel="manifest"`,
-  };
+    from: /x.x.x/g,
+    to: config.branding.version,
+  }];
+
+  if (config.branding.type !== 'core') {
+    brandingReplaceOptions.push({
+      files: 'frontend/public/index.html',
+      from: /core_branding/g,
+      to: 'digipolis_branding',
+    }, {
+      files: 'frontend/public/index.html',
+      from: /safari-pinned-tab.svg" color="#cf0039"/g,
+      to: 'safari-pinned-tab.svg" color="#347ea6"',
+    }, {
+      files: 'frontend/public/index.html',
+      from: /msapplication-TileColor" content="#cf0039"/g,
+      to: 'msapplication-TileColor" content="#5fb1d6"',
+    }, {
+      files: 'frontend/public/index.html',
+      from: /theme-color" content="#cf0039"/g,
+      to: 'theme-color" content="#ffffff"',
+    });
+  }
+
+  if (config.branding.type === 'acpaas') {
+    brandingReplaceOptions.push({
+      files: 'frontend/public/index.html',
+      from: /digipolis_branding_scss/g,
+      to: 'acpaas_branding_scss',
+    });
+  }
+
+  // Flexboxgrid
+  if (config.flexboxgrid) {
+    brandingReplaceOptions.push({
+      files: 'frontend/public/index.html',
+      from: /main.min.css">/g,
+      to: `main.min.css">
+    ${frontEndConfig.flexbox.link}`,
+    });
+  }
 
   try {
-    await replace(brandingReplaceOption);
+    deleteFolderSync('frontend/public');
+    await copyFolderRecursiveSync(`${__basedir}/files/public`, __frontenddir);
+
+    await asyncForEach(brandingReplaceOptions, async (option) => {
+      await replace(option);
+    });
 
     await copyFolderRecursiveSync(`${__basedir}/files/src`, __frontenddir);
 

@@ -7,11 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+
+## [1.3.0] - 2019-06-28
+
+### Added
+- Added favicons
+- Added better standard index file
+
+### Fixed
+- Fixed broken login user menu
+
+
 ## [1.2.3] - 2019-06-07
 
 ### Fixed
 - Fixed npm install errors on windows
 - Fixed security issues
+
 
 ## [1.2.2] - 2019-04-09
 
@@ -43,8 +55,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.3...HEAD
-[1.2.3]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.1...v1.2.3
+[Unreleased]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.3...v1.3.0
+[1.2.3]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.1.0...v1.2.0
