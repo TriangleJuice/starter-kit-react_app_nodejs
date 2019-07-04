@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.3.1] - 2019-07-03
 
 ### Changed
-- Used HTTPS in favor of SSH to clone the NodeJS BFF
+- Specified HTTPS in favor of SSH to clone the NodeJS BFF
+
+### Fixed
+- Fixed React not being installed when running without questionnaire
 
 
 ## [1.3.0] - 2019-06-29

@@ -22,7 +22,7 @@ class App extends Component {
           <div className="u-container u-margin-top-xx u-margin-bottom-lg" role="main">
             <div className="row">
               <div className="col-xs-12">
-                <h1 className="u-margin-top-xl">Hello React starter kit!</h1>
+                <h1 className="u-margin-top-xl">Hello Starter app!</h1>
                 <Home />
               </div>
             </div>
