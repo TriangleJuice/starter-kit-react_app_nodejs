@@ -110,26 +110,38 @@ async function createStarterTemplate(config) {
   const branding = await frontEndConfig.branding.generateLinkTag(config.branding);
 
   const brandingReplaceOptions = [{
-    files: 'frontend/public/index.html',
+    files: './frontend/public/index.html',
     from: /x.x.x/g,
     to: config.branding.version,
   }];
 
+  if (config.name !== 'Starter app') {
+    brandingReplaceOptions.push({
+      files: './frontend/public/index.html',
+      from: /Starter app/g,
+      to: config.name,
+    }, {
+      files: './frontend/src/App.js',
+      from: /Starter app/g,
+      to: config.name,
+    });
+  }
+
   if (config.branding.type !== 'core') {
     brandingReplaceOptions.push({
-      files: 'frontend/public/index.html',
+      files: './frontend/public/index.html',
       from: /core_branding/g,
       to: 'digipolis_branding',
     }, {
-      files: 'frontend/public/index.html',
+      files: './frontend/public/index.html',
       from: /safari-pinned-tab.svg" color="#cf0039"/g,
       to: 'safari-pinned-tab.svg" color="#347ea6"',
     }, {
-      files: 'frontend/public/index.html',
+      files: './frontend/public/index.html',
       from: /msapplication-TileColor" content="#cf0039"/g,
       to: 'msapplication-TileColor" content="#5fb1d6"',
     }, {
-      files: 'frontend/public/index.html',
+      files: './frontend/public/index.html',
       from: /theme-color" content="#cf0039"/g,
       to: 'theme-color" content="#ffffff"',
     });
@@ -137,7 +149,7 @@ async function createStarterTemplate(config) {
 
   if (config.branding.type === 'acpaas') {
     brandingReplaceOptions.push({
-      files: 'frontend/public/index.html',
+      files: './frontend/public/index.html',
       from: /digipolis_branding_scss/g,
       to: 'acpaas_branding_scss',
     });
@@ -146,7 +158,7 @@ async function createStarterTemplate(config) {
   // Flexboxgrid
   if (config.flexboxgrid) {
     brandingReplaceOptions.push({
-      files: 'frontend/public/index.html',
+      files: './frontend/public/index.html',
       from: /main.min.css">/g,
       to: `main.min.css">
     ${frontEndConfig.flexbox.link}`,
@@ -156,12 +168,11 @@ async function createStarterTemplate(config) {
   try {
     deleteFolderSync('frontend/public');
     await copyFolderRecursiveSync(`${__basedir}/files/public`, __frontenddir);
+    await copyFolderRecursiveSync(`${__basedir}/files/src`, __frontenddir);
 
     await asyncForEach(brandingReplaceOptions, async (option) => {
       await replace(option);
     });
-
-    await copyFolderRecursiveSync(`${__basedir}/files/src`, __frontenddir);
 
     if (config.routing.add) {
       await asyncForEach(routingReplaceOptions, async (option) => {

@@ -57,6 +57,7 @@ async function run() {
   fancyLog('cyan.bold', `Welcome to the Digipolis starter kit! (v${pjson.version})`, '=');
   if (program.setup) {
     const config = await askQuestions();
+    config.name = program.name;
     if (program.debug) {
       debug.enable();
     }

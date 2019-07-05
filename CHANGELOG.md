@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 
+## [1.4.0] - 2019-07-05
+
+### Added
+- Added an option to specify an app name when using the starter kit without questionnaire
+
+
 ## [1.3.1] - 2019-07-03
 
 ### Changed
@@ -65,7 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.3...v1.3.0
 [1.2.3]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.2...v1.2.3
