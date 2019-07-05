@@ -56,6 +56,7 @@ async function copyBaseProject() {
   debug.logger(`Copy files from repo`);
   const copyJobs = [
     { source: './tmp/.digipolis.json', destination: './', type: 'file' },
+    { source: './tmp/CHANGELOG.md', destination: './', type: 'file' },
     { source: './tmp/Dockerfile', destination: './', type: 'file' },
     { source: './tmp/README.md', destination: './', type: 'file' },
     { source: './tmp/backend', destination: './', type: 'folder' },

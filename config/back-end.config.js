@@ -1,5 +1,3 @@
-// @TODO: release a version & replace 'master' with a tag
-
 module.exports = {
   nodeConfig: {
     baseProject: {
