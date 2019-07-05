@@ -50,9 +50,9 @@ function getOptions() {
 
 async function copyBaseProject() {
   const { baseProject } = nodeConfig;
-  const { repository, branch } = baseProject;
-  debug.logger(`Clone backend version: ${branch}`);
-  await gitclone(repository, branch);
+  const { repository, tag } = baseProject;
+  debug.logger(`Clone backend version: ${tag}`);
+  await gitclone(repository, tag);
   debug.logger(`Copy files from repo`);
   const copyJobs = [
     { source: './tmp/.digipolis.json', destination: './', type: 'file' },

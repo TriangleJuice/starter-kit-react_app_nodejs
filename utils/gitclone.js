@@ -3,8 +3,8 @@ const util = require('util');
 
 const gitClonePromisify = util.promisify(gitClone);
 
-function gitclone(repo, branch) {
-  return gitClonePromisify(repo, './tmp', { checkout: branch });
+function gitclone(repo, tag) {
+  return gitClonePromisify(repo, './tmp', { checkout: `tags/${tag}` });
 }
 
 
