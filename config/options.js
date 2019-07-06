@@ -21,6 +21,11 @@ const generalOptions = [
     validation: /^(nodejs|dotnet)$/i,
     fallback: 'nodejs',
   },
+  {
+    param: '-n, --name <name>',
+    description: 'The name for your app',
+    fallback: 'Starter app',
+  },
 ];
 
 function getUnique(arr, comp) {
