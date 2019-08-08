@@ -9,12 +9,14 @@
     "lint": "eslint ."
   },
   "bin": {
-    "digipolis-start-react": "./index.js"
+    "digipolis-start": "./index.js"
   },
   "keywords": [
     "starter kit",
     "acpaas ui",
     "react",
+    "angular",
+    "node",
     "generator"
   ],
   "author": "Jasper Van Proeyen",

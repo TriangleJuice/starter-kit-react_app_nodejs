@@ -36,8 +36,6 @@ function finishInstallation(config) {
 
 async function askQuestions() {
   let config = await inquirer.prompt(questions);
-  // Remove this line when activating front-end choices
-  config.frontend = 'react';
   const { frontend, backend } = config;
   if (config.backend && generators[backend].getQuestions) {
     const backendConfig = await inquirer.prompt(generators[backend].getQuestions());
