@@ -1,7 +1,7 @@
 const routingReplaceOptions = [
   {
     files: './frontend/src/index.js',
-    from: 'import ReactDOM from \'react-dom\';',
+    from: "import ReactDOM from 'react-dom';",
     to: `import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";`,
   },
@@ -12,13 +12,13 @@ import { BrowserRouter } from "react-router-dom";`,
   },
   {
     files: './frontend/src/App.js',
-    from: 'import Home from \'./components/Home/Home\';',
+    from: "import Home from './components/Home/Home';",
     to: `import Home from './components/Home/Home';
 import About from './components/About/About';`,
   },
   {
     files: './frontend/src/App.js',
-    from: 'import React, { Component } from \'react\';',
+    from: "import React, { Component } from 'react';",
     to: `import React, { Component } from 'react';
 import { Link, Route, Switch } from "react-router-dom";`,
   },
@@ -102,7 +102,7 @@ const loginRoutingReplaceOptions = [
   },
   {
     files: './frontend/src/App.js',
-    from: 'import About from \'./components/About/About\';',
+    from: "import About from './components/About/About';",
     to: `import About from './components/About/About';
 import Login from './components/Login/Login';`,
   },
@@ -131,7 +131,7 @@ import Login from './components/Login/Login';`,
   },
   {
     files: './frontend/src/App.js',
-    from: `<Link to={'/about'} className="a-button">About</Link>`,
+    from: '<Link to={\'/about\'} className="a-button">About</Link>',
     to: `<Link to={'/about'} className="a-button">About</Link>
               <UserMenu
                 user={this.state.user}
@@ -142,7 +142,7 @@ import Login from './components/Login/Login';`,
   },
   {
     files: './frontend/src/App.js',
-    from: `<Route path="/about" component={About}></Route>`,
+    from: '<Route path="/about" component={About}></Route>',
     to: `<Route path="/about" component={About}></Route>
                   <Route path="/login" component={Login}></Route>`,
   },

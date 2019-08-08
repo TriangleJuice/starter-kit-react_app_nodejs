@@ -2,9 +2,8 @@
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const program = require('commander');
-const requireDir = require('require-dir');
 
-const generators = requireDir('./generators');
+const generators = require('./generators');
 const pjson = require('./package.json');
 const questions = require('./config/questions');
 const options = require('./config/options');
