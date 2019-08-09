@@ -67,6 +67,7 @@ async function installAngular(config) {
   updateLog('Installing Angular...');
   try {
     await execPromise('npm', ['i', '-g', '@angular/cli']);
+    // TODO: Handle angular cli question for routing
     await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss']);
   } catch (e) {
     errorLog(e);
@@ -100,8 +101,8 @@ async function createStarterTemplate(config) {
   brandingReplaceOptions.push(
     {
       files: './frontend/src/index.html',
-      from: /Frontend/g,
-      to: config.name,
+      from: /<title>Frontend<\/title>/g,
+      to: `<title>${config.name}</title>`,
     },
     {
       files: './frontend/src/app/app.component.ts',
@@ -124,12 +125,13 @@ async function createStarterTemplate(config) {
       './frontend/src/styles.scss',
       `@import url('https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css');`,
     );
-    await async.each(brandingReplaceOptions, async (option) => {
+
+    await async.eachSeries(brandingReplaceOptions, async (option) => {
       await replace(option);
+    });
 
       // TODO: Routing
       // TODO: auth
-    });
   } catch (e) {
     errorLog(e);
   }
