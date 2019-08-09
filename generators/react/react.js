@@ -1,12 +1,13 @@
 const path = require('path');
 const replace = require('replace-in-file');
+const async = require('async');
 
 const { copyFolderRecursiveSync } = require('../../utils/copy');
 const { deleteFolderSync, deleteFileSync } = require('../../utils/delete');
 const { execPromise } = require('../../utils/exec');
 const { updateLog, errorLog } = require('../../utils/log');
 const { mapBranding, brandings } = require('../../utils/branding');
-const { mapRouting, routingReplaceOptions, loginReplaceOptions, loginRoutingReplaceOptions, asyncForEach } = require('./routing');
+const { mapRouting, routingReplaceOptions, loginReplaceOptions, loginRoutingReplaceOptions } = require('./routing');
 const frontEndConfig = require('../../config/front-end.config');
 
 const options = [
@@ -172,15 +173,15 @@ async function createStarterTemplate(config) {
 
   try {
     deleteFolderSync('frontend/public');
-    await copyFolderRecursiveSync(`${__basedir}/files/public`, __frontenddir);
-    await copyFolderRecursiveSync(`${__basedir}/files/src`, __frontenddir);
+    await copyFolderRecursiveSync(`${__basedir}/generators/react/files/public`, __frontenddir);
+    await copyFolderRecursiveSync(`${__basedir}/generators/react/files/src`, __frontenddir);
 
-    await asyncForEach(brandingReplaceOptions, async (option) => {
+    await async.each(brandingReplaceOptions, async (option) => {
       await replace(option);
     });
 
     if (config.routing.add) {
-      await asyncForEach(routingReplaceOptions, async (option) => {
+      await async.each(routingReplaceOptions, async (option) => {
         await replace(option);
       });
     } else {
@@ -189,11 +190,11 @@ async function createStarterTemplate(config) {
 
     if (config.auth) {
       if (config.routing.add) {
-        await asyncForEach(loginRoutingReplaceOptions, async (option) => {
+        await async.each(loginRoutingReplaceOptions, async (option) => {
           await replace(option);
         });
       } else {
-        await asyncForEach(loginReplaceOptions, async (option) => {
+        await async.each(loginReplaceOptions, async (option) => {
           await replace(option);
         });
       }

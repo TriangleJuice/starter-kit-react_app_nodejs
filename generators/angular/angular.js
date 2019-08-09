@@ -1,9 +1,13 @@
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
+const replace = require('replace-in-file');
+const async = require('async');
+
 const { updateLog, errorLog } = require('../../utils/log');
 const { deleteFolderSync } = require('../../utils/delete');
 const { mapBranding, brandings } = require('../../utils/branding');
+const frontEndConfig = require('../../config/front-end.config');
 const { execPromise } = require('../../utils/exec');
 
 const appendFile = util.promisify(fs.appendFile);
@@ -90,9 +94,42 @@ async function installACPaasUI(config) {
 
 async function createStarterTemplate(config) {
   updateLog('Creating starter template...');
-  console.log(JSON.stringify(config, null, 2));
+
+  const brandingReplaceOptions = [];
+
+  brandingReplaceOptions.push(
+    {
+      files: './frontend/src/index.html',
+      from: /Frontend/g,
+      to: config.name,
+    },
+    {
+      files: './frontend/src/app/app.component.ts',
+      from: /frontend/g,
+      to: config.name,
+    },
+  );
+
+  if (config.flexboxgrid) {
+    brandingReplaceOptions.push({
+      files: './frontend/src/index.html',
+      from: /favicon.ico">/g,
+      to: `/favicon.ico">
+    ${frontEndConfig.flexbox.link}`,
+    });
+  }
+
   try {
-    await appendFile('./frontend/src/styles.scss', `@import url('https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css');`);
+    await appendFile(
+      './frontend/src/styles.scss',
+      `@import url('https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css');`,
+    );
+    await async.each(brandingReplaceOptions, async (option) => {
+      await replace(option);
+
+      // TODO: Routing
+      // TODO: auth
+    });
   } catch (e) {
     errorLog(e);
   }
