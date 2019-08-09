@@ -1,8 +1,6 @@
-const chalk = require('chalk');
 const path = require('path');
 const replace = require('replace-in-file');
 
-const { log } = console;
 const { copyFolderRecursiveSync } = require('../../utils/copy');
 const { deleteFolderSync, deleteFileSync } = require('../../utils/delete');
 const { execPromise } = require('../../utils/exec');
@@ -54,7 +52,7 @@ function getQuestions() {
   return questions;
 }
 
-function getOptions(auth) {
+function getOptions() {
   return options;
 }
 

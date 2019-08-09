@@ -1,14 +1,14 @@
 const { log } = console;
 const path = require('path');
 const chalk = require('chalk');
-const { nodeConfig } = require('../config/back-end.config');
-const { copyJob } = require('../utils/copy');
-const debug = require('../utils/debug');
-const { deleteFileSync, deleteFolderRecursive } = require('../utils/delete');
-const { execPromise } = require('../utils/exec');
-const gitclone = require('../utils/gitclone');
-const { updateLog, errorLog } = require('../utils/log');
-const removeMatchedLines = require('../utils/removeLine');
+const { nodeConfig } = require('../../config/back-end.config');
+const { copyJob } = require('../../utils/copy');
+const debug = require('../../utils/debug');
+const { deleteFileSync, deleteFolderRecursive } = require('../../utils/delete');
+const { execPromise } = require('../../utils/exec');
+const gitclone = require('../../utils/gitclone');
+const { updateLog, errorLog } = require('../../utils/log');
+const removeMatchedLines = require('../../utils/removeLine');
 
 const generatorOptions = [
   {
@@ -53,7 +53,7 @@ async function copyBaseProject() {
   const { repository, tag } = baseProject;
   debug.logger(`Clone backend version: ${tag}`);
   await gitclone(repository, tag);
-  debug.logger(`Copy files from repo`);
+  debug.logger('Copy files from repo');
   const copyJobs = [
     { source: './tmp/.digipolis.json', destination: './', type: 'file' },
     { source: './tmp/CHANGELOG.md', destination: './', type: 'file' },
@@ -65,7 +65,7 @@ async function copyBaseProject() {
     { source: './tmp/docker-compose.yml', destination: './', type: 'file' },
   ];
   await copyJob(copyJobs);
-  debug.logger(`Cleanup tmp folder`);
+  debug.logger('Cleanup tmp folder');
   deleteFolderRecursive('./tmp');
 }
 
