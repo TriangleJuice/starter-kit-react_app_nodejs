@@ -54,10 +54,7 @@ async function installAngular(config) {
   updateLog('Installing Angular...');
   try {
     await execPromise('npm', ['i', '-g', '@angular/cli']);
-    await execPromise('ng', ['new', 'frontend']);
-    if (config.backend) {
-      deleteFolderSync('frontend/.git');
-    }
+    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`]);
   } catch (e) {
     errorLog(e);
   }
