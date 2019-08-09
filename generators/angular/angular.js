@@ -67,8 +67,13 @@ async function installAngular(config) {
   updateLog('Installing Angular...');
   try {
     await execPromise('npm', ['i', '-g', '@angular/cli']);
-    // TODO: Handle angular cli question for routing
-    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss']);
+    // TODO: fill up config.branding.npm and
+    await execPromise(
+      'ng',
+      ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss', `--routing=${!!config.routing}`]
+        .concat(config.branding.npm)
+        .concat(config.routing.npm),
+    );
   } catch (e) {
     errorLog(e);
   }
@@ -96,42 +101,63 @@ async function installACPaasUI(config) {
 async function createStarterTemplate(config) {
   updateLog('Creating starter template...');
 
-  const brandingReplaceOptions = [];
-
-  brandingReplaceOptions.push(
+  const brandingReplaceOptions = [
     {
       files: './frontend/src/index.html',
       from: /<title>Frontend<\/title>/g,
       to: `<title>${config.name}</title>`,
     },
     {
-      files: './frontend/src/app/app.component.ts',
-      from: /frontend/g,
-      to: config.name,
+      files: './frontend/src/index.html',
+      from: /initial-scale=1" \/>/g,
+      to: `initial-scale=1" />
+      <link rel="stylesheet" href="https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css">`,
     },
-  );
+  ];
+  if (config.branding.type !== 'core') {
+    brandingReplaceOptions.push(
+      {
+        files: './frontend/src/index.html',
+        from: /core_branding/g,
+        to: 'digipolis_branding',
+      },
+      {
+        files: './frontend/src/index.html',
+        from: /safari-pinned-tab.svg" color="#cf0039"/g,
+        to: 'safari-pinned-tab.svg" color="#347ea6"',
+      },
+      {
+        files: './frontend/src/index.html',
+        from: /msapplication-TileColor" content="#cf0039"/g,
+        to: 'msapplication-TileColor" content="#5fb1d6"',
+      },
+      {
+        files: './frontend/src/index.html',
+        from: /theme-color" content="#cf0039"/g,
+        to: 'theme-color" content="#ffffff"',
+      },
+    );
+  }
 
   if (config.flexboxgrid) {
     brandingReplaceOptions.push({
       files: './frontend/src/index.html',
-      from: /favicon.ico">/g,
-      to: `/favicon.ico">
+      from: /main.min.css">/g,
+      to: `main.min.css">
     ${frontEndConfig.flexbox.link}`,
     });
   }
 
   try {
-    await appendFile(
-      './frontend/src/styles.scss',
-      `@import url('https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css');`,
-    );
+    // TODO: Copy premade template?
 
     await async.eachSeries(brandingReplaceOptions, async (option) => {
       await replace(option);
     });
 
-      // TODO: Routing
-      // TODO: auth
+    // TODO: proxy => angular.json +  file copy
+    // TODO: Routing
+    // TODO: auth
   } catch (e) {
     errorLog(e);
   }
