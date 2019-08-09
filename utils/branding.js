@@ -1,4 +1,4 @@
-const package = require('./package');
+const pkg = require('./package');
 
 const brandings = {
   Antwerp: {
@@ -29,12 +29,12 @@ const getBrandings = async () => {
   const updatedBrandings = {};
   await Promise.all(keys.map(async (key) => {
     const branding = brandings[key];
-    branding.version = await package.getlatestverion(branding.npm);
+    branding.version = await pkg.getlatestverion(branding.npm);
     updatedBrandings[key] = branding;
     return branding;
   }));
   return updatedBrandings;
-}
+};
 
 async function mapBranding(key) {
   if (key in brandings) return (await getBrandings())[key];

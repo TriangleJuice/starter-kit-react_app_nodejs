@@ -1,7 +1,12 @@
+const path = require('path');
+const fs = require('fs');
+const util = require('util');
 const { updateLog, errorLog } = require('../../utils/log');
 const { deleteFolderSync } = require('../../utils/delete');
 const { mapBranding, brandings } = require('../../utils/branding');
 const { execPromise } = require('../../utils/exec');
+
+const appendFile = util.promisify(fs.appendFile);
 
 const options = [
   {
@@ -46,23 +51,52 @@ function getQuestions() {
   return questions;
 }
 
-function getOptions(auth) {
+function getOptions() {
   return options;
 }
 
+/**
+ * Run the angular-cli new command.
+ * Install NPM dependencies.
+ */
 async function installAngular(config) {
   updateLog('Installing Angular...');
   try {
     await execPromise('npm', ['i', '-g', '@angular/cli']);
-    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`]);
+    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss']);
   } catch (e) {
     errorLog(e);
   }
 }
 
-async function installACPaasUI() {}
+/**
+ * Go into frontend folder and install ACPaaS UI related stuff:
+ * - ACPaaS UI (Angular).
+ * - Core Branding and optionally one of the other brandings.
+ * - Node SASS, so you don't have to rely on CSS only.
+ */
+async function installACPaasUI(config) {
+  updateLog('Installing ACPaaS UI...');
 
-async function createStarterTemplate() {}
+  try {
+    await execPromise('npm', ['install', '--save-dev', 'node-sass'], { cwd: path.resolve('frontend') });
+    await execPromise('npm', ['install', '--save', '@acpaas-ui/ngx-components'], {
+      cwd: path.resolve('frontend'),
+    });
+  } catch (e) {
+    errorLog(e);
+  }
+}
+
+async function createStarterTemplate(config) {
+  updateLog('Creating starter template...');
+  console.log(JSON.stringify(config, null, 2));
+  try {
+    await appendFile('./frontend/src/styles.scss', `@import url('https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css');`);
+  } catch (e) {
+    errorLog(e);
+  }
+}
 
 async function start(config) {
   const configuration = Object.assign({}, config);
@@ -70,8 +104,8 @@ async function start(config) {
   try {
     deleteFolderSync('frontend');
     await installAngular(configuration);
-    // await installACPaasUI(configuration);
-    // await createStarterTemplate(configuration);
+    await installACPaasUI(configuration);
+    await createStarterTemplate(configuration);
     updateLog('Done with front-end setup', 'cyan');
   } catch (e) {
     errorLog(e);
