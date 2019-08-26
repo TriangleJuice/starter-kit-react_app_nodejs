@@ -50,4 +50,5 @@ function copyJob(jobs) {
 module.exports = {
   copyFolderRecursiveSync,
   copyJob,
+  copyFileSync,
 };

@@ -1,16 +1,15 @@
 const path = require('path');
-const fs = require('fs');
-const util = require('util');
 const replace = require('replace-in-file');
 const async = require('async');
 
 const { updateLog, errorLog } = require('../../utils/log');
 const { deleteFolderSync } = require('../../utils/delete');
+const { updatePackageJson } = require('../../utils/package');
+const { copyFolderRecursiveSync, copyFileSync } = require('../../utils/copy');
 const { mapBranding, brandings } = require('../../utils/branding');
 const frontEndConfig = require('../../config/front-end.config');
 const { execPromise } = require('../../utils/exec');
-
-const appendFile = util.promisify(fs.appendFile);
+const { mapRouting } = require('./routing');
 
 const options = [
   {
@@ -66,14 +65,8 @@ function getOptions() {
 async function installAngular(config) {
   updateLog('Installing Angular...');
   try {
-    await execPromise('npm', ['i', '-g', '@angular/cli']);
-    // TODO: fill up config.branding.npm and
-    await execPromise(
-      'ng',
-      ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss', `--routing=${!!config.routing}`]
-        .concat(config.branding.npm)
-        .concat(config.routing.npm),
-    );
+    await execPromise('npm', ['i', '-g', '@angular/cli'].concat(config.branding.npm).concat(config.routing.npm));
+    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss', `--routing=${!!config.routing}`]);
   } catch (e) {
     errorLog(e);
   }
@@ -149,13 +142,25 @@ async function createStarterTemplate(config) {
   }
 
   try {
-    // TODO: Copy premade template?
+    deleteFolderSync('frontend/src/app');
+    await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/app`, `${__frontenddir}/src`);
 
     await async.eachSeries(brandingReplaceOptions, async (option) => {
       await replace(option);
     });
 
-    // TODO: proxy => angular.json +  file copy
+    if (config.backend) {
+      copyFileSync(`${__basedir}/generators/angular/files/proxy.conf.json`, `${__frontenddir}`);
+      updatePackageJson(
+        {
+          scripts: {
+            start: 'ng serve --proxy-config proxy.conf.json',
+          },
+        },
+        `${__frontenddir}/package.json`,
+      );
+    }
+
     // TODO: Routing
     // TODO: auth
   } catch (e) {
@@ -165,6 +170,8 @@ async function createStarterTemplate(config) {
 
 async function start(config) {
   const configuration = Object.assign({}, config);
+  configuration.routing = mapRouting(configuration);
+  console.log(JSON.stringify(configuration, null, 2));
   updateLog('Preparing...');
   try {
     deleteFolderSync('frontend');

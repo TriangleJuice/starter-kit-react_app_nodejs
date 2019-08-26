@@ -1,0 +1,11 @@
+version: '2'
+services:
+  app:
+    build: .
+    env_file: backend/.env-docker.list
+    tty: true
+    command: "npm run test"
+    links:
+      - mongo
+  mongo:
+    image: mongo:3.2

@@ -153,7 +153,7 @@ import Login from './components/Login/Login';`,
   },
 ];
 
-mapRouting = (conf) => {
+const mapRouting = (conf) => {
   if (!conf.routing) {
     return {
       add: false,

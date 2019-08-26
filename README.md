@@ -1,25 +1,25 @@
-# Digipolis starter kit for React
+[![Build Status](https://travis-ci.com/digipolisantwerp/starter-kit_app_nodejs.svg?branch=master)](https://travis-ci.com/digipolisantwerp/starter-kit_app_nodejs)
+[![Coverage Status](https://coveralls.io/repos/github/digipolisantwerp/starter-kit_app_nodejs/badge.svg?branch=master)](https://coveralls.io/github/digipolisantwerp/starter-kit_app_nodejs?branch=master)
+# starter-kit_app_nodejs
 
-This starter kit makes it easy for you to create a React-based [ACPaaS UI](https://acpaas-ui.digipolis.be) app. It works best as part of the [Digipolis NodeJS starter kit](https://github.com/digipolisantwerp/starter-kit_app_nodejs), but it's also possible to use it stand-alone.
+A boilerplate project for Digipolis, created to keep a consistent folder stucture and implements some much used modules like:
 
-## Basic usage
+-  [`@digipolis/auth`](https://github.com/digipolisantwerp/auth_module_nodejs)
+-  [`digipolis-response`](https://www.npmjs.com/package/digipolis-response)
 
-```sh
-> npm install -g @digipolis/start-react
-> cd your-app
-> digipolis-start-react
-```
+## How to use
 
-## Advanced
+###Backend:
 
-### Run the starter kit without questionnaire
+ **[Backend documentation](backend/README.md)**
 
-```sh
-> digipolis-start-react --no-setup
-```
+### Run:
+|                       | cmd                 |  description                     |  
+| --------------------- | ------------------- | -------------------------------- |
+| **Run app in docker** | `docker-compose up` | Run app in dockerized environment |
 
-Run the help command in order to see all available configuration options:
 
-```sh
-> digipolis-start-react --help
-```
+### Testing:
+|   |  cmd |  description |  
+| --------------------------- | ------------------------------------------- | ------------- |
+| **Run all tests in docker** | `docker-compose -f docker-compose.ci.yml up`| Run all tests |
