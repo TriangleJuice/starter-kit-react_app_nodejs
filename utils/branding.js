@@ -7,6 +7,7 @@ const brandings = {
     version: '0',
     type: 'core',
     key: 'Antwerp',
+    scss: [],
   },
   Digipolis: {
     cdn: 'digipolis_branding_scss',
@@ -14,6 +15,7 @@ const brandings = {
     version: '0',
     type: 'digipolis',
     key: 'Digipolis',
+    scss: ['@import "~@a-ui/digipolis/src/styles/quarks/quarks.variables";'],
   },
   ACPaaS: {
     cdn: 'acpaas_branding_scss',
@@ -21,6 +23,7 @@ const brandings = {
     version: '0',
     type: 'acpaas',
     key: 'ACPaaS',
+    scss: ['@import "~@a-ui/acpaas/src/styles/quarks/quarks.variables";'],
   },
 };
 

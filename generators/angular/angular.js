@@ -1,6 +1,5 @@
 const path = require('path');
 const replace = require('replace-in-file');
-const async = require('async');
 
 const { updateLog, errorLog } = require('../../utils/log');
 const { deleteFolderSync } = require('../../utils/delete');
@@ -95,7 +94,7 @@ async function createStarterTemplate(config) {
   updateLog('Creating starter template...');
 
   const brandingReplaceOptions = {
-    files: './frontend/src/index.html',
+    files: `${__frontenddir}/src/index.html`,
     from: [/<title>Frontend<\/title>/g, /<brand \/>/g],
     to: [
       `<title>${config.name}</title>`,
@@ -123,12 +122,21 @@ async function createStarterTemplate(config) {
   }
 
   try {
-    deleteFolderSync('frontend/src/app');
+    deleteFolderSync(`${__frontenddir}/src/app`);
     await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/app`, `${__frontenddir}/src`);
     await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/assets`, `${__frontenddir}`);
-    await copyFileSync(`${__basedir}/generators/angular/files/index.html`, `${__frontenddir}/src`);
+    copyFileSync(`${__basedir}/generators/angular/files/index.html`, `${__frontenddir}/src`);
+    copyFileSync(`${__basedir}/generators/angular/files/styles.scss`, `${__frontenddir}/src`);
 
     await replace(brandingReplaceOptions);
+    await replace({
+      files: `${__frontenddir}/src/styles.scss`,
+      from: [/styles\/quarks";/],
+      to: [
+        `/styles/quarks";
+      ${config.branding.scss.join('\n')}`,
+      ],
+    });
 
     if (config.backend) {
       copyFileSync(`${__basedir}/generators/angular/files/proxy.conf.json`, `${__frontenddir}`);
@@ -142,13 +150,136 @@ async function createStarterTemplate(config) {
       );
     }
 
-    if (config.auth) {
-      // install rxjs
-      // copy files/replace content
+    if (config.routing.add) {
+      await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/`, `${__frontenddir}/src/app`);
+      deleteFolderSync(`${__frontenddir}/src/app/pages/login`);
+      copyFileSync(`${__basedir}/generators/angular/files/extra/src/app/app-routing.module.ts`, `${__frontenddir}/src/app`);
+      const replaceAppComponentHtml = {
+        files: `${__frontenddir}/src/app/app.component.html`,
+        from: [/<\/aui-header>/],
+        to: [
+          `<div auiHeaderMenuItem>
+        <a routerLink="/home">
+          <button class="a-button">
+            <span>Home</span>
+          </button>
+        </a>
+        <a routerLink="/about">
+          <button class="a-button">
+            <span>About</span>
+          </button>
+        </a>
+      </div>
+      </aui-header>`,
+        ],
+      };
+
+      const replaceAppModule = {
+        files: `${__frontenddir}/src/app/app.module.ts`,
+        from: [/BrowserModule,/g, 'import { AuiModules } from "./aui.modules";', '[AppComponent]'],
+        to: [
+          `BrowserModule,
+        AppRoutingModule,`,
+          `import { AuiModules } from "./aui.modules";
+        import { AppRoutingModule } from './app-routing.module';
+        import { Pages } from './pages';`,
+          '[AppComponent, ...Pages]',
+        ],
+      };
+
+      await replace(replaceAppComponentHtml);
+      await replace(replaceAppModule);
     }
 
-    if (config.routing.add) {
-      // copy files/replace content
+    if (config.auth) {
+      await replace({
+        files: `${__frontenddir}/src/app/app.component.html`,
+        from: [
+          `</div>
+        </aui-header>`,
+        ],
+        to: [
+          `<a routerLink="/login">
+        <button class="a-button">
+          <span>Aanmelden</span>
+        </button>
+      </a>
+      </div>
+      </aui-header>`,
+        ],
+      });
+
+      if (config.routing.add) {
+        await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/login/`, `${__frontenddir}/src/app/pages`);
+        const loginRoutingReplacePages = {
+          files: `${__frontenddir}/src/app/pages/index.ts`,
+          from: ["import { AboutPage } from './about/about.page';", 'AboutPage,'],
+          to: [
+            `import { AboutPage } from './about/about.page';
+import { LoginPage } from './login/login.page';`,
+            `AboutPage,
+LoginPage,`,
+          ],
+        };
+
+        await replace(loginRoutingReplacePages);
+
+        await replace({
+          files: `${__frontenddir}/src/app/app-routing.module.ts`,
+          from: ["import { AboutPage } from './pages/about/about.page';", "{ path: 'about', component: AboutPage },"],
+          to: [
+            `import { AboutPage } from './pages/about/about.page';
+          import { LoginPage } from './pages/login/login.page';`,
+            `{ path: 'about', component: AboutPage },
+          { path: 'login', component: LoginPage }`,
+          ],
+        });
+      } else {
+        await replace({
+          files: `${__frontenddir}/src/app/app.component.html`,
+          from: ['routerLink="/login"'],
+          to: ['url="/auth/login/mprofiel"'],
+        });
+      }
+
+      await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/services`, `${__frontenddir}/src/app`);
+
+      await execPromise('npm', ['install', '--save', 'rxjs'], { cwd: path.resolve('frontend') });
+      await replace({
+        files: `${__frontenddir}/src/app/app.component.ts`,
+        from: ['export class AppComponent { }', "import { Component } from '@angular/core';"],
+        to: [
+          `export class AppComponent implements OnInit {
+          public userData: any;
+        
+          constructor(
+            private userService: UserService) { }
+        
+          ngOnInit() {
+            this.userService.getUser().then((resp) => {
+              resp.json().then((data) => {
+                this.userData = data.user;
+              });
+            });
+          }
+        }
+        `,
+          `import { Component, OnInit } from '@angular/core';
+          import { UserService } from './services/user';
+          `,
+        ],
+      });
+
+      await replace({
+        files: `${__frontenddir}/src/app/app.module.ts`,
+        from: ["import { AppComponent } from './app.component';", '..AuiModules,'],
+        to: [
+          `import { ServiceModule } from './services';
+        import { AppComponent } from './app.component';`,
+          `..AuiModules,
+        ServiceModule,`,
+        ],
+      });
     }
   } catch (e) {
     errorLog(e);
