@@ -124,7 +124,6 @@ async function createStarterTemplate(config) {
   try {
     deleteFolderSync(`${__frontenddir}/src/app`);
     await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/app`, `${__frontenddir}/src`);
-    await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/assets`, `${__frontenddir}`);
     copyFileSync(`${__basedir}/generators/angular/files/index.html`, `${__frontenddir}/src`);
     copyFileSync(`${__basedir}/generators/angular/files/styles.scss`, `${__frontenddir}/src`);
 
@@ -154,6 +153,7 @@ async function createStarterTemplate(config) {
       await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/`, `${__frontenddir}/src/app`);
       deleteFolderSync(`${__frontenddir}/src/app/pages/login`);
       copyFileSync(`${__basedir}/generators/angular/files/extra/src/app/app-routing.module.ts`, `${__frontenddir}/src/app`);
+      copyFileSync(`${__basedir}/generators/angular/files/extra/src/app/app.component.html`, `${__frontenddir}/src/app`);
       const replaceAppComponentHtml = {
         files: `${__frontenddir}/src/app/app.component.html`,
         from: [/<\/aui-header>/],
@@ -194,18 +194,14 @@ async function createStarterTemplate(config) {
     if (config.auth) {
       await replace({
         files: `${__frontenddir}/src/app/app.component.html`,
-        from: [
-          `</div>
-        </aui-header>`,
-        ],
+        from: ['<div auiHeaderMenuItem>'],
         to: [
-          `<a routerLink="/login">
+          `<div auiHeaderMenuItem>
+          <a routerLink="/login">
         <button class="a-button">
           <span>Aanmelden</span>
         </button>
-      </a>
-      </div>
-      </aui-header>`,
+      </a>`,
         ],
       });
 
@@ -237,8 +233,13 @@ LoginPage,`,
       } else {
         await replace({
           files: `${__frontenddir}/src/app/app.component.html`,
-          from: ['routerLink="/login"'],
-          to: ['url="/auth/login/mprofiel"'],
+          from: ['routerLink="/login"', '<ul className="a-list">'],
+          to: [
+            'url="/auth/login/mprofiel"',
+            `<ul className="a-list">
+          <li><a href="/auth/login/mprofiel" className="has-icon-right">Login MProfiel</a></li>
+          `,
+          ],
         });
       }
 
@@ -269,6 +270,8 @@ LoginPage,`,
           `,
         ],
       });
+
+      // TODO: ADD USER MENU!
 
       await replace({
         files: `${__frontenddir}/src/app/app.module.ts`,
