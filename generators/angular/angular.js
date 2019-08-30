@@ -57,6 +57,14 @@ function getOptions() {
   return options;
 }
 
+function getUserMenuLogic(hasRouting) {
+  if (hasRouting) {
+    return "this.router.navigate(['/login']);";
+  }
+
+  return "window.location.href = '/auth/login/mprofiel';";
+}
+
 /**
  * Run the angular-cli new command.
  * Install NPM dependencies.
@@ -64,8 +72,10 @@ function getOptions() {
 async function installAngular(config) {
   updateLog('Installing Angular...');
   try {
+    // TODO: NPX? => npm scripts checken!
+    // TODO: via CLI starterkit runnen
     await execPromise('npm', ['i', '-g', '@angular/cli']);
-    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss', `--routing=${!!config.routing}`]);
+    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss', `--routing=${!!config.routing.add}`]);
   } catch (e) {
     errorLog(e);
   }
@@ -138,11 +148,12 @@ async function createStarterTemplate(config) {
     });
 
     if (config.backend) {
-      copyFileSync(`${__basedir}/generators/angular/files/proxy.conf.json`, `${__frontenddir}`);
+      copyFileSync(`${__basedir}/generators/angular/files/proxy.conf.js`, `${__frontenddir}`);
       updatePackageJson(
         {
           scripts: {
-            start: 'ng serve --proxy-config proxy.conf.json',
+            // TODO: Check if npm start script nog met 'ng' is.
+            start: 'ng serve --proxy-config proxy.conf.js',
           },
         },
         `${__frontenddir}/package.json`,
@@ -192,16 +203,26 @@ async function createStarterTemplate(config) {
     }
 
     if (config.auth) {
+      await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/components`, `${__frontenddir}/src/app`);
       await replace({
         files: `${__frontenddir}/src/app/app.component.html`,
-        from: ['<div auiHeaderMenuItem>'],
+        from: ['</aui-header>'],
         to: [
           `<div auiHeaderMenuItem>
-          <a routerLink="/login">
-        <button class="a-button">
-          <span>Aanmelden</span>
-        </button>
-      </a>`,
+          <user-flyout [user]="user" (login)="login()"></user-flyout>
+        </div>
+      </aui-header>`,
+        ],
+      });
+
+      await replace({
+        files: `${__frontenddir}/src/app/app.module.ts`,
+        from: ['declarations: [AppComponent]', 'import { AuiModules } from "./aui.modules";'],
+        to: [
+          `declarations: [AppComponent,
+          ...Components,]`,
+          `import { AuiModules } from "./aui.modules";
+          import { Components } from "./components";`,
         ],
       });
 
@@ -230,17 +251,6 @@ LoginPage,`,
           { path: 'login', component: LoginPage }`,
           ],
         });
-      } else {
-        await replace({
-          files: `${__frontenddir}/src/app/app.component.html`,
-          from: ['routerLink="/login"', '<ul className="a-list">'],
-          to: [
-            'url="/auth/login/mprofiel"',
-            `<ul className="a-list">
-          <li><a href="/auth/login/mprofiel" className="has-icon-right">Login MProfiel</a></li>
-          `,
-          ],
-        });
       }
 
       await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/services`, `${__frontenddir}/src/app`);
@@ -254,6 +264,7 @@ LoginPage,`,
           public userData: any;
         
           constructor(
+          ${config.routing.add ? 'private router: Router,' : ''}
             private userService: UserService) { }
         
           ngOnInit() {
@@ -263,27 +274,16 @@ LoginPage,`,
               });
             });
           }
+
+          login() {
+            ${getUserMenuLogic(config.routing.add)}
+          }
         }
         `,
           `import { Component, OnInit } from '@angular/core';
+          ${config.routing.add ? "import { Router } from '@angular/router';" : ''}
           import { UserService } from './services/user';
           `,
-        ],
-      });
-
-      await replace({
-        files: `${__frontenddir}/src/app/app.component.html`,
-        from: ['</aui-header>'],
-        to: [
-          `
-        <div auiHeaderMenuItem>
-          <a routerLink="/home">
-            <button class="a-button">
-              
-            </button>
-          </a>
-        </div>
-        </aui-header>`,
         ],
       });
 
@@ -295,6 +295,19 @@ LoginPage,`,
         import { AppComponent } from './app.component';`,
           `..AuiModules,
         ServiceModule,`,
+        ],
+      });
+
+      await replace({
+        files: `${__frontenddir}/src/app/aui.modules.ts`,
+        from: ['LogoModule,', 'import { LogoModule } from "@acpaas-ui/ngx-components/logo";'],
+        to: [
+          `LogoModule,
+        AvatarModule,
+        FlyoutModule`,
+          `import { LogoModule } from "@acpaas-ui/ngx-components/logo";
+        import { AvatarModule } from "@acpaas-ui/ngx-components/avatar";
+        import { FlyoutModule } from "@acpaas-ui/ngx-components/flyout";`,
         ],
       });
     }

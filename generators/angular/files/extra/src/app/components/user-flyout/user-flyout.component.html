@@ -1,0 +1,37 @@
+<button
+  class="a-button has-icon-left"
+  *ngIf="!user"
+  (click)="loginUser()"
+>
+  <i class="fa fa-user"></i>
+  Aanmelden
+</button>
+<div auiFlyout align="right" *ngIf="user">
+  <div class="m-user-flyout" auiFlyoutAction>
+    <ng-container *ngIf="user.avatarUrl">
+      <aui-avatar
+        [image]="user.avatarUrl"
+        [title]="user.firstName + ' ' + user.lastName"
+      ></aui-avatar>
+    </ng-container>
+    <ng-container *ngIf="!user.avatarUrl">
+      <aui-avatar
+        icon="fa fa-user"
+        [title]="user.firstName + ' ' + user.lastName"
+      ></aui-avatar>
+    </ng-container>
+    <button class="a-button u-hide-on-mobile-devices">
+      <span class="u-padding-left-xs u-padding-right-xs"
+        >{{ user.firstName }} {{ user.lastName }}</span
+      >
+    </button>
+  </div>
+  <div auiFlyoutZone>
+    <div>
+      <a class="a-button a-button--block a-button--danger has-icon-left" href="/auth/logout">
+        <i class="fa fa-power-off"></i>
+        Afmelden
+      </a>
+    </div>
+  </div>
+</div>

@@ -4,5 +4,5 @@ import { LogoModule } from "@acpaas-ui/ngx-components/logo";
 export const AuiModules = [
 	FooterModule,
 	HeaderModule,
-	LogoModule
+	LogoModule,
 ];
