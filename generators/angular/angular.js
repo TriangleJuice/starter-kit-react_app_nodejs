@@ -271,7 +271,21 @@ LoginPage,`,
         ],
       });
 
-      // TODO: ADD USER MENU!
+      await replace({
+        files: `${__frontenddir}/src/app/app.component.html`,
+        from: ['</aui-header>'],
+        to: [
+          `
+        <div auiHeaderMenuItem>
+          <a routerLink="/home">
+            <button class="a-button">
+              
+            </button>
+          </a>
+        </div>
+        </aui-header>`,
+        ],
+      });
 
       await replace({
         files: `${__frontenddir}/src/app/app.module.ts`,
