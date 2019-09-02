@@ -110,6 +110,8 @@ async function installACPaasUI(config) {
 async function createStarterTemplate(config) {
   updateLog('Creating starter template...');
 
+  // TODO: update core branding logo version
+
   const brandingReplaceOptions = {
     files: `${__frontenddir}/src/index.html`,
     from: [/<title>Frontend<\/title>/g, /<brand \/>/g],
@@ -223,10 +225,10 @@ async function createStarterTemplate(config) {
 
       await replace({
         files: `${__frontenddir}/src/app/app.module.ts`,
-        from: ['declarations: [AppComponent]', 'import { AuiModules } from "./aui.modules";'],
+        from: ['declarations: [AppComponent', 'import { AuiModules } from "./aui.modules";'],
         to: [
           `declarations: [AppComponent,
-          ...Components,]`,
+          ...Components`,
           `import { AuiModules } from "./aui.modules";
           import { Components } from "./components";`,
         ],
