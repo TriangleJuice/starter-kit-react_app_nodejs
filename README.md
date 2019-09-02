@@ -23,3 +23,7 @@ A boilerplate project for Digipolis, created to keep a consistent folder stuctur
 |   |  cmd |  description |  
 | --------------------------- | ------------------------------------------- | ------------- |
 | **Run all tests in docker** | `docker-compose -f docker-compose.ci.yml up`| Run all tests |
+
+### Frontend:
+
+> ⚠️ **Warning**: Note that if you want to use `ng` commands, you will have to install `@angular/cli`.
