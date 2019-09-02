@@ -182,7 +182,7 @@ async function createStarterTemplate(config) {
       from: [/styles\/quarks';/],
       to: [
         `/styles/quarks';
-      ${config.branding.scss.join('\n')}`,
+${config.branding.scss.join('\n')}`,
       ],
     });
 
