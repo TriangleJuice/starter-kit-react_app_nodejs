@@ -72,10 +72,16 @@ function getUserMenuLogic(hasRouting) {
 async function installAngular(config) {
   updateLog('Installing Angular...');
   try {
-    // TODO: NPX? => npm scripts checken!
-    // TODO: via CLI starterkit runnen
-    await execPromise('npm', ['i', '-g', '@angular/cli']);
-    await execPromise('ng', ['new', 'frontend', `--skipGit=${!!config.backend}`, '--style=scss', `--routing=${!!config.routing.add}`]);
+    await execPromise('npx', [
+      '-p',
+      '@angular/cli',
+      'ng',
+      'new',
+      'frontend',
+      `--skipGit=${!!config.backend}`,
+      '--style=scss',
+      `--routing=${!!config.routing.add}`,
+    ]);
   } catch (e) {
     errorLog(e);
   }
@@ -152,7 +158,6 @@ async function createStarterTemplate(config) {
       updatePackageJson(
         {
           scripts: {
-            // TODO: Check if npm start script nog met 'ng' is.
             start: 'ng serve --proxy-config proxy.conf.js',
           },
         },
