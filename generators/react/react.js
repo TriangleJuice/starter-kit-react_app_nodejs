@@ -6,7 +6,8 @@ const { copyFolderRecursiveSync } = require('../../utils/copy');
 const { deleteFolderSync, deleteFileSync } = require('../../utils/delete');
 const { execPromise } = require('../../utils/exec');
 const { updateLog, errorLog } = require('../../utils/log');
-const { mapBranding, brandings } = require('../../utils/branding');
+const brandings = require('../../config/brandings.config');
+const { mapBranding } = require('../../utils/branding');
 const { mapRouting, routingReplaceOptions, loginReplaceOptions, loginRoutingReplaceOptions } = require('./routing');
 const frontEndConfig = require('../../config/front-end.config');
 
@@ -112,6 +113,15 @@ async function createStarterTemplate(config) {
       to: config.branding.version,
     },
   ];
+
+  await replace({
+    files: `${__frontenddir}/src/App.scss`,
+    from: [/styles\/quarks";/],
+    to: [
+      `/styles/quarks";
+    ${config.branding.scss.join('\n')}`,
+    ],
+  });
 
   if (config.name !== 'Starter app') {
     brandingReplaceOptions.push(
