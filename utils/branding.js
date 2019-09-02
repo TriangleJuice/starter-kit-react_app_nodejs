@@ -28,7 +28,6 @@ const brandings = {
 };
 
 const getBrandings = async () => {
-  console.log('Getting latest version for branding package.');
   const keys = Object.keys(brandings);
   const updatedBrandings = {};
   await Promise.all(keys.map(async (key) => {

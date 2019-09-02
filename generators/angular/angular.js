@@ -324,7 +324,6 @@ LoginPage,`,
 async function start(config) {
   const configuration = Object.assign({}, config);
   configuration.routing = mapRouting(configuration);
-  console.log(JSON.stringify(configuration, null, 2));
   updateLog('Preparing...');
   try {
     deleteFolderSync('frontend');
