@@ -3,7 +3,7 @@ const replace = require('replace-in-file');
 
 const { updateLog, errorLog } = require('../../utils/log');
 const { deleteFolderSync } = require('../../utils/delete');
-const { updatePackageJson } = require('../../utils/package');
+const { updatePackageJson, getlatestverion } = require('../../utils/package');
 const { copyFolderRecursiveSync, copyFileSync } = require('../../utils/copy');
 const brandings = require('../../config/brandings.config');
 const { mapBranding } = require('../../utils/branding');
@@ -112,6 +112,8 @@ async function createStarterTemplate(config) {
 
   // TODO: update core branding logo version
 
+  const coreVersion = await getlatestverion('@a-ui/core');
+
   const brandingReplaceOptions = {
     files: `${__frontenddir}/src/index.html`,
     from: [/<title>Frontend<\/title>/g, /<brand \/>/g],
@@ -175,7 +177,7 @@ async function createStarterTemplate(config) {
       copyFileSync(`${__basedir}/generators/angular/files/extra/src/app/app.component.html`, `${__frontenddir}/src/app`);
       const replaceAppComponentHtml = {
         files: `${__frontenddir}/src/app/app.component.html`,
-        from: [/<\/aui-header>/],
+        from: [/<\/aui-header>/, '<div class="o-header__wrapper">'],
         to: [
           `<div auiHeaderMenuItem>
         <a routerLink="/home">
@@ -190,6 +192,8 @@ async function createStarterTemplate(config) {
         </a>
       </div>
       </aui-header>`,
+          `<div class="o-header__wrapper">
+      <aui-logo src="https://cdn.antwerpen.be/core_branding_scss/${coreVersion}/assets/images/a-logo.svg"></aui-logo>`,
         ],
       };
 
