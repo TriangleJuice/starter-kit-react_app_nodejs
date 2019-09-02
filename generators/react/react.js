@@ -114,15 +114,6 @@ async function createStarterTemplate(config) {
     },
   ];
 
-  await replace({
-    files: `${__frontenddir}/src/App.scss`,
-    from: [/styles\/quarks";/],
-    to: [
-      `/styles/quarks";
-    ${config.branding.scss.join('\n')}`,
-    ],
-  });
-
   if (config.name !== 'Starter app') {
     brandingReplaceOptions.push(
       {
@@ -185,6 +176,15 @@ async function createStarterTemplate(config) {
     deleteFolderSync('frontend/public');
     await copyFolderRecursiveSync(`${__basedir}/generators/react/files/public`, __frontenddir);
     await copyFolderRecursiveSync(`${__basedir}/generators/react/files/src`, __frontenddir);
+
+    await replace({
+      files: `${__frontenddir}/src/App.scss`,
+      from: [/styles\/quarks';/],
+      to: [
+        `/styles/quarks';
+      ${config.branding.scss.join('\n')}`,
+      ],
+    });
 
     await async.each(brandingReplaceOptions, async (option) => {
       await replace(option);

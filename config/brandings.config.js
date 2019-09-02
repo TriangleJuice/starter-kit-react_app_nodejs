@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   Antwerp: {
     cdn: 'core_branding_scss',
     npm: ['@a-ui/core'],
