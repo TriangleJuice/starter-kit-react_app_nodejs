@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+
+global.__basedir = __dirname;
+global.__frontenddir = './frontend';
+global.__backenddir = './backend';
+
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const program = require('commander');
@@ -12,10 +17,6 @@ const { log } = console;
 const { mapBranding } = require('./utils/branding');
 const { fancyLog } = require('./utils/log');
 const debug = require('./utils/debug');
-
-global.__basedir = __dirname;
-global.__frontenddir = './frontend';
-global.__backenddir = './backend';
 
 
 // Run commander with generator options

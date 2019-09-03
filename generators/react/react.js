@@ -8,7 +8,7 @@ const { execPromise } = require('../../utils/exec');
 const { updateLog, errorLog } = require('../../utils/log');
 const brandings = require('../../config/brandings.config');
 const { mapBranding } = require('../../utils/branding');
-const { mapRouting, routingReplaceOptions, loginReplaceOptions, loginRoutingReplaceOptions } = require('./routing');
+const { mapRouting, getRoutingReplaceOptions, getLoginReplaceOptions, getLoginRoutingReplaceOptions } = require('./routing');
 const frontEndConfig = require('../../config/front-end.config');
 
 const options = [
@@ -104,72 +104,37 @@ async function installACPaaSUI(config) {
 
 async function createStarterTemplate(config) {
   updateLog('Creating starter template...');
-  const branding = await frontEndConfig.branding.generateLinkTag(config.branding);
 
-  const brandingReplaceOptions = [
-    {
-      files: './frontend/public/index.html',
-      from: /x.x.x/g,
-      to: config.branding.version,
-    },
-  ];
+  const IndexHtmlReplaceOptions = {
+    files: `${__frontenddir}/public/index.html`,
+    from: [/Starter app/g, 'https://cdn.antwerpen.be/core_branding_scss/x.x.x/main.min.css'],
+    to: [config.name, `https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css`],
+  };
 
-  if (config.name !== 'Starter app') {
-    brandingReplaceOptions.push(
-      {
-        files: './frontend/public/index.html',
-        from: /Starter app/g,
-        to: config.name,
-      },
-      {
-        files: './frontend/src/App.js',
-        from: /Starter app/g,
-        to: config.name,
-      },
-    );
-  }
+  const AppJsReplaceOptions = {
+    files: `${__frontenddir}/src/App.js`,
+    from: [/Starter app/g],
+    to: [config.name],
+  };
 
   if (config.branding.type !== 'core') {
-    brandingReplaceOptions.push(
-      {
-        files: './frontend/public/index.html',
-        from: /core_branding/g,
-        to: 'digipolis_branding',
-      },
-      {
-        files: './frontend/public/index.html',
-        from: /safari-pinned-tab.svg" color="#cf0039"/g,
-        to: 'safari-pinned-tab.svg" color="#347ea6"',
-      },
-      {
-        files: './frontend/public/index.html',
-        from: /msapplication-TileColor" content="#cf0039"/g,
-        to: 'msapplication-TileColor" content="#5fb1d6"',
-      },
-      {
-        files: './frontend/public/index.html',
-        from: /theme-color" content="#cf0039"/g,
-        to: 'theme-color" content="#ffffff"',
-      },
+    IndexHtmlReplaceOptions.from.push(
+      /safari-pinned-tab.svg" color="#cf0039"/g,
+      /msapplication-TileColor" content="#cf0039"/g,
+      /theme-color" content="#cf0039"/g,
     );
-  }
-
-  if (config.branding.type === 'acpaas') {
-    brandingReplaceOptions.push({
-      files: './frontend/public/index.html',
-      from: /digipolis_branding_scss/g,
-      to: 'acpaas_branding_scss',
-    });
+    IndexHtmlReplaceOptions.to.push(
+      'safari-pinned-tab.svg" color="#347ea6"',
+      'msapplication-TileColor" content="#5fb1d6"',
+      'theme-color" content="#ffffff"',
+    );
   }
 
   // Flexboxgrid
   if (config.flexboxgrid) {
-    brandingReplaceOptions.push({
-      files: './frontend/public/index.html',
-      from: /main.min.css">/g,
-      to: `main.min.css">
-    ${frontEndConfig.flexbox.link}`,
-    });
+    IndexHtmlReplaceOptions.from.push(/main.min.css">/g);
+    IndexHtmlReplaceOptions.to.push(`main.min.css">
+    ${frontEndConfig.flexbox.link}`);
   }
 
   try {
@@ -186,12 +151,11 @@ ${config.branding.scss.join('\n')}`,
       ],
     });
 
-    await async.each(brandingReplaceOptions, async (option) => {
-      await replace(option);
-    });
+    await replace(IndexHtmlReplaceOptions);
+    await replace(AppJsReplaceOptions);
 
     if (config.routing.add) {
-      await async.each(routingReplaceOptions, async (option) => {
+      await async.each(getRoutingReplaceOptions(), async (option) => {
         await replace(option);
       });
     } else {
@@ -200,11 +164,11 @@ ${config.branding.scss.join('\n')}`,
 
     if (config.auth) {
       if (config.routing.add) {
-        await async.each(loginRoutingReplaceOptions, async (option) => {
+        await async.each(getLoginRoutingReplaceOptions(), async (option) => {
           await replace(option);
         });
       } else {
-        await async.each(loginReplaceOptions, async (option) => {
+        await async.each(getLoginReplaceOptions(), async (option) => {
           await replace(option);
         });
       }
