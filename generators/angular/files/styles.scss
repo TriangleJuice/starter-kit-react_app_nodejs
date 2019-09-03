@@ -14,18 +14,6 @@ app-root > ng-component {
   flex-direction: column;
 }
 
-.o-header__title {
-  color: $white;
-}
-
-.o-header__logo {
-  position: static;
-
-  img {
-    height: $spacer * 2;
-  }
-}
-
 .u-wrapper {
   flex: 1 0 auto;
   width: 100%;

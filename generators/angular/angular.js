@@ -9,6 +9,7 @@ const brandings = require('../../config/brandings.config');
 const { mapBranding } = require('../../utils/branding');
 const frontEndConfig = require('../../config/front-end.config');
 const { execPromise } = require('../../utils/exec');
+const { appendLine } = require('../../utils/appendLine');
 const { mapRouting } = require('./routing');
 
 const options = [
@@ -110,8 +111,6 @@ async function installACPaasUI(config) {
 async function createStarterTemplate(config) {
   updateLog('Creating starter template...');
 
-  // TODO: update core branding logo version
-
   const coreVersion = await getlatestverion('@a-ui/core');
 
   const brandingReplaceOptions = {
@@ -147,6 +146,23 @@ async function createStarterTemplate(config) {
     await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/app`, `${__frontenddir}/src`);
     copyFileSync(`${__basedir}/generators/angular/files/index.html`, `${__frontenddir}/src`);
     copyFileSync(`${__basedir}/generators/angular/files/styles.scss`, `${__frontenddir}/src`);
+
+    if (config.branding.type !== 'core') {
+      await appendLine(
+        `${__frontenddir}/src/styles.scss`,
+        `.o-header__title {
+    color: $white;
+  }
+  
+  .o-header__logo {
+    position: static;
+  
+    img {
+      height: $spacer * 2;
+    }
+  }`,
+      );
+    }
 
     await replace(brandingReplaceOptions);
     await replace({
