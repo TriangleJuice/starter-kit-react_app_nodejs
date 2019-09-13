@@ -1,29 +1,53 @@
-[![Build Status](https://travis-ci.com/digipolisantwerp/starter-kit_app_nodejs.svg?branch=master)](https://travis-ci.com/digipolisantwerp/starter-kit_app_nodejs)
-[![Coverage Status](https://coveralls.io/repos/github/digipolisantwerp/starter-kit_app_nodejs/badge.svg?branch=master)](https://coveralls.io/github/digipolisantwerp/starter-kit_app_nodejs?branch=master)
-# starter-kit_app_nodejs
+# Digipolis ui-starter
 
-A boilerplate project for Digipolis, created to keep a consistent folder stucture and implements some much used modules like:
+This starter kit makes it easy for you to create a frontend [ACPaaS UI](https://acpaas-ui.digipolis.be) and/or backend nodejs app.
 
--  [`@digipolis/auth`](https://github.com/digipolisantwerp/auth_module_nodejs)
--  [`digipolis-response`](https://www.npmjs.com/package/digipolis-response)
+## Basic usage
 
-## How to use
+```sh
+> npm install -g @digipolis/start-ui
+> cd your-app
+> digipolis-start-ui
+```
 
-###Backend:
+## Advanced
 
- **[Backend documentation](backend/README.md)**
+### Run the starter kit without questionnaire
 
-### Run:
-|                       | cmd                 |  description                     |  
-| --------------------- | ------------------- | -------------------------------- |
-| **Run app in docker** | `docker-compose up` | Run app in dockerized environment |
+```sh
+> digipolis-start-ui --no-setup
+```
 
+Run the help command in order to see all available configuration options:
 
-### Testing:
-|   |  cmd |  description |  
-| --------------------------- | ------------------------------------------- | ------------- |
-| **Run all tests in docker** | `docker-compose -f docker-compose.ci.yml up`| Run all tests |
+```sh
+> digipolis-start-ui --help
+```
 
-### Frontend:
+## Working with the starterkit
 
-> ⚠️ **Warning**: Note that if you want to use `ng` commands, you will have to install `@angular/cli`.
+### config
+
+This folder contains basic configuration for back-end, front-end, branding, questions and general options.
+
+### utils
+
+Small utils to help the generators.
+
+### generators
+
+#### angular
+
+Angular-cli based generator to generate a basic app with the option to add routing and/or authentication.
+
+#### DotNet
+
+Not yet implemented.
+
+#### nodejs
+
+A nodejs backend app wiht several options for routing/authenticatin, etc...
+
+#### React
+
+Create-react-app based generator to generate a basic app with the option to add routing and/or authentication.
