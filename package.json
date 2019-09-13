@@ -1,5 +1,5 @@
 {
-  "name": "@digipolis/starter-kit",
+  "name": "@digipolis/start-ui",
   "version": "1.4.0",
   "description": "Digipolis starter kit",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "lint": "eslint ."
   },
   "bin": {
-    "digipolis-start": "./index.js"
+    "digipolis-start-ui": "./index.js"
   },
   "keywords": [
     "starter kit",
