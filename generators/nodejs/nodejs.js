@@ -118,8 +118,7 @@ async function start(options) {
     await setAuth(options.auth);
     await installPackages();
     log(
-      chalk.cyan.bold(`
-Done with BFF setup`),
+      chalk.cyan.bold('Done with BFF setup'),
     );
   } catch (e) {
     errorLog(e);

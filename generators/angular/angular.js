@@ -1,17 +1,16 @@
-const path = require('path');
-const replace = require('replace-in-file');
-
-const { updateLog, errorLog } = require('../../utils/log');
-const { deleteFolderSync } = require('../../utils/delete');
-const { updatePackageJson, getlatestverion } = require('../../utils/package');
-const { copyFolderRecursiveSync, copyFileSync } = require('../../utils/copy');
-const frontEndConfig = require('../../config/front-end.config');
-const { execPromise } = require('../../utils/exec');
-const { appendLine } = require('../../utils/appendLine');
-const { mapRouting } = require('./routing');
-
+import * as path from 'path';
+import * as replace from 'replace-in-file';
 import options from './config/options';
 import questions from './config/questions';
+import { updateLog, errorLog } from '../../utils/log';
+import { execPromise } from '../../utils/exec';
+import { appendLine } from '../../utils/appendLine';
+import { mapRouting } from './routing';
+import { deleteFolderSync } from '../../utils/delete';
+import { updatePackageJson, getlatestverion } from '../../utils/package';
+import { copyFolderRecursiveSync, copyFileSync } from '../../utils/copy';
+import * as frontEndConfig from '../../config/front-end.config';
+
 
 function getQuestions() {
   return questions;

@@ -1,7 +1,13 @@
 import { HomePage } from './home/home.page';
 import { AboutPage } from './about/about.page';
+{{#if auth}}
+import { LoginPage } from './login/login.page';
+{{/if}}
 
 export const Pages = [
   HomePage,
   AboutPage,
+  {{#if auth}}
+  LoginPage,
+  {{/if}}
 ];

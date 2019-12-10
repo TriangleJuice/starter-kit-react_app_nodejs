@@ -2,7 +2,7 @@ module.exports = {
   moduleFileExtensions: ['js'],
   verbose: true,
   testPathIgnorePatterns: [
-    '/generators',
+    '/generators/react/files',
     '/node_modules',
   ],
   transform: {

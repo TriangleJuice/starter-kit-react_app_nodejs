@@ -1,5 +1,5 @@
 import brandings from '../../../config/brandings.config';
-const { mapBranding } = require('../../../utils/branding');
+import { mapBranding } from '../../../utils/branding';
 
 export default [
   {

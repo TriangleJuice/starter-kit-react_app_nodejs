@@ -1,6 +1,5 @@
 import brandings from '../../config/brandings.config';
 import { mapBranding } from '../../utils/branding';
-import { Config } from '@jest/types';
 
 const path = require('path');
 const replace = require('replace-in-file');

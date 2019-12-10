@@ -1,0 +1,42 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { AuiModules } from "./aui.modules";
+import { FooterModule, HeaderModule } from "@acpaas-ui/ngx-components/layout";
+import { LogoModule } from "@acpaas-ui/ngx-components/logo";
+{{#if routing.add}}
+import { AppRoutingModule } from './app-routing.module'
+import { Pages } from './pages';
+{{/if}}
+{{#if auth}}
+import { UserMenuModule } from '@acpaas-ui/ngx-components/user-menu';
+import { ServiceModule } from './services';
+import { AvatarModule } from "@acpaas-ui/ngx-components/avatar";
+{{/if}}
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    {{#if routing.add}}
+    ...Pages
+    {{/if}}
+  ],
+  imports: [
+    BrowserModule,
+    FooterModule,
+    HeaderModule,
+    LogoModule,
+    {{#if routing.add}}
+    AppRoutingModule,
+    {{/if}}
+    {{#if auth}}
+    UserMenuModule,
+    ServiceModule,
+    AvatarModule,
+    {{/if}}
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
