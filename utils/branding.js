@@ -18,7 +18,7 @@ async function mapBranding(key) {
   return (await getBrandings()).Antwerp;
 }
 
-module.exports = {
+ export default {
   mapBranding,
   getBrandings,
   brandings,

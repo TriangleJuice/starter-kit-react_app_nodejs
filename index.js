@@ -1,17 +1,13 @@
-#!/usr/bin/env node
-
-global.__basedir = __dirname;
-global.__frontenddir = './frontend';
-global.__backenddir = './backend';
+import './globals';
+import options from './config/options';
 
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const program = require('commander');
 
-const generators = require('./generators');
+import generators from './generators';
 const pjson = require('./package.json');
 const questions = require('./config/questions');
-const options = require('./config/options');
 
 const { log } = console;
 const { mapBranding } = require('./utils/branding');
@@ -60,6 +56,8 @@ async function run() {
       debug.enable();
     }
     const { frontend, backend } = config;
+
+    console.log(generators[frontend]);
 
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);

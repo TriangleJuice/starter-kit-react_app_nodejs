@@ -6,6 +6,6 @@ async function start(options) {
   log(chalk.green.bold('.NET Core is not yet implemented 🙄'));
 }
 
-module.exports = {
+export default {
   start,
 };

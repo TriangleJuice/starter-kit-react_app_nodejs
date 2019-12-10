@@ -126,7 +126,7 @@ Done with BFF setup`),
   }
 }
 
-module.exports = {
+export default {
   getOptions,
   getQuestions,
   start,

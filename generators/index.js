@@ -1,11 +1,6 @@
-const angular = require('./angular');
-const react = require('./react');
-const nodejs = require('./nodejs');
-const dotNet = require('./dotnet');
+import angular from './angular/angular';
+import react from './react/react';
+import dotnet from './dotnet/dotnet';
+import nodejs from './nodejs/nodejs';
 
-module.exports = {
-  angular,
-  react,
-  nodejs,
-  dotNet,
-};
+export default { angular, react, dotnet, nodejs };

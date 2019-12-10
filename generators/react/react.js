@@ -6,7 +6,7 @@ const { copyFolderRecursiveSync } = require('../../utils/copy');
 const { deleteFolderSync, deleteFileSync } = require('../../utils/delete');
 const { execPromise } = require('../../utils/exec');
 const { updateLog, errorLog } = require('../../utils/log');
-const brandings = require('../../config/brandings.config');
+import brandings from '../../config/brandings.config';
 const { mapBranding } = require('../../utils/branding');
 const { mapRouting, getRoutingReplaceOptions, getLoginReplaceOptions, getLoginRoutingReplaceOptions } = require('./routing');
 const frontEndConfig = require('../../config/front-end.config');
@@ -196,7 +196,7 @@ async function start(config) {
   }
 }
 
-module.exports = {
+export default {
   getOptions,
   getQuestions,
   start,

@@ -5,51 +5,13 @@ const { updateLog, errorLog } = require('../../utils/log');
 const { deleteFolderSync } = require('../../utils/delete');
 const { updatePackageJson, getlatestverion } = require('../../utils/package');
 const { copyFolderRecursiveSync, copyFileSync } = require('../../utils/copy');
-const brandings = require('../../config/brandings.config');
-const { mapBranding } = require('../../utils/branding');
 const frontEndConfig = require('../../config/front-end.config');
 const { execPromise } = require('../../utils/exec');
 const { appendLine } = require('../../utils/appendLine');
 const { mapRouting } = require('./routing');
 
-const options = [
-  {
-    param: '-b, --branding <branding>',
-    description: 'Branding (Antwerp, Digipolis or ACPaaS)',
-    validation: /^(Antwerp|Digipolis|ACPaaS)$/i,
-    fallback: 'Antwerp',
-  },
-  {
-    param: '-F, --no-flexboxgrid',
-    description: "Don't use the Flexbox grid",
-  },
-  {
-    param: '-R, --no-routing',
-    description: "Don't add basic routing",
-  },
-];
-
-const questions = [
-  {
-    type: 'list',
-    name: 'branding',
-    message: 'Which branding do you want to use?',
-    choices: Object.keys(brandings),
-    filter: mapBranding,
-  },
-  {
-    type: 'confirm',
-    name: 'flexboxgrid',
-    message: 'Do you want to use the Flexbox grid?',
-    default: true,
-  },
-  {
-    type: 'confirm',
-    name: 'routing',
-    message: 'Do you want to add basic routing?',
-    default: true,
-  },
-];
+import options from './config/options';
+import questions from './config/questions';
 
 function getQuestions() {
   return questions;
@@ -153,10 +115,10 @@ async function createStarterTemplate(config) {
         `.o-header__title {
     color: $white;
   }
-  
+
   .o-header__logo {
     position: static;
-  
+
     img {
       height: $spacer * 2;
     }
@@ -290,11 +252,11 @@ LoginPage,`,
         to: [
           `export class AppComponent implements OnInit {
           public userData: any;
-        
+
           constructor(
           ${config.routing.add ? 'private router: Router,' : ''}
             private userService: UserService) { }
-        
+
           ngOnInit() {
             this.userService.getUser().then((resp) => {
               resp.json().then((data) => {
@@ -359,7 +321,7 @@ async function start(config) {
   }
 }
 
-module.exports = {
+export default {
   getOptions,
   getQuestions,
   start,
