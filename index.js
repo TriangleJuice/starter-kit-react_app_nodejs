@@ -57,8 +57,6 @@ async function run() {
     }
     const { frontend, backend } = config;
 
-    console.log(generators[frontend]);
-
     if (frontend) await generators[frontend].start(config);
     if (backend) await generators[backend].start(config);
 

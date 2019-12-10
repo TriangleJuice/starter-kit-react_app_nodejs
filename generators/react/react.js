@@ -1,3 +1,7 @@
+import brandings from '../../config/brandings.config';
+import { mapBranding } from '../../utils/branding';
+import { Config } from '@jest/types';
+
 const path = require('path');
 const replace = require('replace-in-file');
 const async = require('async');
@@ -6,8 +10,8 @@ const { copyFolderRecursiveSync } = require('../../utils/copy');
 const { deleteFolderSync, deleteFileSync } = require('../../utils/delete');
 const { execPromise } = require('../../utils/exec');
 const { updateLog, errorLog } = require('../../utils/log');
-import brandings from '../../config/brandings.config';
-const { mapBranding } = require('../../utils/branding');
+
+
 const { mapRouting, getRoutingReplaceOptions, getLoginReplaceOptions, getLoginRoutingReplaceOptions } = require('./routing');
 const frontEndConfig = require('../../config/front-end.config');
 
@@ -181,10 +185,17 @@ ${config.branding.scss.join('\n')}`,
   }
 }
 
+async function prepareConfiguration(config) {
+  return {
+    ...config,
+    routing: mapRouting(config),
+    branding: await config.branding,
+  };
+}
+
 async function start(config) {
-  const configuration = Object.assign({}, config);
-  configuration.routing = mapRouting(configuration);
   updateLog('Preparing...');
+  const configuration = await prepareConfiguration(config);
   try {
     deleteFolderSync('frontend');
     await installReact(configuration);
@@ -200,4 +211,5 @@ export default {
   getOptions,
   getQuestions,
   start,
+  prepareConfiguration,
 };
