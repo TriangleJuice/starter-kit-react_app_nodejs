@@ -17,7 +17,7 @@ export default class AngularTemplateGenerator {
   }
 
   async generateIndexFile(configuration = {}) {
-    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__dirname, 'files/index.html.template.hbs'), {
+    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__basedir, 'generators/angular/files/src/index.html.template.hbs'), {
       ...configuration,
       coreBranding: (configuration.branding && configuration.branding.type === 'core'),
       frontEndConfig,
@@ -26,17 +26,20 @@ export default class AngularTemplateGenerator {
   }
 
   async generateAppModule(configuration = {}) {
-    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__dirname, 'files/src/app/app.module.ts.template.hbs'), configuration);
+    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__basedir, 'generators/angular/files/src/app/app.module.ts.template.hbs'), configuration);
     return code;
   }
 
   async generateAppComponentTemplate(configuration = {}) {
-    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__dirname, 'files/src/app/app.component.html.template.hbs'), configuration);
+    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__basedir, 'generators/angular/files/src/app/app.component.html.template.hbs'), {
+      ...configuration,
+      coreBranding: (configuration.branding && configuration.branding.type === 'core'),
+    });
     return code;
   }
 
   async generateStyles(configuration = {}) {
-    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__dirname, 'files/styles.scss.template.hbs'), {
+    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__basedir, 'generators/angular/files/src/styles.scss.template.hbs'), {
       ...configuration,
       coreBranding: (configuration.branding && configuration.branding.type === 'core'),
       branding: {
@@ -48,17 +51,17 @@ export default class AngularTemplateGenerator {
   }
 
   async generatePagesIndex(configuration = {}) {
-    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__dirname, 'files/extra/src/app/pages/index.ts.template.hbs'), configuration);
+    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__basedir, 'generators/angular/files/extra/src/app/pages/index.ts.template.hbs'), configuration);
     return code;
   }
 
   async generateRoutingModule(configuration = {}) {
-    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__dirname, 'files/extra/src/app/app-routing.module.ts.template.hbs'), configuration);
+    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__basedir, 'generators/angular/files/extra/src/app/app-routing.module.ts.template.hbs'), configuration);
     return code;
   }
 
   async generateAppComponentTs(configuration = {}) {
-    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__dirname, 'files/src/app/app.component.ts.template.hbs'), configuration);
+    const code = await compileHbsTemplate(this.hbs.handlebars, path.resolve(__basedir, 'generators/angular/files/src/app/app.component.ts.template.hbs'), configuration);
     return code;
   }
 }

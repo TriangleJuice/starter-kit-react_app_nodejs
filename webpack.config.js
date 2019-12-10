@@ -9,6 +9,11 @@ module.exports = {
     filename: 'cli.js',
     path: path.resolve(__dirname),
   },
+  resolve: {
+    alias: {
+      handlebars: 'handlebars/dist/handlebars.js',
+    },
+  },
   plugins: [
     new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }), // Add a shebang bannder that will be needed to execute the cli.js in a node environment
   ],

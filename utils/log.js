@@ -17,7 +17,7 @@ function updateLog(text, color = 'green') {
 
 function errorLog(error) {
   log(chalk.bold.red('Oops!'));
-  log(chalk.red(error));
+  log(chalk.red(error.stack));
 }
 
 module.exports = {

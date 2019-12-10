@@ -36,10 +36,11 @@
     "commander": "^2.19.0",
     "deepmerge": "^4.0.0",
     "git-clone": "^0.1.0",
+    "hbs": "^4.0.6",
     "inquirer": "^6.2.0",
+    "mkdir-recursive": "^0.4.0",
     "replace-in-file": "^3.4.2",
-    "rimraf": "^2.6.2",
-    "hbs": "^4.0.6"
+    "rimraf": "^2.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",

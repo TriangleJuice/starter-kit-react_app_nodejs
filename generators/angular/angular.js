@@ -1,15 +1,16 @@
+import * as fs from 'fs';
 import * as path from 'path';
-import * as replace from 'replace-in-file';
 import options from './config/options';
 import questions from './config/questions';
 import { updateLog, errorLog } from '../../utils/log';
 import { execPromise } from '../../utils/exec';
-import { appendLine } from '../../utils/appendLine';
 import { mapRouting } from './routing';
 import { deleteFolderSync } from '../../utils/delete';
 import { updatePackageJson, getlatestverion } from '../../utils/package';
 import { copyFolderRecursiveSync, copyFileSync } from '../../utils/copy';
-import * as frontEndConfig from '../../config/front-end.config';
+import AngularTemplateGenerator from './template-generator';
+
+import overwriteAndRename from '../../utils/overwrite';
 
 
 function getQuestions() {
@@ -20,13 +21,7 @@ function getOptions() {
   return options;
 }
 
-function getUserMenuLogic(hasRouting) {
-  if (hasRouting) {
-    return "this.router.navigate(['/login']);";
-  }
-
-  return "window.location.href = '/auth/login/mprofiel';";
-}
+const generator = new AngularTemplateGenerator();
 
 /**
  * Run the angular-cli new command.
@@ -45,6 +40,7 @@ async function installAngular(config) {
       '--style=scss',
       `--routing=${!!config.routing.add}`,
     ]);
+    await execPromise('npm', ['install', '--save', 'rxjs'], { cwd: path.resolve('frontend') });
   } catch (e) {
     errorLog(e);
   }
@@ -70,238 +66,90 @@ async function installACPaasUI(config) {
 }
 
 async function createStarterTemplate(config) {
-  updateLog('Creating starter template...');
-
   const coreVersion = await getlatestverion('@a-ui/core');
+  updateLog(`Creating starter template (v.${coreVersion})...`);
 
-  const brandingReplaceOptions = {
-    files: `${__frontenddir}/src/index.html`,
-    from: [/<title>Frontend<\/title>/g, /<brand \/>/g],
-    to: [
-      `<title>${config.name}</title>`,
-      `<link rel="stylesheet" href="https://cdn.antwerpen.be/${config.branding.cdn}/${config.branding.version}/main.min.css">`,
-    ],
-  };
-
-  if (config.branding.type !== 'core') {
-    brandingReplaceOptions.from.push(
-      /safari-pinned-tab.svg" color="#cf0039"/g,
-      /msapplication-TileColor" content="#cf0039"/g,
-      /theme-color" content="#cf0039"/g,
-    );
-    brandingReplaceOptions.to.push(
-      'safari-pinned-tab.svg" color="#347ea6"',
-      'msapplication-TileColor" content="#5fb1d6"',
-      'theme-color" content="#ffffff"',
-    );
-  }
-
-  if (config.flexboxgrid) {
-    brandingReplaceOptions.from.push(/main.min.css">/g);
-    brandingReplaceOptions.to.push(`main.min.css">
-    ${frontEndConfig.flexbox.link}`);
-  }
-
-  try {
-    deleteFolderSync(`${__frontenddir}/src/app`);
-    await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/app`, `${__frontenddir}/src`);
-    copyFileSync(`${__basedir}/generators/angular/files/index.html`, `${__frontenddir}/src`);
-    copyFileSync(`${__basedir}/generators/angular/files/styles.scss`, `${__frontenddir}/src`);
-
-    if (config.branding.type !== 'core') {
-      await appendLine(
-        `${__frontenddir}/src/styles.scss`,
-        `.o-header__title {
-    color: $white;
-  }
-
-  .o-header__logo {
-    position: static;
-
-    img {
-      height: $spacer * 2;
-    }
-  }`,
-      );
-    }
-
-    await replace(brandingReplaceOptions);
-    await replace({
-      files: `${__frontenddir}/src/styles.scss`,
-      from: [/styles\/quarks";/],
-      to: [
-        `/styles/quarks";
-      ${config.branding.scss.join('\n')}`,
-      ],
-    });
-
-    if (config.backend) {
-      copyFileSync(`${__basedir}/generators/angular/files/proxy.conf.js`, `${__frontenddir}`);
-      updatePackageJson(
-        {
-          scripts: {
-            start: 'ng serve --proxy-config proxy.conf.js',
-          },
+  // src/proxy.conf.js
+  if (config.backend) {
+    copyFileSync(`${__basedir}/generators/angular/files/proxy.conf.js`, `${__frontenddir}`);
+    updatePackageJson(
+      {
+        scripts: {
+          start: 'ng serve --proxy-config proxy.conf.js',
         },
-        `${__frontenddir}/package.json`,
-      );
-    }
+      },
+      `${__frontenddir}/package.json`,
+    );
+  }
 
-    if (config.routing.add) {
-      await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/`, `${__frontenddir}/src/app`);
+  // First copy all files necessary, we'll compile the templates later on
+  copyFolderRecursiveSync(`${__basedir}/generators/angular/files/src/app`, `${__frontenddir}/src`);
+  copyFileSync(`${__basedir}/generators/angular/files/src/index.html.template.hbs`, `${__frontenddir}/src`);
+  copyFileSync(`${__basedir}/generators/angular/files/src/styles.scss.template.hbs`, `${__frontenddir}/src`);
+
+  // src/index.html
+  await overwriteAndRename(
+    path.resolve(__frontenddir, 'src/index.html.template.hbs'),
+    path.resolve(__frontenddir, 'src/index.html'),
+    async () => generator.generateIndexFile(config),
+  );
+
+  // src/styles.scss
+  await overwriteAndRename(
+    path.resolve(__frontenddir, 'src/styles.scss.template.hbs'),
+    path.resolve(__frontenddir, 'src/styles.scss'),
+    async () => generator.generateStyles(config),
+  );
+
+  // app.module.ts
+  await overwriteAndRename(
+    path.resolve(__frontenddir, 'src/app/app.module.ts.template.hbs'),
+    path.resolve(__frontenddir, 'src/app/app.module.ts'),
+    async () => generator.generateAppModule(config),
+  );
+
+  // app.component.html
+  await overwriteAndRename(
+    path.resolve(__frontenddir, 'src/app/app.component.html.template.hbs'),
+    path.resolve(__frontenddir, 'src/app/app.component.html'),
+    async () => generator.generateAppComponentTemplate({
+      ...config,
+      coreVersion,
+    }),
+  );
+
+  // app.component.ts
+  await overwriteAndRename(
+    path.resolve(__frontenddir, 'src/app/app.component.ts.template.hbs'),
+    path.resolve(__frontenddir, 'src/app/app.component.ts'),
+    async () => generator.generateAppComponentTs(config),
+  );
+
+  if (config.routing && config.routing.add) {
+    await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/`, `${__frontenddir}/src/app`);
+    await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/services`, `${__frontenddir}/src/app`);
+    copyFileSync(`${__basedir}/generators/angular/files/extra/src/app/app-routing.module.ts.template.hbs`, `${__frontenddir}/src/app`);
+    if (!config.auth) {
       deleteFolderSync(`${__frontenddir}/src/app/pages/login`);
-      copyFileSync(`${__basedir}/generators/angular/files/extra/src/app/app-routing.module.ts`, `${__frontenddir}/src/app`);
-      copyFileSync(`${__basedir}/generators/angular/files/extra/src/app/app.component.html`, `${__frontenddir}/src/app`);
-      const replaceAppComponentHtml = {
-        files: `${__frontenddir}/src/app/app.component.html`,
-        from: [/<\/aui-header>/, '<div class="o-header__wrapper">'],
-        to: [
-          `<div auiHeaderMenuItem>
-        <a routerLink="/home">
-          <button class="a-button">
-            <span>Home</span>
-          </button>
-        </a>
-        <a routerLink="/about">
-          <button class="a-button">
-            <span>About</span>
-          </button>
-        </a>
-      </div>
-      </aui-header>`,
-          `<div class="o-header__wrapper">
-      <aui-logo src="https://cdn.antwerpen.be/core_branding_scss/${coreVersion}/assets/images/a-logo.svg"></aui-logo>`,
-        ],
-      };
-
-      const replaceAppModule = {
-        files: `${__frontenddir}/src/app/app.module.ts`,
-        from: [/BrowserModule,/g, 'import { AuiModules } from "./aui.modules";', '[AppComponent]'],
-        to: [
-          `BrowserModule,
-        AppRoutingModule,`,
-          `import { AuiModules } from "./aui.modules";
-        import { AppRoutingModule } from './app-routing.module';
-        import { Pages } from './pages';`,
-          '[AppComponent, ...Pages]',
-        ],
-      };
-
-      await replace(replaceAppComponentHtml);
-      await replace(replaceAppModule);
-    }
-
-    if (config.auth) {
-      await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/components`, `${__frontenddir}/src/app`);
-      await replace({
-        files: `${__frontenddir}/src/app/app.component.html`,
-        from: ['</aui-header>'],
-        to: [
-          `<div auiHeaderMenuItem>
-          <user-flyout [user]="user" (login)="login()"></user-flyout>
-        </div>
-      </aui-header>`,
-        ],
-      });
-
-      await replace({
-        files: `${__frontenddir}/src/app/app.module.ts`,
-        from: ['declarations: [AppComponent', 'import { AuiModules } from "./aui.modules";'],
-        to: [
-          `declarations: [AppComponent,
-          ...Components`,
-          `import { AuiModules } from "./aui.modules";
-          import { Components } from "./components";`,
-        ],
-      });
-
-      if (config.routing.add) {
-        await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/login/`, `${__frontenddir}/src/app/pages`);
-        const loginRoutingReplacePages = {
-          files: `${__frontenddir}/src/app/pages/index.ts`,
-          from: ["import { AboutPage } from './about/about.page';", 'AboutPage,'],
-          to: [
-            `import { AboutPage } from './about/about.page';
-import { LoginPage } from './login/login.page';`,
-            `AboutPage,
-LoginPage,`,
-          ],
-        };
-
-        await replace(loginRoutingReplacePages);
-
-        await replace({
-          files: `${__frontenddir}/src/app/app-routing.module.ts`,
-          from: ["import { AboutPage } from './pages/about/about.page';", "{ path: 'about', component: AboutPage },"],
-          to: [
-            `import { AboutPage } from './pages/about/about.page';
-          import { LoginPage } from './pages/login/login.page';`,
-            `{ path: 'about', component: AboutPage },
-          { path: 'login', component: LoginPage }`,
-          ],
-        });
-      }
-
+    } else {
+      // Auth is enabled
+      await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/login/`, `${__frontenddir}/src/app/pages`);
       await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/services`, `${__frontenddir}/src/app`);
-
-      await execPromise('npm', ['install', '--save', 'rxjs'], { cwd: path.resolve('frontend') });
-      await replace({
-        files: `${__frontenddir}/src/app/app.component.ts`,
-        from: ['export class AppComponent { }', "import { Component } from '@angular/core';"],
-        to: [
-          `export class AppComponent implements OnInit {
-          public userData: any;
-
-          constructor(
-          ${config.routing.add ? 'private router: Router,' : ''}
-            private userService: UserService) { }
-
-          ngOnInit() {
-            this.userService.getUser().then((resp) => {
-              resp.json().then((data) => {
-                this.userData = data.user;
-              });
-            });
-          }
-
-          login() {
-            ${getUserMenuLogic(config.routing.add)}
-          }
-        }
-        `,
-          `import { Component, OnInit } from '@angular/core';
-          ${config.routing.add ? "import { Router } from '@angular/router';" : ''}
-          import { UserService } from './services/user';
-          `,
-        ],
-      });
-
-      await replace({
-        files: `${__frontenddir}/src/app/app.module.ts`,
-        from: ["import { AppComponent } from './app.component';", '..AuiModules,'],
-        to: [
-          `import { ServiceModule } from './services';
-        import { AppComponent } from './app.component';`,
-          `..AuiModules,
-        ServiceModule,`,
-        ],
-      });
-
-      await replace({
-        files: `${__frontenddir}/src/app/aui.modules.ts`,
-        from: ['LogoModule,', 'import { LogoModule } from "@acpaas-ui/ngx-components/logo";'],
-        to: [
-          `LogoModule,
-        AvatarModule,
-        FlyoutModule`,
-          `import { LogoModule } from "@acpaas-ui/ngx-components/logo";
-        import { AvatarModule } from "@acpaas-ui/ngx-components/avatar";
-        import { FlyoutModule } from "@acpaas-ui/ngx-components/flyout";`,
-        ],
-      });
     }
-  } catch (e) {
-    errorLog(e);
+
+    // src/app/pages/index.ts
+    await overwriteAndRename(
+      path.resolve(__frontenddir, 'src/app/pages/index.ts.template.hbs'),
+      path.resolve(__frontenddir, 'src/app/pages/index.ts'),
+      async () => generator.generatePagesIndex(config),
+    );
+
+    // src/app/app-routing.module.ts
+    await overwriteAndRename(
+      path.resolve(__frontenddir, 'src/app/app-routing.module.ts.template.hbs'),
+      path.resolve(__frontenddir, 'src/app/app-routing.module.ts'),
+      async () => generator.generateRoutingModule(config),
+    );
   }
 }
 
@@ -311,6 +159,7 @@ async function start(config) {
   updateLog('Preparing...');
   try {
     deleteFolderSync('frontend');
+    fs.mkdirSync('frontend');
     await installAngular(configuration);
     await installACPaasUI(configuration);
     await createStarterTemplate(configuration);

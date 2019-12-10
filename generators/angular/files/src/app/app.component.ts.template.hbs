@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+{{#if auth}}
 import { UserService } from './services/user'
+{{/if}}
 {{#if routing.add}}
 import { Router } from '@angular/router';
 {{/if}}
@@ -16,7 +18,7 @@ export class AppComponent implements OnInit {
   public userData: any;
   {{/if}}
 
-  constructor({{#if routing.add}}private router: Router,{{/if}} private userService: UserService) {
+  constructor({{#if routing.add}}private router: Router{{/if}}{{#if auth}}, private userService: UserService{{/if}}) {
 
   }
 

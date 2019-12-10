@@ -1,29 +1,24 @@
-<aui-header>
-  <div class="o-header__wrapper">
-    {{#if routing.add}}
-    <aui-logo src="https://cdn.antwerpen.be/core_branding_scss/${coreVersion}/assets/images/a-logo.svg"></aui-logo>
-    <div auiHeaderMenuItem>
-      <a routerLink="/home">
-        <button class="a-button">
-            <span>Home</span>
-        </button>
-      </a>
-      <a routerLink="/about">
-        <button class="a-button">
-          <span>About</span>
-        </button>
-      </a>
+<header class="o-header">
+  <div class="o-header_content-wrapper">
+    {{#if coreBranding}}
+    <div class="o-header__content">
+      <aui-logo src="https://cdn.antwerpen.be/core_branding_scss/{{coreVersion}}/assets/images/a-logo.svg"></aui-logo>
     </div>
     {{/if}}
-    {{#if auth}}
-    <div auiHeaderMenuItem>
-      <aui-user-menu></aui-user-menu>
+    <div class="o-header__menu-items">
+      {{#if routing.add}}
+      <a routerLink="/home" class="a-button o-header__button">Home</a>
+      <a routerLink="/about" class="a-button o-header__button">About</a>
+      {{#if auth}}<aui-user-menu></aui-user-menu>{{/if}}
+      {{/if}}
     </div>
-    {{/if}}
   </div>
-</aui-header>
+</header>
 <main class="u-wrapper">
   <div class="u-container u-margin-top-xx u-margin-bottom-lg" role="main">
+    <div col="col-xs-12">
+        <h1>Hello Starter app!</h1>
+    </div>
     <div>
       <h2 class="h4 u-margin-top">Handy resources</h2>
       <ul class="a-list">

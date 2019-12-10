@@ -1,7 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import * as fx from 'mkdir-recursive';
+import * as fs from 'fs';
+import * as path from 'path';
 
-function copyFileSync(source, target) {
+
+export function copyFileSync(source, target) {
   let targetFile = target;
 
   // If target is a directory a new file with the same name will be created
@@ -14,13 +16,13 @@ function copyFileSync(source, target) {
   fs.writeFileSync(targetFile, fs.readFileSync(source));
 }
 
-function copyFolderRecursiveSync(source, target) {
+export function copyFolderRecursiveSync(source, target) {
   let files = [];
 
   // Check if folder needs to be created or integrated
   const targetFolder = path.join(target, path.basename(source));
   if (!fs.existsSync(targetFolder)) {
-    fs.mkdirSync(targetFolder);
+    fx.mkdirSync(targetFolder);
   }
 
   // Copy
@@ -37,7 +39,7 @@ function copyFolderRecursiveSync(source, target) {
   }
 }
 
-function copyJob(jobs) {
+export function copyJob(jobs) {
   const promiseArray = jobs.map(({ source, destination, type }) => {
     if (type === 'folder') {
       return copyFolderRecursiveSync(source, destination);
@@ -46,9 +48,3 @@ function copyJob(jobs) {
   });
   return Promise.all(promiseArray);
 }
-
-module.exports = {
-  copyFolderRecursiveSync,
-  copyJob,
-  copyFileSync,
-};

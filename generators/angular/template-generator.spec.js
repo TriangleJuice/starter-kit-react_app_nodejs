@@ -1,13 +1,12 @@
-import '../../globals';
 import AngularTemplateGenerator from './template-generator';
 import * as frontEndConfig from '../../config/front-end.config';
-
 
 describe('Angular Template Generator', () => {
   let mockConfiguration;
   let generator;
 
   beforeEach(() => {
+    global.__basedir = '.';
     mockConfiguration = {
       name: 'Test App',
       branding: {
@@ -145,6 +144,16 @@ describe('Angular Template Generator', () => {
       });
       expect(code).toContain('aui-user-menu');
     });
+    it('should include the logo if the core branding is used', async () => {
+      const code = await generator.generateAppComponentTemplate({
+        ...mockConfiguration,
+        branding: {
+          type: 'core',
+        },
+        coreVersion: '1.0.0',
+      });
+      expect(code).toContain('https://cdn.antwerpen.be/core_branding_scss/1.0.0/assets/images/a-logo.svg');
+    });
   });
   describe('App Pages Index', () => {
     it('should generate pages', async () => {
@@ -194,7 +203,6 @@ describe('Angular Template Generator', () => {
           add: true,
         },
       });
-      console.log(code);
       expect(code).toContain('public userData: any;');
     });
   });
