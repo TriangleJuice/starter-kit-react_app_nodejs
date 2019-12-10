@@ -133,7 +133,7 @@ describe('Angular Template Generator', () => {
           add: true,
         },
       });
-      expect(code).toContain('o-header__wrapper');
+      expect(code).toContain('o-header__content-wrapper');
       expect(code).toContain('routerLink="/home"');
       expect(code).toContain('routerLink="/about"');
     });

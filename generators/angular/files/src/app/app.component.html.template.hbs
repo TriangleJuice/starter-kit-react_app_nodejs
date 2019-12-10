@@ -1,5 +1,5 @@
 <header class="o-header">
-  <div class="o-header_content-wrapper">
+  <div class="o-header__content-wrapper">
     {{#if coreBranding}}
     <div class="o-header__content">
       <aui-logo src="https://cdn.antwerpen.be/core_branding_scss/{{coreVersion}}/assets/images/a-logo.svg"></aui-logo>
@@ -9,7 +9,9 @@
       {{#if routing.add}}
       <a routerLink="/home" class="a-button o-header__button">Home</a>
       <a routerLink="/about" class="a-button o-header__button">About</a>
-      {{#if auth}}<aui-user-menu></aui-user-menu>{{/if}}
+      {{/if}}
+      {{#if auth}}
+      <aui-user-menu></aui-user-menu>
       {{/if}}
     </div>
   </div>
