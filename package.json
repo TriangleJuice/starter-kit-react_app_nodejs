@@ -7,7 +7,8 @@
     "test": "jest",
     "build": "webpack",
     "start": "node ./cli.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepublish": "npm run build"
   },
   "bin": {
     "digipolis-start-ui": "cli.js"
