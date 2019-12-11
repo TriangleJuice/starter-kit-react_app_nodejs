@@ -22,11 +22,11 @@ describe('Angular Generator', () => {
         version: '1.0.0',
         scss: ['@import "one"'],
         type: 'core',
-        npm: 'branding.npm'
+        npm: ['branding.npm']
       },
       routing: {
         add: false,
-        npm: 'routing.npm'
+        npm: ['routing.npm']
       }
     };
     templateGenerator = sinon.createStubInstance(HandlebarsTemplateGenerator);

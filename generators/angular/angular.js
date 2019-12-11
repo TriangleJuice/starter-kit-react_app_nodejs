@@ -79,7 +79,7 @@ class AngularAppGenerator {
   async installACPaasUI(config) {
     updateLog('Installing ACPaaS UI...');
     await this.execPromise('npm', ['install', '--save-dev', 'node-sass'], { cwd: path.resolve(__frontenddir) });
-    await this.execPromise('npm', ['install', '--save', '@acpaas-ui/ngx-components', config.branding.npm, config.routing.npm], {
+    await this.execPromise('npm', ['install', '--save', '@acpaas-ui/ngx-components', ...config.branding.npm, ...config.routing.npm], {
       cwd: path.resolve(__frontenddir),
     });
   }
