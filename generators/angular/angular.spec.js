@@ -1,5 +1,4 @@
 import '../../globals';
-import spawn from '../../utils/mock-spawn';
 import angular from './angular';
 import * as sinon from 'sinon';
 import * as mockFs from 'mock-fs';
@@ -53,13 +52,6 @@ describe('Angular Generator', () => {
       expect(fs.existsSync(__frontenddir)).toBe(false);
       await generator.prepareDirectory();
       expect(fs.existsSync(__frontenddir)).toBe(true);
-    });
-  });
-
-  describe('Installing Angular', () => {
-    it('should install angular using the cli tool', async () => {
-      await generator.installAngular(mockConfiguration);
-      console.log(child_process.spawn);
     });
   });
 });
