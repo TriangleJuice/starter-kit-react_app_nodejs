@@ -59,6 +59,7 @@
     "jest": "^24.9.0",
     "mock-fs": "^4.10.4",
     "mock-spawn": "^0.2.6",
+    "recursive-readdir": "^2.2.2",
     "sinon": "^7.5.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"

@@ -1,17 +1,17 @@
+/**
+ * Main generator file for generating Angular projects.
+ */
 import * as fs from 'fs';
 import * as path from 'path';
 import options from './config/options';
 import questions from './config/questions';
 import { updateLog, errorLog } from '../../utils/log';
 import { execPromise } from '../../utils/exec';
-import { mapRouting } from './routing';
+import { mapRouting } from './helpers/routing';
 import { deleteFolderSync, deleteFileSync } from '../../utils/delete';
 import { updatePackageJson, getlatestverion } from '../../utils/package';
 import { copyFolderRecursiveSync, copyFileSync } from '../../utils/copy';
 import HandlebarsTemplateGenerator from '../../utils/template-generator';
-
-import overwriteAndRename from '../../utils/overwrite';
-
 
 function getQuestions() {
   return questions;
@@ -22,17 +22,19 @@ function getOptions() {
 }
 
 class AngularAppGenerator {
-  constructor(configuration) {
+  /**
+   * @param configuration Configuration object
+   * @param execCallback Callback used for executing command on the child process spawn
+   * @param templateGenerator Instance of HandlebarsTemplateGenerator
+   */
+  constructor(configuration, execCallback, templateGenerator) {
+    this.execPromise = execCallback;
     this.configuration = configuration;
+    this.generator = templateGenerator;
   }
 
   async start() {
     updateLog('Preparing...');
-    this.configuration = {
-      ...this.configuration,
-      routing: mapRouting(this.configuration),
-      coreVersion: await getlatestverion('@a-ui/core')
-    };
     await this.prepareDirectory();
     await this.installAngular(this.configuration);
     await this.installACPaasUI(this.configuration);
@@ -40,18 +42,23 @@ class AngularAppGenerator {
     updateLog('Done with front-end setup', 'cyan');
   }
 
+  /**
+   * Deletes & recreates the frontend directory (if present)
+   * The method won't crash if no frontend directory is present.
+   */
   async prepareDirectory() {
     deleteFolderSync(__frontenddir);
     return new Promise((resolve, reject) => fs.mkdir(__frontenddir, (err) => err ? reject(err) : resolve()));
   }
 
   /**
- * Run the angular-cli new command.
- * Install NPM dependencies.
- */
+   * Creates a new application by invoking the @angular/cli new command.
+   * Additionaly a git and routing config is added if necessary
+   * @param Configuration config
+   */
   async installAngular(config) {
     updateLog('Installing Angular...');
-    await execPromise('npx', [
+    await this.execPromise('npx', [
       '-p',
       '@angular/cli',
       'ng',
@@ -61,25 +68,27 @@ class AngularAppGenerator {
       '--style=scss',
       `--routing=${!!config.routing.add}`,
     ]);
-    await execPromise('npm', ['install', '--save', 'rxjs'], { cwd: path.resolve('frontend') });
   }
 
+
   /**
- * Go into frontend folder and install ACPaaS UI related stuff:
- * - ACPaaS UI (Angular).
- * - Core Branding and optionally one of the other brandings.
- * - Node SASS, so you don't have to rely on CSS only.
- */
+   * Installs necessary ACPaas UI libraries:
+   * - ACPaas UI
+   * - SASS
+   */
   async installACPaasUI(config) {
     updateLog('Installing ACPaaS UI...');
-    await execPromise('npm', ['install', '--save-dev', 'node-sass'], { cwd: path.resolve('frontend') });
-    await execPromise('npm', ['install', '--save', '@acpaas-ui/ngx-components'].concat(config.branding.npm).concat(config.routing.npm), {
-      cwd: path.resolve('frontend'),
+    await this.execPromise('npm', ['install', '--save-dev', 'node-sass'], { cwd: path.resolve(__frontenddir) });
+    await this.execPromise('npm', ['install', '--save', '@acpaas-ui/ngx-components', config.branding.npm, config.routing.npm], {
+      cwd: path.resolve(__frontenddir),
     });
   }
 
+  /**
+   * Compiles and renders template files and copies necessary files for a complete
+   * angular app setup. THis method does the actual method of generating the project.
+   */
   async createStarterTemplate(config) {
-    const generator = new HandlebarsTemplateGenerator(config);
     updateLog(`Creating starter template (v.${config.coreVersion})...`);
 
     // src/proxy.conf.js
@@ -101,35 +110,36 @@ class AngularAppGenerator {
     copyFileSync(`${__basedir}/generators/angular/files/src/styles.scss.template.hbs`, `${__frontenddir}/src`);
 
     // src/index.html
-    await generator.generate({
+    await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/index.html.template.hbs'),
       to: path.resolve(__frontenddir, 'src/index.html')
     });
     updateLog('CREATED: index.html');
 
     // src/styles.scss
-    await generator.generate({
+    await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/styles.scss.template.hbs'),
       to: path.resolve(__frontenddir, 'src/styles.scss')
     });
+
     updateLog('CREATED: styles.scss');
 
     // app.module.ts
-    await generator.generate({
+    await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/app/app.module.ts.template.hbs'),
       to: path.resolve(__frontenddir, 'src/app/app.module.ts'),
     });
     updateLog('CREATED: app.module.ts');
 
     // app.component.html
-    await generator.generate({
+    await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/app/app.component.html.template.hbs'),
       to: path.resolve(__frontenddir, 'src/app/app.component.html')
     });
     updateLog('CREATED: app.component.html');
 
     // app.component.ts
-    await generator.generate({
+    await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/app/app.component.ts.template.hbs'),
       to: path.resolve(__frontenddir, 'src/app/app.component.ts'),
     });
@@ -148,14 +158,14 @@ class AngularAppGenerator {
       }
 
       // src/app/pages/index.ts
-      await generator.generate({
+      await this.generator.generate({
         fromTemplate: path.resolve(__frontenddir, 'src/app/pages/index.ts.template.hbs'),
         to: path.resolve(__frontenddir, 'src/app/pages/index.ts'),
       });
       updateLog('CREATED: pages/index.ts');
 
       // src/app/app-routing.module.ts
-      await generator.generate({
+      await this.generator.generate({
         fromTemplate: path.resolve(__frontenddir, 'src/app/app-routing.module.ts.template.hbs'),
         to: path.resolve(__frontenddir, 'src/app/app-routing.module.ts'),
       });
@@ -173,11 +183,22 @@ class AngularAppGenerator {
 
 }
 
+/**
+ * Dependency injection is used here for testing purposes.
+ * However, to prevent to start reworking the whole application,
+ * we imply with the export default interface that is also present in other
+ * generator files.
+ */
 export default {
   getOptions,
   getQuestions,
-  start: (config) => {
-    const generator = new AngularAppGenerator(config);
+  start: async (config) => {
+    const configuration = {
+      ...config,
+      routing: mapRouting(config),
+      coreVersion: await getlatestverion('@a-ui/core')
+    };
+    const generator = new AngularAppGenerator(configuration, execPromise, new HandlebarsTemplateGenerator(configuration));
     return generator.start();
   },
   AngularAppGenerator
