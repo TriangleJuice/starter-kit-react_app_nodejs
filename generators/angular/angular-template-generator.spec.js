@@ -1,5 +1,7 @@
-import AngularTemplateGenerator from './template-generator';
+import '../../globals';
+import HandlebarsTemplateGenerator from '../../utils/template-generator';
 import * as frontEndConfig from '../../config/front-end.config';
+import * as path from 'path';
 
 describe('Angular Template Generator', () => {
   let mockConfiguration;
@@ -12,19 +14,31 @@ describe('Angular Template Generator', () => {
       branding: {
         cdn: 'some-cdn',
         version: '1.0.0',
-        scss: [],
+        scss: ['@import "one"'],
+        type: 'core'
       },
     };
-    generator = new AngularTemplateGenerator(mockConfiguration);
+    generator = new HandlebarsTemplateGenerator(mockConfiguration);
+  });
+
+  describe('Prepping config for templating', () => {
+    it('should prep config', () => {
+      const config = HandlebarsTemplateGenerator.prepConfigForRendering(mockConfiguration);
+      expect(config.scss).toBe('@import "one"');
+      expect(config.coreBranding).toBe(true);
+      expect(config.frontEndConfig.flexbox.link).toBe('<link rel="stylesheet" href="https://cdn.antwerpen.be/core_flexboxgrid_scss/1.0.1/flexboxgrid.min.css">');
+    });
   });
 
   describe('App Module', () => {
+    const templatePath = path.resolve(__dirname, 'files/src/app/app.module.ts.template.hbs');
     it('should generate a basic app module', async () => {
-      const appModule = await generator.generateAppModule();
+      const appModule = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(typeof appModule).toBe('string');
     });
     it('should add routing configuration when needed', async () => {
-      const appModule = await generator.generateAppModule({
+      const appModule = await generator.compileAndRenderTemplate(templatePath, {
+        ...mockConfiguration,
         routing: {
           add: true,
         },
@@ -33,7 +47,7 @@ describe('Angular Template Generator', () => {
       expect(appModule).toContain('...Pages');
     });
     it('should import login and necessary modules when auth is enabled', async () => {
-      const code = await generator.generateAppModule({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         auth: true,
       });
@@ -44,16 +58,17 @@ describe('Angular Template Generator', () => {
   });
 
   describe('Index HTML file', () => {
+    const templatePath = path.resolve(__dirname, 'files/src/index.html.template.hbs');
     it('should set the title tag', async () => {
-      const index = await generator.generateIndexFile(mockConfiguration);
+      const index = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(index).toContain('<title>Test App</title>');
     });
     it('should inject the branding css style link', async () => {
-      const index = await generator.generateIndexFile(mockConfiguration);
+      const index = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(index).toContain('<link rel="stylesheet" href="https://cdn.antwerpen.be/some-cdn/1.0.0/main.min.css"/>');
     });
     it('should set core branding colors', async () => {
-      const index = await generator.generateIndexFile({
+      const index = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         branding: {
           type: 'core',
@@ -65,14 +80,19 @@ describe('Angular Template Generator', () => {
     });
 
     it('should use other colors if not core branding', async () => {
-      const index = await generator.generateIndexFile(mockConfiguration);
+      const index = await generator.compileAndRenderTemplate(templatePath, {
+        ...mockConfiguration,
+        branding: {
+          type: 'whatever'
+        }
+      });
       expect(index).toContain('safari-pinned-tab.svg" color="#cf0039"');
       expect(index).toContain('msapplication-TileColor" content="#cf0039"');
       expect(index).toContain('theme-color" content="#cf0039"');
     });
 
     it('should include flexbox css link', async () => {
-      const index = await generator.generateIndexFile({
+      const index = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         flexboxgrid: true,
       });
@@ -81,12 +101,13 @@ describe('Angular Template Generator', () => {
   });
 
   describe('SASS file', () => {
+    const templatePath = path.resolve(__dirname, 'files/src/styles.scss.template.hbs');
     it('should generate a sass file', async () => {
-      const code = await generator.generateStyles(mockConfiguration);
+      const code = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(code).not.toBeUndefined();
     });
     it('should not include extra properties when handling core branding', async () => {
-      const code = await generator.generateStyles({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         branding: {
           type: 'core',
@@ -96,7 +117,7 @@ describe('Angular Template Generator', () => {
       expect(code).not.toContain('o-header__logo');
     });
     it('should include extra properties when NOT handling core branding', async () => {
-      const code = await generator.generateStyles({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         branding: {
           type: 'other-type',
@@ -106,7 +127,7 @@ describe('Angular Template Generator', () => {
       expect(code).toContain('o-header__logo');
     });
     it('should inlude extra sass imports if configured so', async () => {
-      const code = await generator.generateStyles({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         branding: {
           ...mockConfiguration.branding,
@@ -122,12 +143,13 @@ describe('Angular Template Generator', () => {
   });
 
   describe('App Component Template', () => {
+    const templatePath = path.resolve(__dirname, 'files/src/app/app.component.html.template.hbs');
     it('should generate an app component template', async () => {
-      const code = await generator.generateAppComponentTemplate(mockConfiguration);
+      const code = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(code).not.toBeUndefined();
     });
     it('should include routing header if routing is enabled', async () => {
-      const code = await generator.generateAppComponentTemplate({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         routing: {
           add: true,
@@ -138,14 +160,15 @@ describe('Angular Template Generator', () => {
       expect(code).toContain('routerLink="/about"');
     });
     it('should generate user menu when auth is enabled', async () => {
-      const code = await generator.generateAppComponentTemplate({
+
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         auth: true,
       });
       expect(code).toContain('aui-user-menu');
     });
     it('should include the logo if the core branding is used', async () => {
-      const code = await generator.generateAppComponentTemplate({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         branding: {
           type: 'core',
@@ -156,15 +179,16 @@ describe('Angular Template Generator', () => {
     });
   });
   describe('App Pages Index', () => {
+    const templatePath = path.resolve(__dirname, 'files/extra/src/app/pages/index.ts.template.hbs');
     it('should generate pages', async () => {
-      const code = await generator.generatePagesIndex(mockConfiguration);
+      const code = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(code).not.toBeUndefined();
       expect(code).toContain('HomePage');
       expect(code).toContain('AboutPage');
       expect(code).not.toContain('LoginPage');
     });
     it('should include login page if auth is enabled', async () => {
-      const code = await generator.generatePagesIndex({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         auth: true,
       });
@@ -173,14 +197,15 @@ describe('Angular Template Generator', () => {
   });
 
   describe('Routing Module', () => {
+    const templatePath = path.resolve(__dirname, 'files/extra/src/app/app-routing.module.ts.template.hbs');
     it('should include basic routes', async () => {
-      const code = await generator.generateRoutingModule(mockConfiguration);
+      const code = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(code).toContain('HomePage');
       expect(code).toContain('AboutPage');
       expect(code).not.toContain('LoginPage');
     });
     it('should inlude login routes if auth is enabled', async () => {
-      const code = await generator.generateRoutingModule({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         auth: true,
       });
@@ -190,13 +215,14 @@ describe('Angular Template Generator', () => {
   });
 
   describe('App Component Ts', () => {
+    const templatePath = path.resolve(__dirname, 'files/src/app/app.component.ts.template.hbs');
     it('should generate basic app component', async () => {
-      const code = await generator.generateAppComponentTs(mockConfiguration);
+      const code = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(code).not.toBeUndefined();
       expect(code).toContain('AppComponent');
     });
     it('shoudl generate login functionality if auth is enabled', async () => {
-      const code = await generator.generateAppComponentTs({
+      const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         auth: true,
         routing: {

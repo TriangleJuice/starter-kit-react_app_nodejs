@@ -6,6 +6,8 @@ import { LogoModule } from '@acpaas-ui/ngx-components/logo';
 {{#if routing.add}}
 import { AppRoutingModule } from './app-routing.module'
 import { Pages } from './pages';
+{{else}}
+import { HomePage } from './pages/home/home.page';
 {{/if}}
 {{#if auth}}
 import { UserMenuModule } from '@acpaas-ui/ngx-components/user-menu';
@@ -18,7 +20,9 @@ import { AvatarModule } from '@acpaas-ui/ngx-components/avatar';
   declarations: [
     AppComponent,
     {{#if routing.add}}
-    ...Pages
+    ...Pages,
+    {{else}}
+    HomePage,
     {{/if}}
   ],
   imports: [

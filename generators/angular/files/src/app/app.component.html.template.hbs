@@ -2,7 +2,13 @@
   <div class="o-header__content-wrapper">
     {{#if coreBranding}}
     <div class="o-header__content">
+      {{#if routing.add}}
       <aui-logo src="https://cdn.antwerpen.be/core_branding_scss/{{coreVersion}}/assets/images/a-logo.svg"></aui-logo>
+      {{else}}
+      <a href="#" class="o-header__logo">
+        <img src="https://cdn.antwerpen.be/core_branding_scss/{{coreVersion}}/assets/images/a-logo.svg"/>
+      </a>
+      {{/if}}
     </div>
     {{/if}}
     <div class="o-header__menu-items">
@@ -11,29 +17,18 @@
       <a routerLink="/about" class="a-button o-header__button">About</a>
       {{/if}}
       {{#if auth}}
-      <aui-user-menu></aui-user-menu>
+      <aui-user-menu (login$)="login()"></aui-user-menu>
       {{/if}}
     </div>
   </div>
 </header>
 <main class="u-wrapper">
   <div class="u-container u-margin-top-xx u-margin-bottom-lg" role="main">
-    <div col="col-xs-12">
-        <h1>Hello Starter app!</h1>
-    </div>
-    <div>
-      <h2 class="h4 u-margin-top">Handy resources</h2>
-      <ul class="a-list">
-        <li>ACPaaS UI homepage: <a href="https://acpaas-ui.digipolis.be/home" target="_blank" rel="noopener noreferrer"
-            class="has-icon-right">https://acpaas-ui.digipolis.be<i class="fa fa-external-link"></i></a></li>
-        <li>ACPaaS UI components: <a href="https://digipolisantwerp.github.io/acpaas-ui_angular/" target="_blank"
-            rel="noopener noreferrer" class="has-icon-right">https://digipolisantwerp.github.io/acpaas-ui_angular/<i
-              class="fa fa-external-link"></i></a></li>
-        <li>Core Branding: <a href="https://a-ui.github.io/core_branding_scss/" target="_blank"
-            rel="noopener noreferrer" class="has-icon-right">https://a-ui.github.io/core_branding_scss/<i
-              class="fa fa-external-link"></i></a></li>
-      </ul>
-    </div>
+    {{#if routing.add}}
+    <router-outlet></router-outlet>
+    {{else}}
+    <home-page></home-page>
+    {{/if}}
   </div>
 </main>
 <aui-footer>

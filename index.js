@@ -76,5 +76,8 @@ async function run() {
     finishInstallation(config);
   }
 }
-
-run();
+try {
+  run();
+} catch (error) {
+  errorLog(error);
+}

@@ -1,8 +1,7 @@
 import * as fs from 'fs';
 
-const overwriteAndRename = async (oldPath, newPath, contentsCallback) => {
+const overwriteAndRename = async (oldPath, newPath, code) => {
   fs.renameSync(oldPath, newPath);
-  const code = await contentsCallback();
   fs.writeFileSync(newPath, code);
 };
 
