@@ -1,18 +1,14 @@
 	/* Core branding API */
 	@import '~@a-ui/core/dist/assets/styles/quarks';
-	
+
 	:host {
 	  display: flex;
 	  flex: 1 1 auto;
 	  flex-direction: column;
 	  max-width: 100%;
 	}
-	
+
 	main {
 	  flex: 1 0 auto;
 	  width: 100%;
-	
-	  @include to($screen-xs-max) {
-	    padding-left: 0;
-	  }
 	}

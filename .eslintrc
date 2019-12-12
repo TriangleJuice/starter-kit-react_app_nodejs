@@ -16,14 +16,32 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "rules" : {
-    "indent": ["error", 2],
+  "rules": {
+    "indent": [
+      "error",
+      2
+    ],
     "no-use-before-define": 0,
     "object-curly-newline": 0,
     "no-underscore-dangle": 0,
-    "class-methods-use-this": ["off"],
-    "no-console": ["error", { "allow": ["log", "info", "warn", "error"]  }],
-    "max-len": ["error", 150]
+    "class-methods-use-this": [
+      "off"
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "log",
+          "info",
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "max-len": [
+      "error",
+      150
+    ]
   },
   "globals": {
     "__basedir": "writable",
