@@ -1,27 +1,23 @@
-<header class="o-header">
-  <div class="o-header__content-wrapper">
-    {{#if coreBranding}}
-    <div class="o-header__content">
-      {{#if routing.add}}
-      <aui-logo src="https://cdn.antwerpen.be/core_branding_scss/{{coreVersion}}/assets/images/a-logo.svg"></aui-logo>
-      {{else}}
-      <a href="#" class="o-header__logo">
-        <img src="https://cdn.antwerpen.be/core_branding_scss/{{coreVersion}}/assets/images/a-logo.svg"/>
-      </a>
-      {{/if}}
-    </div>
+<aui-header>
+  <div auiHeaderLogo>
+    {{#if routing.add}}
+    <aui-logo src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}"></aui-logo>
+    {{else}}
+    <a href="#" class="o-header__logo">
+      <img src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}" />
+    </a>
     {{/if}}
-    <div class="o-header__menu-items">
-      {{#if routing.add}}
-      <a routerLink="/home" class="a-button o-header__button">Home</a>
-      <a routerLink="/about" class="a-button o-header__button">About</a>
-      {{/if}}
-      {{#if auth}}
-      <aui-user-menu (login$)="login()" (logout$)="logout()"></aui-user-menu>
-      {{/if}}
-    </div>
   </div>
-</header>
+  <div auiHeaderMenuItem>
+    {{#if routing.add}}
+    <a routerLink="/home" class="a-button o-header__button">Home</a>
+    <a routerLink="/about" class="a-button o-header__button">About</a>
+    {{/if}}
+    {{#if auth}}
+    <aui-user-menu (login$)="login()" (logout$)="logout()"></aui-user-menu>
+    {{/if}}
+  </div>
+</aui-header>
 <main class="u-wrapper">
   <div class="u-container u-margin-top-xx u-margin-bottom-lg" role="main">
     {{#if routing.add}}

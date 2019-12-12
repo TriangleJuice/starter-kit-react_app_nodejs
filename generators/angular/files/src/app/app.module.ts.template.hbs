@@ -1,8 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { FooterModule, HeaderModule } from '@acpaas-ui/ngx-components/layout';
-import { LogoModule } from '@acpaas-ui/ngx-components/logo';
+import { AuiModule } from './aui/aui.module';
 {{#if routing.add}}
 import { AppRoutingModule } from './app-routing.module'
 import { Pages } from './pages';
@@ -10,9 +9,7 @@ import { Pages } from './pages';
 import { HomePage } from './pages/home/home.page';
 {{/if}}
 {{#if auth}}
-import { UserMenuModule } from '@acpaas-ui/ngx-components/user-menu';
 import { ServiceModule } from './services';
-import { AvatarModule } from '@acpaas-ui/ngx-components/avatar';
 {{/if}}
 
 
@@ -27,16 +24,12 @@ import { AvatarModule } from '@acpaas-ui/ngx-components/avatar';
   ],
   imports: [
     BrowserModule,
-    FooterModule,
-    HeaderModule,
-    LogoModule,
+    AuiModule,
     {{#if routing.add}}
     AppRoutingModule,
     {{/if}}
     {{#if auth}}
-    UserMenuModule,
     ServiceModule,
-    AvatarModule,
     {{/if}}
   ],
   providers: [],

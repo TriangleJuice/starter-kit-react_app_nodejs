@@ -5,10 +5,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import options from './config/options';
 import questions from './config/questions';
-import { updateLog, errorLog } from '../../utils/log';
+import { updateLog } from '../../utils/log';
 import { execPromise } from '../../utils/exec';
 import { mapRouting } from './helpers/routing';
-import { deleteFolderSync, deleteFileSync } from '../../utils/delete';
+import { deleteFolderSync } from '../../utils/delete';
 import { updatePackageJson, getlatestverion } from '../../utils/package';
 import { copyFolderRecursiveSync, copyFileSync } from '../../utils/copy';
 import HandlebarsTemplateGenerator from '../../utils/template-generator';
@@ -48,7 +48,7 @@ class AngularAppGenerator {
    */
   async prepareDirectory() {
     deleteFolderSync(__frontenddir);
-    return new Promise((resolve, reject) => fs.mkdir(__frontenddir, (err) => err ? reject(err) : resolve()));
+    return new Promise((resolve, reject) => fs.mkdir(__frontenddir, err => (err ? reject(err) : resolve())));
   }
 
   /**
@@ -112,14 +112,14 @@ class AngularAppGenerator {
     // src/index.html
     await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/index.html.template.hbs'),
-      to: path.resolve(__frontenddir, 'src/index.html')
+      to: path.resolve(__frontenddir, 'src/index.html'),
     });
     updateLog('CREATED: index.html');
 
     // src/styles.scss
     await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/styles.scss.template.hbs'),
-      to: path.resolve(__frontenddir, 'src/styles.scss')
+      to: path.resolve(__frontenddir, 'src/styles.scss'),
     });
 
     updateLog('CREATED: styles.scss');
@@ -134,7 +134,7 @@ class AngularAppGenerator {
     // app.component.html
     await this.generator.generate({
       fromTemplate: path.resolve(__frontenddir, 'src/app/app.component.html.template.hbs'),
-      to: path.resolve(__frontenddir, 'src/app/app.component.html')
+      to: path.resolve(__frontenddir, 'src/app/app.component.html'),
     });
     updateLog('CREATED: app.component.html');
 
@@ -144,6 +144,19 @@ class AngularAppGenerator {
       to: path.resolve(__frontenddir, 'src/app/app.component.ts'),
     });
     updateLog('CREATED: app.component.ts');
+
+    // AUI module
+    await copyFolderRecursiveSync(
+      path.resolve(__basedir, 'generators/angular/files/src/app/aui'),
+      path.resolve(__frontenddir, 'src/app/'),
+    );
+
+    // aui-imports.ts
+    await this.generator.generate({
+      fromTemplate: path.resolve(__frontenddir, 'src/app/aui/aui.imports.ts.template.hbs'),
+      to: path.resolve(__frontenddir, 'src/app/aui/aui.imports.ts'),
+    });
+    updateLog('CREATED: aui.module.ts');
 
     if (config.routing && config.routing.add) {
       await copyFolderRecursiveSync(`${__basedir}/generators/angular/files/extra/src/app/pages/`, `${__frontenddir}/src/app`);
@@ -173,14 +186,13 @@ class AngularAppGenerator {
     } else {
       await copyFolderRecursiveSync(
         path.resolve(__basedir, 'generators/angular/files/extra/src/app/pages'),
-        path.resolve(__frontenddir, 'src/app/')
+        path.resolve(__frontenddir, 'src/app/'),
       );
       deleteFolderSync(path.resolve(__frontenddir, 'src/app/pages/about'));
       deleteFolderSync(path.resolve(__frontenddir, 'src/app/pages/login'));
       deleteFolderSync(path.resolve(__frontenddir, 'src/app/pages/index.ts.template.hbs'));
     }
   }
-
 }
 
 /**
@@ -196,10 +208,10 @@ export default {
     const configuration = {
       ...config,
       routing: mapRouting(config),
-      coreVersion: await getlatestverion('@a-ui/core')
+      coreVersion: await getlatestverion('@a-ui/core'),
     };
     const generator = new AngularAppGenerator(configuration, execPromise, new HandlebarsTemplateGenerator(configuration));
     return generator.start();
   },
-  AngularAppGenerator
+  AngularAppGenerator,
 };

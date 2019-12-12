@@ -16,6 +16,7 @@ describe('Angular Template Generator', () => {
         version: '1.0.0',
         scss: ['@import "one"'],
         type: 'core',
+        logo: 'a-logo.svg',
       },
     };
     generator = new HandlebarsTemplateGenerator(mockConfiguration);
@@ -46,13 +47,16 @@ describe('Angular Template Generator', () => {
       expect(appModule).toContain('AppRoutingModule');
       expect(appModule).toContain('...Pages');
     });
+  });
+
+  describe('AUI Module', () => {
+    const templatePath = path.resolve(__dirname, 'files/src/app/aui/aui.imports.ts.template.hbs');
     it('should import login and necessary modules when auth is enabled', async () => {
       const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         auth: true,
       });
-      expect(code).toContain('import { UserMenuModule } from \'@acpaas-ui/ngx-components/user-menu\'');
-      expect(code).toContain('import { ServiceModule } from \'./services\'');
+      expect(code).toContain('UserMenuModule');
       expect(code).toContain('AvatarModule');
     });
   });
@@ -97,6 +101,26 @@ describe('Angular Template Generator', () => {
         flexboxgrid: true,
       });
       expect(index).toContain(frontEndConfig.flexbox.link);
+    });
+    it('should set correct favicon links when using core branding', async () => {
+      const index = await generator.compileAndRenderTemplate(templatePath, {
+        ...mockConfiguration,
+        branding: {
+          ...mockConfiguration.branding,
+          type: 'core',
+        },
+      });
+      expect(index).toContain('https://cdn.antwerpen.be/core_branding_favicons/');
+    });
+    it('should set correct favicon links when using alternative branding', async () => {
+      const index = await generator.compileAndRenderTemplate(templatePath, {
+        ...mockConfiguration,
+        branding: {
+          ...mockConfiguration.branding,
+          type: 'digipolis',
+        },
+      });
+      expect(index).toContain('https://cdn.antwerpen.be/digipolis_branding_favicons/');
     });
   });
 
@@ -145,7 +169,6 @@ describe('Angular Template Generator', () => {
           add: true,
         },
       });
-      expect(code).toContain('o-header__content-wrapper');
       expect(code).toContain('routerLink="/home"');
       expect(code).toContain('routerLink="/about"');
     });
@@ -161,6 +184,7 @@ describe('Angular Template Generator', () => {
         ...mockConfiguration,
         branding: {
           type: 'core',
+          logo: 'a-logo.svg',
         },
         coreVersion: '1.0.0',
       });
