@@ -1,7 +1,7 @@
 import '../../globals';
+import * as path from 'path';
 import HandlebarsTemplateGenerator from '../../utils/template-generator';
 import * as frontEndConfig from '../../config/front-end.config';
-import * as path from 'path';
 
 describe('Angular Template Generator', () => {
   let mockConfiguration;
@@ -15,7 +15,7 @@ describe('Angular Template Generator', () => {
         cdn: 'some-cdn',
         version: '1.0.0',
         scss: ['@import "one"'],
-        type: 'core'
+        type: 'core',
       },
     };
     generator = new HandlebarsTemplateGenerator(mockConfiguration);
@@ -83,8 +83,8 @@ describe('Angular Template Generator', () => {
       const index = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         branding: {
-          type: 'whatever'
-        }
+          type: 'whatever',
+        },
       });
       expect(index).toContain('safari-pinned-tab.svg" color="#cf0039"');
       expect(index).toContain('msapplication-TileColor" content="#cf0039"');
@@ -115,16 +115,6 @@ describe('Angular Template Generator', () => {
       });
       expect(code).not.toContain('o-header__title');
       expect(code).not.toContain('o-header__logo');
-    });
-    it('should include extra properties when NOT handling core branding', async () => {
-      const code = await generator.compileAndRenderTemplate(templatePath, {
-        ...mockConfiguration,
-        branding: {
-          type: 'other-type',
-        },
-      });
-      expect(code).toContain('o-header__title');
-      expect(code).toContain('o-header__logo');
     });
     it('should inlude extra sass imports if configured so', async () => {
       const code = await generator.compileAndRenderTemplate(templatePath, {
@@ -160,7 +150,6 @@ describe('Angular Template Generator', () => {
       expect(code).toContain('routerLink="/about"');
     });
     it('should generate user menu when auth is enabled', async () => {
-
       const code = await generator.compileAndRenderTemplate(templatePath, {
         ...mockConfiguration,
         auth: true,
