@@ -58,7 +58,7 @@ async function copyBaseProject(config) {
     await replace({
       files: './tmp/Dockerfile',
       from: ['# RUN npm install', '# RUN npm run build'],
-      to: ['RUN npm install', 'RUN npm run  build'],
+      to: ['RUN npm install', 'RUN npm run build'],
     });
   }
   const copyJobs = [

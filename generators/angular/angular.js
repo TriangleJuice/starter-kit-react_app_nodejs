@@ -39,7 +39,7 @@ class AngularAppGenerator {
     await this.installAngular(this.configuration);
     await this.installACPaasUI(this.configuration);
     await this.createStarterTemplate(this.configuration);
-    updateLog('Done with front-end setup', 'cyan');
+    updateLog('Done with frontend setup', 'cyan');
   }
 
   /**
