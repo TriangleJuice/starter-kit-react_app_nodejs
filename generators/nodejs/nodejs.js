@@ -1,14 +1,16 @@
 const { log } = console;
 const path = require('path');
 const chalk = require('chalk');
-const { nodeConfig } = require('../config/back-end.config');
-const { copyJob } = require('../utils/copy');
-const debug = require('../utils/debug');
-const { deleteFileSync, deleteFolderRecursive } = require('../utils/delete');
-const { execPromise } = require('../utils/exec');
-const gitclone = require('../utils/gitclone');
-const { updateLog, errorLog } = require('../utils/log');
-const removeMatchedLines = require('../utils/removeLine');
+const replace = require('replace-in-file');
+
+const { nodeConfig } = require('../../config/back-end.config');
+const { copyJob } = require('../../utils/copy');
+const debug = require('../../utils/debug');
+const { deleteFileSync, deleteFolderRecursive } = require('../../utils/delete');
+const { execPromise } = require('../../utils/exec');
+const gitclone = require('../../utils/gitclone');
+const { updateLog, errorLog } = require('../../utils/log');
+const removeMatchedLines = require('../../utils/removeLine');
 
 const generatorOptions = [
   {
@@ -19,7 +21,7 @@ const generatorOptions = [
   },
   {
     param: '-A, --no-auth',
-    description: 'Don\'t add basic authentication',
+    description: "Don't add basic authentication",
   },
 ];
 const questions = [
@@ -27,10 +29,7 @@ const questions = [
     type: 'list',
     name: 'database',
     message: 'Which database would you like?',
-    choices: [
-      { value: 'mongodb', name: 'MongoDB' },
-      { value: undefined, name: 'I don\'t need a database' },
-    ],
+    choices: [{ value: 'mongodb', name: 'MongoDB' }, { value: undefined, name: "I don't need a database" }],
   },
   {
     type: 'confirm',
@@ -48,12 +47,20 @@ function getOptions() {
   return generatorOptions;
 }
 
-async function copyBaseProject() {
+async function copyBaseProject(config) {
   const { baseProject } = nodeConfig;
   const { repository, tag } = baseProject;
   debug.logger(`Clone backend version: ${tag}`);
   await gitclone(repository, tag);
-  debug.logger(`Copy files from repo`);
+  debug.logger('Copy files from repo');
+  if (config.frontend) {
+    debug.logger('Enable Frontend in Dockerfile.');
+    await replace({
+      files: './tmp/Dockerfile',
+      from: ['# RUN npm install', '# RUN npm run build'],
+      to: ['RUN npm install', 'RUN npm run build'],
+    });
+  }
   const copyJobs = [
     { source: './tmp/.digipolis.json', destination: './', type: 'file' },
     { source: './tmp/CHANGELOG.md', destination: './', type: 'file' },
@@ -65,7 +72,7 @@ async function copyBaseProject() {
     { source: './tmp/docker-compose.yml', destination: './', type: 'file' },
   ];
   await copyJob(copyJobs);
-  debug.logger(`Cleanup tmp folder`);
+  debug.logger('Cleanup tmp folder');
   deleteFolderRecursive('./tmp');
 }
 
@@ -75,13 +82,13 @@ async function setDB(db) {
     debug.logger('MongoDB is the default. Nothing to replace');
   } else {
     debug.logger('Remove DB files');
-    deleteFileSync('./backend/src/helpers/db.helper.js');
-    deleteFileSync('./backend/src/routes/example.router.js');
+    deleteFileSync(`${__backenddir}/src/helpers/db.helper.js`);
+    deleteFileSync(`${__backenddir}/src/routes/example.router.js`);
     debug.logger('remove db references');
-    deleteFolderRecursive('./backend/src/models');
-    await removeMatchedLines('./backend/src/app.js', 'initializeDatabase');
-    await removeMatchedLines('./backend/src/routes/api.router.js', 'example');
-    await removeMatchedLines('./backend/package.json', 'mongoose');
+    deleteFolderRecursive(`${__backenddir}/src/models`);
+    await removeMatchedLines(`${__backenddir}/src/app.js`, 'initializeDatabase');
+    await removeMatchedLines(`${__backenddir}/src/routes/api.router.js`, 'example');
+    await removeMatchedLines(`${__backenddir}/package.json`, 'mongoose');
   }
 }
 
@@ -91,33 +98,34 @@ async function setAuth(auth) {
     debug.logger('Auth is included. Nothing to replace');
   } else {
     debug.logger('Remove Auth files');
-    deleteFileSync('./backend/src/routes/auth.router.js');
+    deleteFileSync(`${__backenddir}/src/routes/auth.router.js`);
     debug.logger('remove auth references');
-    deleteFolderRecursive('./backend/src/models');
-    await removeMatchedLines('./backend/src/routes/index.js', 'setupAuthRoutes');
-    await removeMatchedLines('./backend/package.json', '@digipolis/auth');
+    deleteFolderRecursive(`${__backenddir}/src/models`);
+    await removeMatchedLines(`${__backenddir}/src/routes/index.js`, 'setupAuthRoutes');
+    await removeMatchedLines(`${__backenddir}/package.json`, '@digipolis/auth');
   }
 }
 
 async function installPackages() {
-  await execPromise('npm', ['install'], { cwd: path.resolve('backend') });
+  await execPromise('npm', ['install'], { cwd: path.resolve(__backenddir) });
 }
 
 async function start(options) {
   updateLog('Setting up Node.js...');
   try {
-    await copyBaseProject();
+    await copyBaseProject(options);
     await setDB(options.database);
     await setAuth(options.auth);
     await installPackages();
-    log(chalk.cyan.bold(`
-Done with BFF setup`));
+    log(
+      chalk.cyan.bold('Done with BFF setup'),
+    );
   } catch (e) {
     errorLog(e);
   }
 }
 
-module.exports = {
+export default {
   getOptions,
   getQuestions,
   start,

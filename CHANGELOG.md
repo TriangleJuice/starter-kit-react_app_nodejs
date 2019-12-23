@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- NodeJs Front-end aware
+- Add Angular generator
+- Refactor project structure
 
 
 ## [1.4.0] - 2019-07-05

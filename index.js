@@ -1,22 +1,18 @@
-#!/usr/bin/env node
+import './globals';
+import options from './config/options';
+
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const program = require('commander');
-const requireDir = require('require-dir');
 
-const generators = requireDir('./generators');
+import generators from './generators';
 const pjson = require('./package.json');
 const questions = require('./config/questions');
-const options = require('./config/options');
 
 const { log } = console;
 const { mapBranding } = require('./utils/branding');
 const { fancyLog } = require('./utils/log');
 const debug = require('./utils/debug');
-
-global.__basedir = __dirname;
-global.__frontenddir = './frontend';
-global.__backenddir = './backend';
 
 
 // Run commander with generator options
@@ -36,8 +32,6 @@ function finishInstallation(config) {
 
 async function askQuestions() {
   let config = await inquirer.prompt(questions);
-  // Remove this line when activating front-end choices
-  config.frontend = 'react';
   const { frontend, backend } = config;
   if (config.backend && generators[backend].getQuestions) {
     const backendConfig = await inquirer.prompt(generators[backend].getQuestions());
@@ -82,5 +76,8 @@ async function run() {
     finishInstallation(config);
   }
 }
-
-run();
+try {
+  run();
+} catch (error) {
+  errorLog(error);
+}

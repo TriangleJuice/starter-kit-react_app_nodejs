@@ -1,0 +1,16 @@
+import { FooterModule, HeaderModule } from '@acpaas-ui/ngx-components/layout';
+import { LogoModule } from '@acpaas-ui/ngx-components/logo';
+{{#if auth}}
+import { UserMenuModule } from '@acpaas-ui/ngx-components/user-menu';
+import { AvatarModule } from '@acpaas-ui/ngx-components/avatar';
+{{/if}}
+
+export const AUI_IMPORTS = [
+    FooterModule,
+    HeaderModule,
+    LogoModule,
+    {{#if auth}}
+    UserMenuModule,
+    AvatarModule,
+    {{/if}}
+];

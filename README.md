@@ -1,13 +1,13 @@
-# Digipolis starter kit for React
+# Digipolis ui-starter
 
-This starter kit makes it easy for you to create a React-based [ACPaaS UI](https://acpaas-ui.digipolis.be) app. It works best as part of the [Digipolis NodeJS starter kit](https://github.com/digipolisantwerp/starter-kit_app_nodejs), but it's also possible to use it stand-alone.
+This starter kit makes it easy for you to create a frontend [ACPaaS UI](https://acpaas-ui.digipolis.be) and/or backend nodejs app.
 
 ## Basic usage
 
 ```sh
-> npm install -g @digipolis/start-react
+> npm install -g @digipolis/start-ui
 > cd your-app
-> digipolis-start-react
+> digipolis-start-ui
 ```
 
 ## Advanced
@@ -15,11 +15,39 @@ This starter kit makes it easy for you to create a React-based [ACPaaS UI](https
 ### Run the starter kit without questionnaire
 
 ```sh
-> digipolis-start-react --no-setup
+> digipolis-start-ui --no-setup
 ```
 
 Run the help command in order to see all available configuration options:
 
 ```sh
-> digipolis-start-react --help
+> digipolis-start-ui --help
 ```
+
+## Working with the starterkit
+
+### config
+
+This folder contains basic configuration for back-end, front-end, branding, questions and general options.
+
+### utils
+
+Small utils to help the generators.
+
+### generators
+
+#### angular
+
+Angular-cli based generator to generate a basic app with the option to add routing and/or authentication.
+
+#### DotNet
+
+Not yet implemented.
+
+#### nodejs
+
+A nodejs backend app wiht several options for routing/authenticatin, etc...
+
+#### React
+
+Create-react-app based generator to generate a basic app with the option to add routing and/or authentication.

@@ -1,9 +1,7 @@
-const requireDir = require('require-dir');
+import generators from '../generators/index';
+
 const program = require('commander');
-
 const pjson = require('../package.json');
-
-const generators = requireDir('../generators');
 const generatorNames = Object.keys(generators);
 
 const generalOptions = [
@@ -57,4 +55,4 @@ function commander() {
   return prog.parse(process.argv);
 }
 
-module.exports = commander;
+export default commander;

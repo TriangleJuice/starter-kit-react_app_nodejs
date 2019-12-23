@@ -1,0 +1,38 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { AuiModule } from './aui/aui.module';
+{{#if routing.add}}
+import { AppRoutingModule } from './app-routing.module'
+import { Pages } from './pages';
+{{else}}
+import { HomePage } from './pages/home/home.page';
+{{/if}}
+{{#if auth}}
+import { ServiceModule } from './services';
+{{/if}}
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    {{#if routing.add}}
+    ...Pages,
+    {{else}}
+    HomePage,
+    {{/if}}
+  ],
+  imports: [
+    BrowserModule,
+    AuiModule,
+    {{#if routing.add}}
+    AppRoutingModule,
+    {{/if}}
+    {{#if auth}}
+    ServiceModule,
+    {{/if}}
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }

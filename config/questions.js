@@ -13,6 +13,16 @@ const questions = [
       { value: undefined, name: 'I don\'t need a BFF' },
     ],
   },
+  {
+    type: 'list',
+    name: 'frontend',
+    message: 'Which frontend technology would you like?',
+    choices: [
+      { value: 'react', name: 'ReactJs' },
+      { value: 'angular', name: 'Angular' },
+      { value: undefined, name: 'I don\'t need a frontend' },
+    ],
+  },
 ];
 
 module.exports = questions;

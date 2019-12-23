@@ -1,20 +1,24 @@
 {
-  "name": "@digipolis/start-react",
+  "name": "@digipolis/start-ui",
   "version": "1.4.0",
-  "description": "Digipolis starter kit for React",
+  "description": "Digipolis starter kit",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./index.js",
-    "lint": "eslint ."
+    "test": "jest",
+    "build": "webpack",
+    "start": "node ./cli.js",
+    "lint": "eslint .",
+    "prepublish": "npm run build"
   },
   "bin": {
-    "digipolis-start-react": "./index.js"
+    "digipolis-start-ui": "cli.js"
   },
   "keywords": [
     "starter kit",
     "acpaas ui",
     "react",
+    "angular",
+    "node",
     "generator"
   ],
   "author": "Jasper Van Proeyen",
@@ -27,21 +31,38 @@
     "url": "https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/issues"
   },
   "dependencies": {
+    "async": "^3.1.0",
     "axios": "^0.19.0",
     "chalk": "^2.4.1",
     "commander": "^2.19.0",
+    "deepmerge": "^4.0.0",
     "git-clone": "^0.1.0",
+    "hbs": "^4.0.6",
     "inquirer": "^6.2.0",
+    "mkdir-recursive": "^0.4.0",
     "replace-in-file": "^3.4.2",
-    "require-dir": "^1.2.0",
     "rimraf": "^2.6.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.7.5",
+    "@babel/plugin-transform-runtime": "^7.7.6",
+    "@babel/preset-env": "^7.7.6",
+    "@babel/runtime": "^7.7.6",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
     "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-mocha": "^5.3.0",
-    "eslint-plugin-node": "^8.0.1"
+    "eslint-plugin-node": "^8.0.1",
+    "jest": "^24.9.0",
+    "mock-fs": "^4.10.4",
+    "mock-spawn": "^0.2.6",
+    "recursive-readdir": "^2.2.2",
+    "sinon": "^7.5.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   }
 }

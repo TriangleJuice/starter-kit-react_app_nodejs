@@ -1,0 +1,48 @@
+import { Component, OnInit } from '@angular/core';
+{{#if auth}}
+import { UserService } from './services/user'
+{{/if}}
+{{#if routing.add}}
+import { Router } from '@angular/router';
+{{/if}}
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+
+  {{#if auth}}
+  public userData: any;
+  {{/if}}
+
+  constructor({{#if routing.add}}private router: Router{{/if}}{{#if auth}}, private userService: UserService{{/if}}) {
+
+  }
+
+  public ngOnInit() {
+    {{#if auth}}
+    this.userService.getUser().then((resp) => {
+      return resp.json();
+    }).then((data) => {
+      this.userData = data.user;
+    });
+    {{/if}}
+  }
+
+  {{#if auth}}
+  public login() {
+     {{#if routing.add}}
+     return this.router.navigate(['/login']);
+     {{else}}
+     window.location.href = '/auth/login/mprofiel';
+     {{/if}}
+  }
+
+  public logout() {
+    window.location.href = '/auth/logout';
+  }
+  {{/if}}
+}

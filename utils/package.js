@@ -1,6 +1,8 @@
 const axios = require('axios');
+const fs = require('fs');
+const merge = require('deepmerge');
 
-getlatestverion = async (packageName) => {
+const getlatestverion = async (packageName) => {
   let key = packageName;
   if (Array.isArray(packageName)) {
     key = packageName[packageName.length - 1];
@@ -9,6 +11,13 @@ getlatestverion = async (packageName) => {
   return response.data['dist-tags'].latest;
 };
 
+const updatePackageJson = (newValues, pkgLocation) => {
+  const pkgJson = JSON.parse(fs.readFileSync(pkgLocation));
+  const newPkgJson = merge(pkgJson, newValues);
+  fs.writeFileSync(pkgLocation, JSON.stringify(newPkgJson, null, 2));
+};
+
 module.exports = {
   getlatestverion,
+  updatePackageJson,
 };
