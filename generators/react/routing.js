@@ -26,9 +26,15 @@ import { Link, Route, Switch } from "react-router-dom";`,
     files: `${__frontenddir}/src/App.js`,
     from: '<Header />',
     to: `<Header>
-            <div className="m-button-group">
-              <Link to={'/'} className="a-button">Home</Link>
-              <Link to={'/about'} className="a-button">About</Link>
+            <div className="o-header__content-wrapper">
+              <div className="o-header__menu-items">
+                <div className="o-header__menu-item">
+                  <Link to={'/'} className="a-button-negative o-header__button">Home</Link>
+                </div>
+                <div className="o-header__menu-item">
+                  <Link to={'/about'} className="a-button-negative o-header__button">About</Link>
+                </div>
+              </div>
             </div>
           </Header>`,
   },
@@ -76,14 +82,18 @@ const loginReplaceOptions = [
     files: `${__frontenddir}/src/App.js`,
     from: '<Header />',
     to: `<Header>
-            <div className="m-button-group">
-              <UserMenu
-                user={this.state.user}
-                loggedIn={this.state.isLoggedin}
-                loginUrl="/auth/login/mprofiel"
-                logoutUrl="/auth/logout/callback/mprofiel">
-              </UserMenu>
+          <div className="o-header__content-wrapper">
+            <div className="o-header__menu-items">
+              <div className="o-header__menu-item">
+                <UserMenu
+                  user={this.state.user}
+                  loggedIn={this.state.isLoggedin}
+                  loginUrl="/auth/login/mprofiel"
+                  logoutUrl="/auth/logout/callback/mprofiel">
+                </UserMenu>
+              </div>
             </div>
+          </div>
           </Header>`,
   },
 ];
