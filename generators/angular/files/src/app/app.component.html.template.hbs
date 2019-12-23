@@ -1,22 +1,29 @@
 <aui-header>
   <div auiHeaderLogo>
     {{#if routing.add}}
-    <aui-logo src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}"></aui-logo>
+    <aui-logo
+      src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}">
+    </aui-logo>
     {{else}}
     <a href="#" class="o-header__logo">
-      <img src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}" />
+      <img
+        src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}" />
     </a>
     {{/if}}
   </div>
+  {{#if routing.add}}
   <div auiHeaderMenuItem>
-    {{#if routing.add}}
     <a routerLink="/home" class="a-button o-header__button">Home</a>
-    <a routerLink="/about" class="a-button o-header__button">About</a>
-    {{/if}}
-    {{#if auth}}
-    <aui-user-menu (login$)="login()" (logout$)="logout()"></aui-user-menu>
-    {{/if}}
   </div>
+  <div auiHeaderMenuItem>
+    <a routerLink="/about" class="a-button o-header__button">About</a>
+  </div>
+  {{/if}}
+  {{#if auth}}
+  <div auiHeaderMenuItem>
+    <aui-user-menu (login$)="login()" (logout$)="logout()"></aui-user-menu>
+  </div>
+  {{/if}}
 </aui-header>
 <main class="u-wrapper">
   <div class="u-container u-margin-top-xx u-margin-bottom-lg" role="main">
