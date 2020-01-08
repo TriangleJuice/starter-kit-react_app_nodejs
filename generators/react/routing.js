@@ -24,8 +24,8 @@ import { Link, Route, Switch } from "react-router-dom";`,
   },
   {
     files: `${__frontenddir}/src/App.js`,
-    from: '<Header />',
-    to: `<Header>
+    from: '<Header logoAlt="{{BRANDING_NAME}} logo." logoSrc="https://cdn.antwerpen.be/{{BRANDING_TYPE}}_branding_scss/{{BRANDING_VERSION}}/assets/images/{{BRANDING_LOGO}}" />',
+    to: `<Header logoAlt="{{BRANDING_NAME}} logo." logoSrc="https://cdn.antwerpen.be/{{BRANDING_TYPE}}_branding_scss/{{BRANDING_VERSION}}/assets/images/{{BRANDING_LOGO}}">
             <div className="o-header__content-wrapper">
               <div className="o-header__menu-items">
                 <div className="o-header__menu-item">
@@ -80,8 +80,8 @@ const loginReplaceOptions = [
   },
   {
     files: `${__frontenddir}/src/App.js`,
-    from: '<Header />',
-    to: `<Header>
+    from: '<Header logoAlt="{{BRANDING_NAME}} logo." logoSrc="https://cdn.antwerpen.be/{{BRANDING_TYPE}}_branding_scss/{{BRANDING_VERSION}}/assets/images/{{BRANDING_LOGO}}" />',
+    to: `<Header logoAlt="{{BRANDING_NAME}} logo." logoSrc="https://cdn.antwerpen.be/{{BRANDING_TYPE}}_branding_scss/{{BRANDING_VERSION}}/assets/images/{{BRANDING_LOGO}}">
           <div className="o-header__content-wrapper">
             <div className="o-header__menu-items">
               <div className="o-header__menu-item">
@@ -141,14 +141,20 @@ import Login from './components/Login/Login';`,
   },
   {
     files: `${__frontenddir}/src/App.js`,
-    from: '<Link to={\'/about\'} className="a-button">About</Link>',
-    to: `<Link to={'/about'} className="a-button">About</Link>
-              <UserMenu
-                user={this.state.user}
-                loggedIn={this.state.isLoggedin}
-                loginUrl="/login"
-                logoutUrl="/auth/logout/callback/mprofiel">
-              </UserMenu>`,
+    from: `<div className="o-header__menu-item">
+                  <Link to={'/about'} className="a-button-negative o-header__button">About</Link>
+                </div>`,
+    to: `<div className="o-header__menu-item">
+                  <Link to={'/about'} className="a-button-negative o-header__button">About</Link>
+                </div>
+                <div className="o-header__menu-item">
+                  <UserMenu
+                    user={this.state.user}
+                    loggedIn={this.state.isLoggedin}
+                    loginUrl="/login"
+                    logoutUrl="/auth/logout/callback/mprofiel">
+                  </UserMenu>
+                </div>`,
   },
   {
     files: `${__frontenddir}/src/App.js`,

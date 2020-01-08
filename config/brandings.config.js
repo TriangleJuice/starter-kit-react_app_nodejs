@@ -4,7 +4,7 @@ export default {
     npm: ['@a-ui/core'],
     version: '0',
     type: 'core',
-    key: 'Antwerp',
+    key: 'Antwerpen',
     scss: [],
     logo: 'a-logo.svg',
   },

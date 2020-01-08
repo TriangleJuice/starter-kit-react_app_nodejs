@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Refactor project structure
 
 
+## [2.0.0] - 2020-01-08
+
+### Added
+- Added an Angular generator
+
+### Changed
+- [BREAKING] Changed the package name and CLI command to reflect the new addition
+
+### Fixed
+- Fixed an issue where an incorrect logo was set for other brandings
+
+
 ## [1.4.0] - 2019-07-05
 
 ### Added
@@ -74,13 +86,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.4.0...HEAD
-[1.4.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.3.1...v1.4.0
-[1.3.1]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.3.0...v1.3.1
-[1.3.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.3...v1.3.0
-[1.2.3]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.2...v1.2.3
-[1.2.2]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.1...v1.2.2
-[1.2.1]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.2.0...v1.2.1
-[1.2.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/compare/v1.0.0
+[Unreleased]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.4.0...v2.0.0
+[1.4.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.3.1...v1.4.0
+[1.3.1]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.3.0...v1.3.1
+[1.3.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.2.3...v1.3.0
+[1.2.3]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.0.0

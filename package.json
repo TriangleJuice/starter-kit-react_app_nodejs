@@ -25,10 +25,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/digipolisantwerp/starter-kit-react_app_nodejs.git"
+    "url": "git+https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs.git"
   },
   "bugs": {
-    "url": "https://github.com/digipolisantwerp/starter-kit-react_app_nodejs/issues"
+    "url": "https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/issues"
   },
   "dependencies": {
     "async": "^3.1.0",

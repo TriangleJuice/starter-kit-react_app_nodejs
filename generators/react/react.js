@@ -120,6 +120,12 @@ async function createStarterTemplate(config) {
     to: [config.name],
   };
 
+  const AppJsNextReplaceOptions = {
+    files: `${__frontenddir}/src/App.js`,
+    from: ['logoAlt="{{BRANDING_NAME}} logo." logoSrc="https://cdn.antwerpen.be/{{BRANDING_TYPE}}_branding_scss/{{BRANDING_VERSION}}/assets/images/{{BRANDING_LOGO}}'],
+    to: [`logoAlt="${config.branding.key} logo." logoSrc="https://cdn.antwerpen.be/${config.branding.type}_branding_scss/${config.branding.version}/assets/images/${config.branding.logo}`],
+  };
+
   if (config.branding.type !== 'core') {
     IndexHtmlReplaceOptions.from.push(
       /safari-pinned-tab.svg" color="#cf0039"/g,
@@ -179,6 +185,9 @@ ${config.branding.scss.join('\n')}`,
       deleteFileSync('frontend/src/setupProxy.js');
       deleteFolderSync('frontend/src/components/Login');
     }
+
+    await replace(AppJsNextReplaceOptions);
+
   } catch (e) {
     errorLog(e);
   }

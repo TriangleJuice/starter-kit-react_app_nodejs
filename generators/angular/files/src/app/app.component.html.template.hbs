@@ -2,11 +2,14 @@
   <div auiHeaderLogo>
     {{#if routing.add}}
     <aui-logo
+      title="{{branding.key}} logo."
+      link="/"
       src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}">
     </aui-logo>
     {{else}}
-    <a href="#" class="o-header__logo">
+    <a href="/" class="o-header__logo">
       <img
+        alt="{{branding.key}} logo."
         src="https://cdn.antwerpen.be/{{branding.type}}_branding_scss/{{coreVersion}}/assets/images/{{branding.logo}}" />
     </a>
     {{/if}}
