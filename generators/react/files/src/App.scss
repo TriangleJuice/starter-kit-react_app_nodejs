@@ -10,6 +10,14 @@
   max-width: 100%;
 }
 
+.o-header {
+  display: flex;
+
+  &__content-wrapper {
+    flex: 1;
+  }
+}
+
 .main {
   flex: 1 0 auto;
   width: 100%;

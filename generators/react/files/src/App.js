@@ -16,7 +16,7 @@ class App extends Component {
     return (
       <div className="App">
         <header>
-          <Header />
+          <Header logoAlt="{{BRANDING_NAME}} logo." logoSrc="https://cdn.antwerpen.be/{{BRANDING_TYPE}}_branding_scss/{{BRANDING_VERSION}}/assets/images/{{BRANDING_LOGO}}" />
         </header>
         <div className="main u-wrapper">
           <div className="u-container u-margin-top-xx u-margin-bottom-lg" role="main">
