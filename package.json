@@ -2,7 +2,7 @@
   "name": "@digipolis/start-ui",
   "version": "2.0.0",
   "description": "Digipolis starter kit",
-  "main": "index.js",
+  "main": "cli.js",
   "scripts": {
     "test": "jest",
     "build": "webpack",
@@ -13,6 +13,9 @@
   "bin": {
     "digipolis-start-ui": "cli.js"
   },
+  "files": [
+    "cli.js"
+  ],
   "keywords": [
     "starter kit",
     "acpaas ui",

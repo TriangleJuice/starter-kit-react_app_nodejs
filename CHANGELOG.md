@@ -11,7 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Refactor project structure
 
 
-## [2.0.0] - 2020-01-08
+## [2.0.1] - 2020-01-09
+
+### Fixed
+- Fixed the main cli.js file not being included in the published package
+
+
+## [2.0.0] - 2020-01-08 - BORKED
 
 ### Added
 - Added an Angular generator
@@ -86,7 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.4.0...v2.0.0
 [1.4.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v1.3.0...v1.3.1

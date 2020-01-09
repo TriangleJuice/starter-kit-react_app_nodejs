@@ -1,4 +1,4 @@
-# Digipolis ui-starter
+# Digipolis UI starter kit
 
 This starter kit makes it easy for you to create a frontend [ACPaaS UI](https://acpaas-ui.digipolis.be) and/or backend nodejs app.
 
