@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AuiModule } from './aui/aui.module';
 {{#if routing.add}}
-import { AppRoutingModule } from './app-routing.module'
+import { AppRoutingModule } from './app-routing.module';
 import { Pages } from './pages';
 {{else}}
-import { HomePage } from './pages/home/home.page';
+import { HomePageComponent } from './pages/home/home.page';
 {{/if}}
 {{#if auth}}
 import { ServiceModule } from './services';
@@ -19,7 +19,7 @@ import { ServiceModule } from './services';
     {{#if routing.add}}
     ...Pages,
     {{else}}
-    HomePage,
+    HomePageComponent,
     {{/if}}
   ],
   imports: [

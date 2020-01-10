@@ -1,12 +1,12 @@
-import { HomePage } from './home/home.page';
-import { AboutPage } from './about/about.page';
+import { HomePageComponent } from './home/home.page';
+import { AboutPageComponent } from './about/about.page';
 {{#if auth}}
 import { LoginPage } from './login/login.page';
 {{/if}}
 
 export const Pages = [
-  HomePage,
-  AboutPage,
+  HomePageComponent,
+  AboutPageComponent,
   {{#if auth}}
   LoginPage,
   {{/if}}

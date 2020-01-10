@@ -1,18 +1,9 @@
-import { NgModule } from "@angular/core";
-
-import { UserService } from "./user";
+import { NgModule } from '@angular/core';
+import { UserService } from './user';
 
 @NgModule({
-	imports: [
-	],
-	declarations: [
-	],
-	exports: [
-	],
-	providers: [
-		UserService,
-	],
-	entryComponents: [
-	],
+  providers: [
+    UserService,
+  ],
 })
 export class ServiceModule { }
