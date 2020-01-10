@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomePage } from './pages/home/home.page';
-import { AboutPage } from './pages/about/about.page';
+import { HomePageComponent } from './pages/home/home.page';
+import { AboutPageComponent } from './pages/about/about.page';
 {{#if auth}}
 import { LoginPage } from './pages/login/login.page';
 {{/if}}
@@ -13,11 +13,11 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomePage,
+    component: HomePageComponent,
   },
   {
     path: 'about',
-    component: AboutPage
+    component: AboutPageComponent
   },
   {{#if auth }}
   {

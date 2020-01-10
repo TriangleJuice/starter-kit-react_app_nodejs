@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -13,8 +13,8 @@ export class UserService {
     // In a real world app, we might use a remote logging infrastructure
     // We"d also dig deeper into the error to get a better message
     const errMsg = (error.message) ? error.message :
-      error.status ? `${error.status} - ${error.statusText}` : "Server error";
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
     console.error(errMsg); // log to console instead
-    return Observable.throw(errMsg);
+    return throwError(errMsg);
   }
 }

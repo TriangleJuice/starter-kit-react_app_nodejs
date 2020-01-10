@@ -5,6 +5,6 @@ import {
 @Component({
   templateUrl: './about.page.html'
 })
-export class AboutPage {
+export class AboutPageComponent {
 
 }

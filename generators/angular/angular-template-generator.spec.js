@@ -196,8 +196,8 @@ describe('Angular Template Generator', () => {
     it('should generate pages', async () => {
       const code = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
       expect(code).not.toBeUndefined();
-      expect(code).toContain('HomePage');
-      expect(code).toContain('AboutPage');
+      expect(code).toContain('HomePageComponent');
+      expect(code).toContain('AboutPageComponent');
       expect(code).not.toContain('LoginPage');
     });
     it('should include login page if auth is enabled', async () => {
@@ -213,8 +213,8 @@ describe('Angular Template Generator', () => {
     const templatePath = path.resolve(__dirname, 'files/extra/src/app/app-routing.module.ts.template.hbs');
     it('should include basic routes', async () => {
       const code = await generator.compileAndRenderTemplate(templatePath, mockConfiguration);
-      expect(code).toContain('HomePage');
-      expect(code).toContain('AboutPage');
+      expect(code).toContain('HomePageComponent');
+      expect(code).toContain('AboutPageComponent');
       expect(code).not.toContain('LoginPage');
     });
     it('should inlude login routes if auth is enabled', async () => {
