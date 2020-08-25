@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2020-01-10
+### Added
+- Added support for frontend flag in --no-setup mode
+- Use node starterkit v1.2.0 -> v1.4.0
+
+### Fixed
+- Fixed vulnerabilities
+
 ## [2.0.3] - 2020-01-10
 ### Fixed
 - Angular TSLint errors on default project generation
