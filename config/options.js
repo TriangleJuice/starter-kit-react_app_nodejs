@@ -14,6 +14,11 @@ const generalOptions = [
     description: 'Skip setup questions',
   },
   {
+    param: '-f, --frontend <frontend>',
+    description: 'Frontend (angular or react)',
+    fallback: 'react',
+  },
+  {
     param: '-b, --backend <backend>',
     description: 'Backend framework (Node.js or none)',
     validation: /^(nodejs|dotnet)$/i,

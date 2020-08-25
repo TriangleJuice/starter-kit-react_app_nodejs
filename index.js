@@ -67,7 +67,6 @@ async function run() {
     if (program.debug) {
       debug.enable();
     }
-    config.frontend = 'react';
     const { frontend, backend } = config;
 
     if (frontend) await generators[frontend].start(config);
