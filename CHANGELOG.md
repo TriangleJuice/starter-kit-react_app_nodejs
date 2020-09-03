@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.1] - 2020-09-03
+### Added
+- fix build command for front-end
+
 ## [2.1.0] - 2020-01-10
 ### Added
 - Added support for frontend flag in --no-setup mode
