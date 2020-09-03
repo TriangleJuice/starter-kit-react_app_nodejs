@@ -1,11 +1,11 @@
 import './globals';
 import options from './config/options';
+import generators from './generators';
 
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const program = require('commander');
 
-import generators from './generators';
 const pjson = require('./package.json');
 const questions = require('./config/questions');
 

@@ -55,11 +55,21 @@ async function copyBaseProject(config) {
   debug.logger('Copy files from repo');
   if (config.frontend) {
     debug.logger('Enable Frontend in Dockerfile.');
-    await replace({
-      files: './tmp/Dockerfile',
-      from: ['# RUN npm install', '# RUN npm run build'],
-      to: ['RUN npm install', 'RUN npm run build'],
-    });
+    if (config.frontend === 'react') {
+      debug.logger('Enable React build');
+      await replace({
+        files: './tmp/Dockerfile',
+        from: ['# RUN npm ci', '# RUN npm run build:prod'],
+        to: ['RUN npm ci', 'RUN npm run build'],
+      });
+    } if (config.frontend === 'angular') {
+      debug.logger('Enable angular build');
+      await replace({
+        files: './tmp/Dockerfile',
+        from: ['# RUN npm ci', '# RUN npm run build:prod'],
+        to: ['RUN npm ci', 'RUN npm run build:prod'],
+      });
+    }
   }
   const copyJobs = [
     { source: './tmp/.digipolis.json', destination: './', type: 'file' },

@@ -3,6 +3,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import replace from 'replace-in-file';
 import options from './config/options';
 import questions from './config/questions';
 import { updateLog } from '../../utils/log';

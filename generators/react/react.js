@@ -5,6 +5,7 @@ const path = require('path');
 const replace = require('replace-in-file');
 const async = require('async');
 
+const debug = require('../../utils/debug');
 const { copyFolderRecursiveSync } = require('../../utils/copy');
 const { deleteFolderSync, deleteFileSync } = require('../../utils/delete');
 const { execPromise } = require('../../utils/exec');
@@ -187,7 +188,6 @@ ${config.branding.scss.join('\n')}`,
     }
 
     await replace(AppJsNextReplaceOptions);
-
   } catch (e) {
     errorLog(e);
   }
