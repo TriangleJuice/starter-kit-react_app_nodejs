@@ -62,7 +62,7 @@ async function copyBaseProject(config) {
         from: ['# RUN npm ci', '# RUN npm run build:prod'],
         to: ['RUN npm ci', 'RUN npm run build'],
       });
-    } if (config.frontend === 'angular') {
+    } else if (config.frontend === 'angular') {
       debug.logger('Enable angular build');
       await replace({
         files: './tmp/Dockerfile',
