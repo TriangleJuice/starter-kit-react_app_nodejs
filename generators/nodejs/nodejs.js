@@ -16,7 +16,6 @@ const generatorOptions = [
   {
     param: '-d, --database <database>',
     description: 'Database (MongoDB or none)',
-    validation: /^(mongodb)$/i,
     fallback: 'mongodb',
   },
   {
@@ -94,9 +93,35 @@ async function setDB(db) {
     debug.logger('Remove DB files');
     deleteFileSync(`${__backenddir}/src/helpers/db.helper.js`);
     deleteFileSync(`${__backenddir}/src/routes/example.router.js`);
+    deleteFileSync(`${__backenddir}/test/routes/example.test.js`);
     debug.logger('remove db references');
     deleteFolderRecursive(`${__backenddir}/src/models`);
-    await removeMatchedLines(`${__backenddir}/src/app.js`, 'initializeDatabase');
+    await replace({
+      files: `${__backenddir}/src/app.js`,
+      from: [
+        "import initializeDatabase, { closeDatabaseConnection } from './helpers/db.helper';",
+        'await initializeDatabase();',
+        'closeDatabaseConnection();',
+      ],
+      to: [
+        '',
+        '',
+        '',
+      ],
+    });
+    await replace({
+      files: `${__backenddir}/src/services/example.js`,
+      from: [
+        "import Example from '../models/example';",
+        'return Example.findById(exampleId);',
+        'return Example.find();',
+      ],
+      to: [
+        '',
+        'return true',
+        'return true',
+      ],
+    });
     await removeMatchedLines(`${__backenddir}/src/routes/api.router.js`, 'example');
     await removeMatchedLines(`${__backenddir}/package.json`, 'mongoose');
   }
