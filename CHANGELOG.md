@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.2] - 2020-09-03
+### Added
+- bugfix database param validation
+
 ## [2.1.1] - 2020-09-03
 ### Added
 - fix build command for front-end
