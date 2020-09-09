@@ -24,6 +24,22 @@ Run the help command in order to see all available configuration options:
 > digipolis-start-ui --help
 ```
 
+#### Params
+
+  * `-V, --version`              output the version number
+  * `-d, --debug`                debug
+  * `-S, --no-setup`             Skip setup questions
+  * `-f, --frontend <frontend>`  Frontend (angular or react) (default: "react")
+  * `-b, --backend <backend>`    Backend framework (Node.js or none) (default: "nodejs")
+  * `-n, --name <name>`          The name for your app (default: "Starter app")
+  * `-b, --branding <branding>`  Branding (Antwerp, Digipolis or ACPaaS) (default: "Antwerp")
+  * `-F, --no-flexboxgrid`       Don't use the Flexbox grid
+  * `-R, --no-routing`           Don't add basic routing
+  * `-d, --database <database>`  Database (MongoDB or none) (default: "mongodb")
+  * `-A, --no-auth`              Don't add basic authentication
+  * `-h, --help`                 output usage information
+
+
 ## Working with the starterkit
 
 ### config
