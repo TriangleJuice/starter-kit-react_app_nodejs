@@ -7,15 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- Fixed misc styling bugs
+- Fixed a wrong language being set
+
+
 ## [2.1.2] - 2020-09-03
+
 ### Added
 - bugfix database param validation
 
+
 ## [2.1.1] - 2020-09-03
+
 ### Added
 - fix build command for front-end
 
+
 ## [2.1.0] - 2020-01-10
+
 ### Added
 - Added support for frontend flag in --no-setup mode
 - Use node starterkit v1.2.0 -> v1.4.0
@@ -23,9 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Fixed
 - Fixed vulnerabilities
 
+
 ## [2.0.3] - 2020-01-10
+
 ### Fixed
 - Angular TSLint errors on default project generation
+
 
 ## [2.0.2] - 2020-01-09
 
@@ -114,7 +127,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.3...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.2...HEAD
+[2.1.2]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.1...v2.1.2
+[2.1.1]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.3...v2.1.0
 [2.0.3]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.0...v2.0.1
