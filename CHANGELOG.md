@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.3] - 2020-09-15
+
 ### Fixed
 - Fixed misc styling bugs
 - Fixed a wrong language being set
@@ -127,7 +129,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.2...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.3...HEAD
+[2.1.3]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/digipolisantwerp/starter-kit-ui_app_nodejs/compare/v2.0.3...v2.1.0
