@@ -42,28 +42,41 @@ Run the help command in order to see all available configuration options:
 
 ## Working with the starterkit
 
-### config
+### Config
 
 This folder contains basic configuration for back-end, front-end, branding, questions and general options.
 
-### utils
+### Utils
 
 Small utils to help the generators.
 
-### generators
+### Generators
 
-#### angular
+#### Angular
 
 Angular-cli based generator to generate a basic app with the option to add routing and/or authentication.
 
-#### DotNet
+#### .Net
 
 Not yet implemented.
 
-#### nodejs
+#### Node.js
 
-A nodejs backend app wiht several options for routing/authenticatin, etc...
+A Node.js backend app wiht several options for routing/authenticatin, etc...
 
 #### React
 
 Create-react-app based generator to generate a basic app with the option to add routing and/or authentication.
+
+## Contributing
+
+Pull requests are always welcome, however keep the following things in mind:
+
+- New features (both breaking and non-breaking) should always be discussed with the [repo's owner](#support). If possible, please open an issue first to discuss what you would like to change.
+- Fork this repo and issue your fix or new feature via a pull request.
+- Please make sure to update tests as appropriate. Also check possible linting errors and update the CHANGELOG if applicable.
+
+## Support
+
+Jasper Van Proeyen (<jasper.vanproeyen@digipolis.be>)
+
