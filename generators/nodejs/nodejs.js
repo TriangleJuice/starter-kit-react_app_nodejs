@@ -15,7 +15,7 @@ const removeMatchedLines = require('../../utils/removeLine');
 const generatorOptions = [
   {
     param: '-d, --database <database>',
-    description: 'Database (MongoDB or none)',
+    description: 'Database (MongoDB, Postgres or none)',
     fallback: 'mongodb',
   },
   {
@@ -28,7 +28,7 @@ const questions = [
     type: 'list',
     name: 'database',
     message: 'Which database would you like?',
-    choices: [{ value: 'mongodb', name: 'MongoDB' }, { value: undefined, name: "I don't need a database" }],
+    choices: [{ value: 'postgres', name: 'Postgres' }, { value: 'mongodb', name: 'MongoDB' }, { value: undefined, name: "I don't need a database" }],
   },
   {
     type: 'confirm',
@@ -48,11 +48,14 @@ function getOptions() {
 
 async function copyBaseProject(config) {
   const { baseProject } = nodeConfig;
-  const { repository, tag } = baseProject;
+  const { repository, tag, branch } = baseProject;
   debug.logger(`Clone backend version: ${tag}`);
-  await gitclone(repository, tag);
+  await gitclone(repository, tag, branch);
   debug.logger('Copy files from repo');
   if (config.frontend) {
+    console.log('@@@@@@@@@@@@@@@@@@@@@');
+    console.log('config.frontend');
+    console.log('@@@@@@@@@@@@@@@@@@@@@');
     debug.logger('Enable Frontend in Dockerfile.');
     if (config.frontend === 'react') {
       debug.logger('Enable React build');
@@ -69,6 +72,9 @@ async function copyBaseProject(config) {
         to: ['RUN npm ci', 'RUN npm run build:prod'],
       });
     }
+  } else {
+    debug.logger('No frontend');
+    deleteFileSync('./tmp/backend/test/routes/frontend.test.js');
   }
   const copyJobs = [
     { source: './tmp/.digipolis.json', destination: './', type: 'file' },
@@ -89,9 +95,36 @@ async function setDB(db) {
   if (db === 'mongodb') {
     updateLog('Installing MongoDB...');
     debug.logger('MongoDB is the default. Nothing to replace');
+  } else if (db === 'postgres') {
+    debug.logger('enable postgres');
+    await replace({
+      files: `${__backenddir}/src/controllers/examples.js`,
+      from: [
+        "// import { getExampleById, getAllExamples } from '../services/pgexample'",
+        "import { getExampleById, getAllExamples } from '../services/example'",
+      ],
+      to: [
+        "import { getExampleById, getAllExamples } from '../services/pgexample'",
+        '',
+      ],
+    });
+    await replace({
+      files: `${__backenddir}/src/app.js`,
+      from: [
+        "// import initializeDatabase, { closeDatabaseConnection } from './helpers/postgres.helper';",
+        "import initializeDatabase, { closeDatabaseConnection } from './helpers/mongoose.helper';",
+      ],
+      to: [
+        "import initializeDatabase, { closeDatabaseConnection } from './helpers/postgres.helper';",
+        '',
+      ],
+    });
+    deleteFileSync(`${__backenddir}/test/unit/mongoose.test.js`);
+    deleteFileSync(`${__backenddir}/test/routes/example.test.js`);
+    await removeMatchedLines(`${__backenddir}/package.json`, 'mongoose');
   } else {
     debug.logger('Remove DB files');
-    deleteFileSync(`${__backenddir}/src/helpers/db.helper.js`);
+    deleteFileSync(`${__backenddir}/src/helpers/mongoose.helper.js`);
     deleteFileSync(`${__backenddir}/src/routes/example.router.js`);
     deleteFileSync(`${__backenddir}/test/routes/example.test.js`);
     debug.logger('remove db references');
@@ -99,13 +132,9 @@ async function setDB(db) {
     await replace({
       files: `${__backenddir}/src/app.js`,
       from: [
-        "import initializeDatabase, { closeDatabaseConnection } from './helpers/db.helper';",
-        'await initializeDatabase();',
-        'closeDatabaseConnection();',
+        "import initializeDatabase, { closeDatabaseConnection } from './helpers/mongoose.helper'",
       ],
       to: [
-        '',
-        '',
         '',
       ],
     });
