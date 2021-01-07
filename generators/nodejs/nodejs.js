@@ -53,9 +53,6 @@ async function copyBaseProject(config) {
   await gitclone(repository, tag, branch);
   debug.logger('Copy files from repo');
   if (config.frontend) {
-    console.log('@@@@@@@@@@@@@@@@@@@@@');
-    console.log('config.frontend');
-    console.log('@@@@@@@@@@@@@@@@@@@@@');
     debug.logger('Enable Frontend in Dockerfile.');
     if (config.frontend === 'react') {
       debug.logger('Enable React build');
