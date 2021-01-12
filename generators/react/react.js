@@ -90,7 +90,7 @@ async function installACPaaSUI(config) {
   updateLog('Installing ACPaaS UI...');
 
   try {
-    await execPromise('npm', ['install', '--save-dev', 'node-sass'], { cwd: path.resolve('frontend') });
+    await execPromise('npm', ['install', '--save-dev', 'node-sass@<5.0.0'], { cwd: path.resolve('frontend') });
     await execPromise('npm', ['install', '--save', '@acpaas-ui/react-components'].concat(config.branding.npm).concat(config.routing.npm), {
       cwd: path.resolve('frontend'),
     });
