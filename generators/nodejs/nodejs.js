@@ -91,17 +91,35 @@ async function copyBaseProject(config) {
 async function setDB(db) {
   if (db === 'mongodb') {
     updateLog('Installing MongoDB...');
-    debug.logger('MongoDB is the default. Nothing to replace');
+    debug.logger('MongoDB is the default. Removing Postgres comments');
+    await replace({
+      files: `${__backenddir}/src/controllers/examples.js`,
+      from: [
+        "// import { getExampleById, getAllExamples } from '../services/pgexample';",
+      ],
+      to: [
+        '',
+      ],
+    });
+    await replace({
+      files: `${__backenddir}/src/app.js`,
+      from: [
+        "// import initializeDatabase, { closeDatabaseConnection } from './helpers/postgres.helper';",
+      ],
+      to: [
+        '',
+      ],
+    });
   } else if (db === 'postgres') {
     debug.logger('enable postgres');
     await replace({
       files: `${__backenddir}/src/controllers/examples.js`,
       from: [
-        "// import { getExampleById, getAllExamples } from '../services/pgexample'",
-        "import { getExampleById, getAllExamples } from '../services/example'",
+        "// import { getExampleById, getAllExamples } from '../services/pgexample';",
+        "import { getExampleById, getAllExamples } from '../services/example';",
       ],
       to: [
-        "import { getExampleById, getAllExamples } from '../services/pgexample'",
+        "import { getExampleById, getAllExamples } from '../services/pgexample';",
         '',
       ],
     });
@@ -116,6 +134,7 @@ async function setDB(db) {
         '',
       ],
     });
+    deleteFileSync(`${__backenddir}/src/models/example.js`);
     deleteFileSync(`${__backenddir}/test/unit/mongoose.test.js`);
     deleteFileSync(`${__backenddir}/test/routes/example.test.js`);
     await removeMatchedLines(`${__backenddir}/package.json`, 'mongoose');
