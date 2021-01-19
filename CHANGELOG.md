@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.2.0] - 2021-01-19
+
+### Fixed
+
+- Fixed Angular build error
+- Fixed React build error
+
+### Added
+- Add Postgres option to node
+- Add option to clone from branch for debugging purposes
+
+
 ## [2.1.3] - 2020-09-15
 
 ### Fixed
