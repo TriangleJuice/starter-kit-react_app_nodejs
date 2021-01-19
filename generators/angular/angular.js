@@ -68,6 +68,7 @@ class AngularAppGenerator {
       `--skipGit=${!!config.backend}`,
       '--style=scss',
       `--routing=${!!config.routing.add}`,
+      '--strict=false',
     ]);
   }
 
