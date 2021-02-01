@@ -71,6 +71,11 @@ async function copyBaseProject(config) {
     }
   } else {
     debug.logger('No frontend');
+    await replace({
+      files: './tmp/Dockerfile',
+      from: [/COPY .\/frontend \/code\/frontend/g, /WORKDIR \/code\/frontend/g],
+      to: ['# COPY ./frontend /code/frontend', '# WORKDIR /code/frontend'],
+    });
     deleteFileSync('./tmp/backend/test/routes/frontend.test.js');
   }
   const copyJobs = [
