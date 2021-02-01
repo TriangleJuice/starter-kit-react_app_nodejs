@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.3.0] - 2021-02-01
+
+- Fixed Backend-only issue (copy non-existing fe folder)
+
 ## [2.2.0] - 2021-01-19
 
 ### Fixed
